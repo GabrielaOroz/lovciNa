@@ -60,40 +60,118 @@
 				\subsubsection{Opis obrazaca uporabe}
 					\textit{Funkcionalne zahtjeve razraditi u obliku obrazaca uporabe. Svaki obrazac je potrebno razraditi prema donjem predlošku. Ukoliko u nekom koraku može doći do odstupanja, potrebno je to odstupanje opisati i po mogućnosti ponuditi rješenje kojim bi se tijek obrasca vratio na osnovni tijek.}\\
 					
-
-					\noindent \underbar{\textbf{UC$<$broj obrasca$>$ -$<$ime obrasca$>$}}
+					\noindent \underbar{\textbf{UC$<$broj obrasca$>$ -$<$Stvaranje zadataka$>$}}
 					\begin{packed_item}
-	
-						\item \textbf{Glavni sudionik: }$<$sudionik$>$
-						\item  \textbf{Cilj:} $<$cilj$>$
-						\item  \textbf{Sudionici:} $<$sudionici$>$
-						\item  \textbf{Preduvjet:} $<$preduvjet$>$
+						
+						\item \textbf{Glavni sudionik: }$<$Istraživač$>$
+						\item  \textbf{Cilj:} $<$Stvaranje zadataka$>$
+						\item  \textbf{Sudionici:} $<$Baza podataka$>$
+						\item  \textbf{Preduvjet:} $<$Istraživač je prijavljen$>$
 						\item  \textbf{Opis osnovnog tijeka:}
 						
 						\item[] \begin{packed_enum}
-	
-							\item $<$opis korak jedan$>$
-							\item $<$opis korak dva$>$
-							\item $<$opis korak tri$>$
-							\item $<$opis korak četiri$>$
-							\item $<$opis korak pet$>$
+							
+							\item $<$Istraživaču je omogućen odabir dodavanja zadataka pojedinom tragaču.$>$
+							\item $<$Istraživač odabire zadatak (prolazak određenom rutom i dolazak do određene lokacije, postavljanje
+							kamere ili uređaja za praćenje) i dodjeljuje ga tragaču.$>$
+							\item $<$Tragačima je omogućen pregled zadataka za određenu akciju.$>$
+							\item $<$Dodijeljeni zadatci se spremaju u bazu podataka.$>$
 						\end{packed_enum}
 						
-						\item  \textbf{Opis mogućih odstupanja:}
+					\end{packed_item}
+					
+					\noindent \underbar{\textbf{UC$<$broj obrasca$>$ -$<$Micanje tragača s akcije$>$}}
+					\begin{packed_item}
 						
-						\item[] \begin{packed_item}
-	
-							\item[2.a] $<$opis mogućeg scenarija odstupanja u koraku 2$>$
-							\item[] \begin{packed_enum}
-								
-								\item $<$opis rješenja mogućeg scenarija korak 1$>$
-								\item $<$opis rješenja mogućeg scenarija korak 2$>$
-								
-							\end{packed_enum}
-							\item[2.b] $<$opis mogućeg scenarija odstupanja u koraku 2$>$
-							\item[3.a] $<$opis mogućeg scenarija odstupanja  u koraku 3$>$
+						\item \textbf{Glavni sudionik: }$<$Tragač$>$
+						\item  \textbf{Cilj:} $<$Micanje tragača s akcije$>$
+						\item  \textbf{Sudionici:} $<$Baza podataka$>$
+						\item  \textbf{Preduvjet:} $<$Tragač je prijavljen$>$
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
 							
-						\end{packed_item}
+							\item $<$Tragaču je omogućeno micanje s akcije.$>$
+							\item $<$Tragač se miče s akcije prilikom završetka svih zadataka i potvrđuje micanje.$>$
+							\item $<$Akcija određenog tragača se briše iz baze podataka.$>$
+						\end{packed_enum}
+						
+					\end{packed_item}
+					
+					\noindent \underbar{\textbf{UC$<$broj obrasca$>$ -$<$Prikaz toplinskih karata za analizu kretanja životinja$>$}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: }$<$Istraživač$>$
+						\item  \textbf{Cilj:} $<$Prikaz toplinskih karata za analizu kretanja životinja$>$
+						\item  \textbf{Sudionici:} $<$Baza podataka$>$
+						\item  \textbf{Preduvjet:} $<$Istraživač je prijavljen$>$
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item $<$Istraživač odabire opciju prikaza toplinskih karata za analizu kretanja životinja.$>$
+							\item $<$Sustav omogućuje odabir između različitih podataka (povijesne pozicije životinja i trenutne pozicije životinja) koji se mogu filtrirati (po vrsti ili pojedinačno po jedinki).$>$
+							\item $<$Istraživač odabire vrstu podatka koju želi prikazati na karti.$>$
+							\item $<$Sustav generira toplinsku kartu na temelju odabranih podataka.$>$
+						\end{packed_enum}
+						
+					\end{packed_item}
+					
+					\noindent \underbar{\textbf{UC$<$broj obrasca$>$ -$<$Prikaz pozicija tragača na nekoj akciji na karti$>$}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: }$<$Korisnik$>$
+						\item  \textbf{Cilj:} $<$Prikaz pozicija tragača na nekoj akciji na karti$>$
+						\item  \textbf{Sudionici:} $<$Baza podataka$>$
+						\item  \textbf{Preduvjet:} $<$Korisnik je prijavljen$>$
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item $<$Korisnik odabire opciju prikaza pozicija tragača na karti.$>$
+							\item $<$Sustav omogućuje odabir između različitih podataka (povijesne pozicije tragača i trenutne pozicije tragača) koji se mogu filtrirati (po tipu prijevoza ili pojedinačno po tragaču).$>$
+							\item $<$Korisnik odabire vrstu podatka koju želi prikazati na karti.$>$
+							\item $<$Sustav generira toplinsku kartu na temelju odabranih podataka.$>$
+						\end{packed_enum}
+						
+					\end{packed_item}
+					
+					\noindent \underbar{\textbf{UC$<$broj obrasca$>$ -$<$Ostavljanje komentara na karti za određeni zadatak$>$}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: }$<$Istraživač$>$
+						\item  \textbf{Cilj:} $<$Ostavljanje komentara na karti za određeni zadatak$>$
+						\item  \textbf{Sudionici:} $<$Baza podataka$>$
+						\item  \textbf{Preduvjet:} $<$Istraživač je prijavljen$>$
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item $<$Istraživač odabire zadatak na koji želi ostaviti komentar.$>$
+							\item $<$Istraživač unosi komentar i potvrđuje unos.$>$
+							\item $<$Komentar se pohranjuje u bazu podataka.$>$
+							\item $<$Sudionici akcije mogu vidjeti unešeni komentar.$>$
+						\end{packed_enum}
+						
+					\end{packed_item}
+					
+					\noindent \underbar{\textbf{UC$<$broj obrasca$>$ -$<$Ostavljanje komentara na karti za određenu životinju unutar neke akcije$>$}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: }$<$Tragač$>$
+						\item  \textbf{Cilj:} $<$Ostavljanje komentara na karti za određenu životinju unutar neke akcije$>$
+						\item  \textbf{Sudionici:} $<$Baza podataka$>$
+						\item  \textbf{Preduvjet:} $<$Tragač je prijavljen$>$
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item $<$Tragač odabire životinju na koju želi ostaviti komentar.$>$
+							\item $<$Tragač unosi komentar i potvrđuje unos.$>$
+							\item $<$Komentar se pohranjuje u bazu podataka.$>$
+							\item $<$Sudionici akcije mogu vidjeti unešeni komentar.$>$
+						\end{packed_enum}
+						
 					\end{packed_item}
 				
 					
