@@ -13,9 +13,18 @@
 			
 			\begin{packed_enum}
 				
-				\item Dionik 1
-				\item Dionik 2				
-				\item ...
+				\item Vlasnik (naručitelj)
+				\item Registrirani korisnici:
+							
+					\begin{packed_enum}
+						\item Voditelji
+						\item Istraživači
+						\item Tragači
+					\end{packed_enum}
+					
+				\item Razvojni tim
+				\item Administrator
+				
 				
 			\end{packed_enum}
 			
@@ -23,31 +32,77 @@
 			
 			
 			\begin{packed_enum}
-				\item  \underbar{Aktor 1 (inicijator) može:}
+				
+				\item  \underbar{Neregistrirani korisnik (sudionik) može:}
 				
 				\begin{packed_enum}
 					
-					\item funkcionalnost 1
-					\item funkcionalnost 2
-					\begin{packed_enum}
-						
-						\item  podfunkcionalnost 1 
-						\item  podfunkcionalnost 2
+					\item poslati zahtjev za registraciju s željenom ulogom za koju se prijavljuje (istraživač voditelj postaje ili tragač na terenu)
 				
-					\end{packed_enum}
-					\item  funkcionalnost 3
+				\end{packed_enum}
+				
+				\item \underbar{Istraživač (inicijator) može:}
+				
+				\begin{packed_enum}
+					
+					\item stvoriti nove akcije pretraživanja i praćenja
+					\item poslati zahtjev voditelju za tragača s potrebnim kvalifikacijama
+					\item pojedinačno zadati zadatke tragačima
+						\begin{packed_enum}
+							\item dati komentar za zadani zadatak
+						\end{packed_enum}
+					\item pristupiti interaktivnoj karti s informacijama o poziciji tragača, životinja i postaja
+						\begin{packed_enum}
+							\item ostaviti komentar za ostale sudionike
+						\end{packed_enum} 
+					\item odabrati način izrade karata (povijesne pozicije životinja, filtrirano po vrsti, filtrirano po jedinki, trenutne pozicija životinja; povijesne pozicije tragača, filitrirano po tipu prijevoza, filtrirano pojedinačno po tragaču, trenutne pozicije tragača)
+					
+				\end{packed_enum}	
+				
+				\item \underbar{Voditelj postaje (inicijator) može:}
+				
+				\begin{packed_enum}
+					
+					\item definirati tragače njegove postaje
+						\begin{packed_enum}
+							\item definirati način na koji su osposobljeni izvoditi pretraživanje
+						\end{packed_enum}
+					\item odabrati konkretne tragače za pojedinu akciju
 					
 				\end{packed_enum}
 			
-				\item  \underbar{Aktor 2 (sudionik) može:}
+				\item \underbar{Tragač na terenu (inicijator) može:}
+					
+					\begin{packed_enum}
+						\item biti osposobljen za obavljanje zadataka na različite načine (pješke, dronom, automobilom, 
+						cross motorom, brodom, helikopterom)
+						\item ostaviti komentar o životinji tijekom akcije
+						\item maknuti s akcije završetkom potrebnih zadataka
+						\item pristupiti interaktivnoj karti s informacijama o zadacima, poziciji tragača te trenutnim pozicijama životinja
+							\begin{packed_enum}
+								\item ostaviti komentar za ostale sudionike
+							\end{packed_enum}
+					\end{packed_enum}
+					
+				\item \underbar{Administrator (inicijator) može:}
 				
-				\begin{packed_enum}
+					\begin{packed_enum}
+						\item vidjeti popis registriranih korisnika i njihove podatke
+						\begin{packed_enum}
+							\item mijenjati prava i podatke registriranih korisnika
+						\end{packed_enum}
+						\item potvrditi istraživača i voditelja postaje
+					\end{packed_enum}
 					
-					\item funkcionalnost 1
-					\item funkcionalnost 2
-					
-				\end{packed_enum}
+				\item \underbar{Baza podataka (sudionik):}
+				
+					\begin{packed_enum}
+						\item pohranjuje sve podatke o korisnicima i njihovim ovlastima
+						\item pohranjuje sve podatke o postajama i njihovim lokacijama
+						\item pohranjuje sve podatke o životinjama i njihovim lokacijama
+					\end{packed_enum}
 			\end{packed_enum}
+			
 			
 			\eject 
 			
