@@ -60,6 +60,195 @@
 				\subsubsection{Opis obrazaca uporabe}
 					\textit{Funkcionalne zahtjeve razraditi u obliku obrazaca uporabe. Svaki obrazac je potrebno razraditi prema donjem predlošku. Ukoliko u nekom koraku može doći do odstupanja, potrebno je to odstupanje opisati i po mogućnosti ponuditi rješenje kojim bi se tijek obrasca vratio na osnovni tijek.}\\
 					
+					\noindent \underbar{\textbf{UC$<$1$>$ -$<$Registracija$>$}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: }$<$Korisnik$>$
+						\item  \textbf{Cilj:} $<$Izrada korisničkog računa za pristup sustavu$>$
+						\item  \textbf{Sudionici:} $<$Baza podataka$>$
+						\item  \textbf{Preduvjet:} $<$-$>$
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item $<$Odabir opcije registracija$>$
+							\item $<$Odabir uloge$>$
+							\item $<$Unos osobnih podataka (korisničko ime, fotografija, lozinka, ime, prezime i email adresa)$>$
+							\item $<$Potvrda za ulogu istraživača i voditelja od strane administratora$>$
+							\item $<$
+							Spremanje u bazu podataka te potvrda registracije putem email adrese$>$
+						
+								\end{packed_enum}
+						
+					\end{packed_item}
+					
+					\item  \textbf{Opis mogućih odstupanja:}
+					
+					\item[] \begin{packed_item}
+						
+						\item[3.a] $<$Unos zauzetog korisničkog imena$>$
+						\item[] \begin{packed_enum}
+							
+							\item $<$Sustav obavještava korisnika da je potrebno upotrijebiti drugo korisničko ime$>$
+	
+						\end{packed_enum}
+
+						\item[3.b] $<$Krivi format lozinke$>$\begin{packed_enum}
+							
+							\item $<$Sustav obavještava korisnika o uvjetu koji nije zadovoljen da bi lozinka bila ispravna$>$
+							
+						\end{packed_enum}
+						
+						\item[3.c] $<$Nepotpuna prijava$>$\begin{packed_enum}
+							
+							\item $<$Sustav obavještava korisnika o podacima koji mu nedostaju za uspješnu registraciju$>$
+							
+						\end{packed_enum}
+						
+						\item[4.a] $<$Administrator odbija odabranu ulogu$>$\begin{packed_enum}
+							
+							\item $<$Sustav obavještava korisnika o odbijanju odabrane uloge te mu predlaže da sudjeluje kao tragač$>$
+							
+						\end{packed_enum}
+						
+					\end{packed_item}
+					
+					
+					\noindent \underbar{\textbf{UC$<$2$>$ -$<$Prijava u sustav$>$}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: }$<$Korisnik$>$
+						\item  \textbf{Cilj:} $<$Korištenje aplikacije$>$
+						\item  \textbf{Sudionici:} $<$Baza podataka$>$
+						\item  \textbf{Preduvjet:} $<$Korisnik već registriran u bazi$>$
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item $<$Odabir opcije prijava$>$
+							\item $<$Unos podataka (korisničko ime i lozinka)$>$
+							\item $<$Otvaranje aplikacije$>$
+					
+							
+						\end{packed_enum}
+						
+					\end{packed_item}
+					
+					\item  \textbf{Opis mogućih odstupanja:}
+					
+					\item[] \begin{packed_item}
+						
+						\item[2.a] $<$Unos pogrešnog korisničkog imena ili lozinke$>$
+						\item[] \begin{packed_enum}
+							
+							\item $<$Sustav obavještava korisnika da je unio pogrešno korisničko ime ili lozinku te mu dozvoljava novi pokušaj$>$
+							
+						\end{packed_enum}
+						
+					\end{packed_item}
+					
+					
+					\noindent \underbar{\textbf{UC$<$3$>$ -$<$Voditelj odabire svoje postaje i tragače$>$}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: }$<$Voditelj$>$
+						\item  \textbf{Cilj:} $<$Voditelj ima dodijeljene postaje i tragače kojima upravlja$>$
+						\item  \textbf{Sudionici:} $<$Baza podataka$>$
+						\item  \textbf{Preduvjet:} $<$Voditelj mora biti potvrđen od strane administratora$>$
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item $<$Voditelj unosi naziv postaja koje će pokrivati$>$
+							\item $<$Za svakog novog tragača neki od voditelja ga odabire$>$
+							\item $<$Za odabranog tragača voditelj definira za što je sve osposobljen $>$
+							
+							
+						\end{packed_enum}
+						
+					\end{packed_item}
+					
+					\item  \textbf{Opis mogućih odstupanja:}
+					
+					\item[] \begin{packed_item}
+						
+						\item[2.a] $<$Unos pogrešnog korisničkog imena ili lozinke$>$
+						\item[] \begin{packed_enum}
+							
+							\item $<$Sustav obavještava korisnika da je unio pogrešno korisničko ime ili lozinku te mu dozvoljava novi pokušaj$>$
+							
+						\end{packed_enum}
+						
+					\end{packed_item}
+					
+					
+					\noindent \underbar{\textbf{UC$<$4$>$ -$<$Stvaranje akcije pretraživanja i praćenja$>$}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: }$<$Istraživač$>$
+						\item  \textbf{Cilj:} $<$Stvoriti akciju pretraživanja i praćenja$>$
+						\item  \textbf{Sudionici:} $<$Baza podataka$>$
+						\item  \textbf{Preduvjet:} $<$Korisnik koji stvara akciju mora biti istraživač$>$
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item $<$Istraživač odabire postaju, broj tragača te potrebne kvalifikacije za akciju $>$
+							\item $<$Istraživač šalje zahtjev za tragačima voditelju postaje$>$
+							\item $<$Voditelj vraća popis tragača koje je odabrao za akciju$>$
+							
+							
+						\end{packed_enum}
+						
+					\end{packed_item}
+					
+					\item  \textbf{Opis mogućih odstupanja:}
+					
+					\item[] \begin{packed_item}
+						
+						\item[3.a] $<$Voditelj postaje nema dovoljan broj tragača s potrebnim kvalifikacijama$>$
+						\item[] \begin{packed_enum}
+							
+							\item $<$Voditelj obavještava istraživača kako nema dovoljan broja tragača te mu dodjeljuje one koje ima$>$
+							
+						\end{packed_enum}
+						
+					\end{packed_item}
+					
+					
+					
+					\noindent \underbar{\textbf{UC$<$5$>$ -$<$Tragač napušta akciju$>$}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: }$<$Tragač$>$
+						\item  \textbf{Cilj:} $<$Tragač više nije na popisu tragača koji sudjeluju u akciji$>$
+						\item  \textbf{Sudionici:} $<$Baza podataka$>$
+						\item  \textbf{Preduvjet:} $<$Tragač je ispunio sve dodijeljene zadatke$>$
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item $<$Tragač odabire opciju za napuštanje akcije$>$
+	
+						\end{packed_enum}
+						
+					\end{packed_item}
+					
+					\item  \textbf{Opis mogućih odstupanja:}
+					
+					\item[] \begin{packed_item}
+						
+						\item[1.a] $<$Tragač pokušava napustiti akciju, a nije izvršio sve zadatke.$>$
+						\item[] \begin{packed_enum}
+							
+							\item $<$Sustav obavještava tragača da nije ispunio sve zadatke te mu ne dopušta napustiti akciju$>$
+							
+						\end{packed_enum}
+						
+					\end{packed_item}
+					
+					
+					
 					\noindent \underbar{\textbf{UC$<$broj obrasca$>$ -$<$Stvaranje zadataka$>$}}
 					\begin{packed_item}
 						
