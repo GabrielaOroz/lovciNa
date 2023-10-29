@@ -3,8 +3,8 @@ import { extendTheme } from '@chakra-ui/react'
 const theme = extendTheme({
   fonts: {
     heading: `Nature`,
-    body: `Consolas`
+    body: `Arial`
   },
 })
 
-export default theme
+export default theme;

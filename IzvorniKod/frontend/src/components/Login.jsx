@@ -1,13 +1,13 @@
-import { Link } from 'react-router-dom';
-import { Button } from "@chakra-ui/react";
+import { Text } from '@chakra-ui/react';
+import Base from './Base';
+import Form from './Form';
 
 export default function Login() {
   return (
-    <div>
-      <h1>Login Page</h1>
-      <Link to="/">
-        <Button>Home</Button>
-      </Link>
-    </div>
+    <Base>
+      <Form>
+        <Text alignSelf="center" fontSize="lg">Start using Wild Track</Text>
+      </Form>
+    </Base>
   )
 }
