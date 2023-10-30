@@ -1,8 +1,8 @@
 import { ChakraProvider } from '@chakra-ui/react'
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from './components/Home';
-import Login from './components/Login';
-import Register from './components/Register';
+import Home from './components/pages/Home';
+import Login from './components/pages/Login';
+import Register from './components/pages/Register';
 import Fonts from './styles/Fonts';
 import theme from './styles/theme';
 import './styles/rain.css';

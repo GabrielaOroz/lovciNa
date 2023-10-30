@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { Box, Button, Flex, Heading, Text } from "@chakra-ui/react";
+import { Box, Flex, Heading, Text } from "@chakra-ui/react";
 import Rain from './Rain';
 
 export default function Base({children}) {
@@ -34,14 +34,6 @@ export default function Base({children}) {
                 </Link>
             </Flex>
             {children}
-            <Flex alignSelf="center" gap="50px" marginBottom="30px">
-                <Link to="/login">
-                    <Button shadow='dark-lg' size="lg" colorScheme="green">Log In</Button>
-                </Link>
-                <Link to="/register">
-                    <Button shadow='dark-lg' size="lg">Register</Button>
-                </Link>
-            </Flex>
         </Box>
         
     )
