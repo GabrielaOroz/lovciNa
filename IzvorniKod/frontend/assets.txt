@@ -1,0 +1,6 @@
+BAIGE
+#F1EDD4 - button color
+#FFFBE0 - button color on hover
+#FFFBE0 - text color
+
+GREEN

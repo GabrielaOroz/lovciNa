@@ -5,8 +5,8 @@ export default function Base({children}) {
     return (
         <Box 
             bgImage="url(/forest.jpg)" 
-            bgPosition="center" 
-            height="100vh" 
+            bgPosition="center"
+            minH="100vh"
             display="flex"
             flexDirection="column"
             justifyContent="space-between"

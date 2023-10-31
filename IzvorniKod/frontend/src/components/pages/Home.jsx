@@ -10,7 +10,7 @@ export default function Home() {
           <Button shadow='dark-lg' size="lg" colorScheme="green">Log In</Button>
         </Link>
         <Link to="/register">
-           <Button shadow='dark-lg' size="lg">Register</Button>
+           <Button shadow='dark-lg' size="lg" bgColor="#F1EDD4">Register</Button>
         </Link>
       </Flex>
     </Base>

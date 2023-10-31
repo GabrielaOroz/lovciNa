@@ -3,7 +3,7 @@ import { extendTheme } from '@chakra-ui/react'
 const theme = extendTheme({
   fonts: {
     heading: `Nature`,
-    body: `Arial`
+    body: `Comic Sans MS`
   },
 })
 
