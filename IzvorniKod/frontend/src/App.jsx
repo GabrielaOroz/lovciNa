@@ -5,7 +5,6 @@ import Login from './components/pages/Login';
 import Register from './components/pages/Register';
 import Fonts from './styles/Fonts';
 import theme from './styles/theme';
-import './styles/rain.css';
 
 export default function App() {
   return (

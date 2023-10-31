@@ -3,7 +3,7 @@ export default function Form({children}) {
     return (
         <Card 
             padding="20px" 
-            width="500px"
+            w={{base: "300px", md: "400px", lg: "500px"}}
             margin="30px" 
             alignSelf="center" 
             bgGradient="linear(to-t, green.500, green.800)"
