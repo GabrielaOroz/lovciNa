@@ -138,7 +138,8 @@
 						
 						\item[] \begin{packed_item}
 							
-							\item[3.a] Unos zauzetog korisničkog imena \begin{packed_enum}
+							\item[3.a] Zauzeto korisničko ime
+							\begin{packed_enum}
 								
 								\item Sustav obavještava korisnika da je potrebno upotrijebiti drugo korisničko ime
 								
@@ -231,7 +232,62 @@
 						
 					\end{packed_item}
 					
-					\noindent \underbar{\textbf{UC4 - Pregled registriranih korisnika}}
+					\noindent \underbar{\textbf{UC4 - Uređivanje osobnih podataka}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: }Korisnik
+						\item  \textbf{Cilj:} Promijenjeni osobni podaci
+						\item  \textbf{Sudionici:} Baza podataka
+						\item  \textbf{Preduvjet:} Korisnik je prijavljen u sustav
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item Odabir opcije "Osobni podaci"
+							\item Odabir opcije "Uredi"
+							\item Promjena željenih podataka
+							\item Odabir opcije "Spremi"
+							\item Baza podataka se ažurira
+							
+						\end{packed_enum}
+						
+						\item  \textbf{Opis mogućih odstupanja:}
+						
+						\item[] \begin{packed_item}
+							
+							\item[3.a] Unos zauzetog korisničkog imena
+							\item[] \begin{packed_enum}
+								
+								\item Sustav obavještava korisnika da je potrebno upotrijebiti drugu korisničko ime
+								
+							\end{packed_enum}
+							
+						\end{packed_item}
+						
+						\item[] \begin{packed_item}
+							
+							\item[3.b] Korisnik unosi krivi format lozinke
+							\item[] \begin{packed_enum}
+								
+								\item Sustav obavještava korisnika lo uvjetu koji nije zadovoljen da bi lozinka bila ispravna
+								
+							\end{packed_enum}
+							
+						\end{packed_item}
+						
+						\item[] \begin{packed_item}
+							
+							\item[4.a]Korisnik ne odabire opciju "Spremi"
+							\item[] \begin{packed_enum}
+								
+								\item Sustav obavještava korisnika da nije spremio podatke 
+								
+							\end{packed_enum}
+							
+						\end{packed_item}
+					\end{packed_item}
+					
+					\noindent \underbar{\textbf{UC5 - Pregled registriranih korisnika}}
 					\begin{packed_item}
 						
 						\item \textbf{Glavni sudionik: }Administrator
@@ -256,7 +312,7 @@
 							\item[3.a] Administrator ne odabire opciju spremanja promjena
 							\item[] \begin{packed_enum}
 								
-								\item Sustav obavještava korisnika da nije spremio podatke prije izlaska iz prozora
+								\item Sustav obavještava korisnika da nije spremio podatke 
 								
 							\end{packed_enum}
 							
@@ -265,7 +321,7 @@
 					\end{packed_item}
 					
 					
-					\noindent \underbar{\textbf{UC5 - Voditelj odabire svoje postaje i tragače}}
+					\noindent \underbar{\textbf{UC6 - Voditelj odabire svoje postaje i tragače}}
 					\begin{packed_item}
 						
 						\item \textbf{Glavni sudionik: }Voditelj
@@ -278,199 +334,48 @@
 							
 							\item Voditelj unosi naziv postaje koje će pokrivati
 							\item Voditelj odabire tragače koji su dio njegove postaje
+							
+							\end{packed_enum}
+						\item  \textbf{Opis mogućih odstupanja:}
+						
+						\item[] \begin{packed_item}
+							
+							\item[2.a] Voditelj odabire već zauzetu postaju
+							\item[] \begin{packed_enum}
+								
+								\item Sustav obavještava voditelja da postaja već ima svog voditelja
+								
+							\end{packed_enum}
+							
+						\end{packed_item}
+						
+						
+					\end{packed_item}
+					
+					\noindent \underbar{\textbf{UC7 - Voditelj definira metode pretraživanja za tragača}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: }Voditelj
+						\item  \textbf{Cilj:} Tragač ima određene metode pretraživanja
+						\item  \textbf{Sudionici:} Baza podataka
+						\item  \textbf{Preduvjet:} Voditelj ima dodijeljenu postaju i tragače kojima upravlja
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item Voditelj odabire tragača
 							\item Voditelj definira načine na koje je odabrani tragač osposobljen pretraživati (pješke, dronom, automobilom, cross motorm, brodom ili helikopterom)
 							
 							
-							\end{packed_enum}
-						
-						
-					\end{packed_item}
-					
-					
-					\noindent \underbar{\textbf{UC6 - Stvaranje akcije pretraživanja i praćenja}}
-					\begin{packed_item}
-						
-						\item \textbf{Glavni sudionik: }Istraživač
-						\item  \textbf{Cilj:} Stvoriti akciju pretraživanja i praćenja
-						\item  \textbf{Sudionici:} Baza podataka
-						\item  \textbf{Preduvjet:} Prijavljen kao istraživač
-						\item  \textbf{Opis osnovnog tijeka:}
-						
-						\item[] \begin{packed_enum}
-							
-							\item Istraživač odabire opciju stvaranja nove akcije
-							\item Istraživač odabire postaju, broj tragača te potrebne kvalifikacije za akciju 
-							\item Istraživač šalje zahtjev za tragačima voditelju postaje
-							\item Voditelj postaje odabire tragače za akciju
-							
-							
 						\end{packed_enum}
 						
-						\item  \textbf{Opis mogućih odstupanja:}
-						
-						\item[] \begin{packed_item}
-							
-							\item[4.a] Voditelj postaje nema dovoljan broj tragača s potrebnim kvalifikacijama
-							\item[] \begin{packed_enum}
-								
-								\item Voditelj obavještava istraživača kako nema dovoljan broja tragača te mu dodjeljuje one koje ima
-								
-							\end{packed_enum}
-							
-						\end{packed_item}
 						
 					\end{packed_item}
 					
-					
-					
-					\noindent \underbar{\textbf{UC7 - Stvaranje zadataka}}
+					\noindent \underbar{\textbf{UC8 - Praćenje životinja}}
 					\begin{packed_item}
 						
-						\item \textbf{Glavni sudionik: }Istraživač
-						\item  \textbf{Cilj:} Stvaranje zadataka na pojedinoj akciji
-						\item  \textbf{Sudionici:} Baza podataka
-						\item  \textbf{Preduvjet:} Istraživač je prijavljen
-						\item  \textbf{Opis osnovnog tijeka:}
-						
-						\item[] \begin{packed_enum}
-							
-							\item Odabir određenog tragača
-							\item Odabir opcije dodavanja novog zadatka odabranom tragaču
-							\item Odabir zadatka (prolazak određenom rutom i dolazak do određene lokacije, postavljanje
-							kamere ili uređaja za praćenje)
-							\item Istraživaču se nudi opcija dodavanja komentara na zadatak
-							\item Istraživač unosi komentar
-							\item Istraživač potvrđuje unesene podatke i time dodijeljuje zadatak tragaču
-							\item Spremanje podataka u bazu podataka
-						\end{packed_enum}
-						
-						\item  \textbf{Opis mogućih odstupanja:}
-						
-						\item[] \begin{packed_item}
-							
-							
-							\item[6.a] Istraživač ne potvrđuje unesene podatke
-							\item[] \begin{packed_enum}
-								
-								\item Sustav obavještava korisnika da nije potvrdio podatke prije izlaska iz prozora
-								
-								\end{packed_enum}
-							
-						\end{packed_item}
-						
-					\end{packed_item}
-					
-					
-					\noindent \underbar{\textbf{UC8 - Prikaz karte za tragača}}
-					\begin{packed_item}
-						
-						\item \textbf{Glavni sudionik: }Tragač
-						\item  \textbf{Cilj:} Prikaz karte za tragača na određenoj akciji
-						\item  \textbf{Sudionici:} Baza podataka
-						\item  \textbf{Preduvjet:} Tragač je prijavljen i sudjeluje u određenoj akciji
-						\item  \textbf{Opis osnovnog tijeka:}
-						
-						\item[] \begin{packed_enum}
-							
-							\item Odabir određene akcije
-							\item Odabir prikaza karte za odabranu akciju
-							\item Odabir prikaza popisa zadataka, trenutne pozicije ostalih tragača ili trenutne pozicije praćenih životinja za određenu akciju
-							\item Tragač može pojedini zadatak označiti odrađenim
-							\item Tragač može ostaviti komentar na zadatak ili na praćenu životinju
-							\item Tragač potvrđuje unesene podatke
-							\item Spremanje podataka u bazu podataka
-						\end{packed_enum}
-						
-						\item  \textbf{Opis mogućih odstupanja:}
-						
-						\item[] \begin{packed_item}
-							
-							
-							\item[5.a] Tragač ne potvrđuje unesene podatke
-							\item[] \begin{packed_enum}
-								
-								\item Sustav obavještava korisnika da nije potvrdio podatke prije izlaska iz prozora
-								
-							\end{packed_enum}
-							
-						\end{packed_item}
-						
-					\end{packed_item}
-					
-					
-					
-					\noindent \underbar{\textbf{UC9 - Tragač napušta akciju}}
-					\begin{packed_item}
-						
-						\item \textbf{Glavni sudionik: }Tragač
-						\item  \textbf{Cilj:} Tragač više ne sudjeluje u akciji
-						\item  \textbf{Sudionici:} Baza podataka
-						\item  \textbf{Preduvjet:} Tragač je ispunio sve dodijeljene zadatke
-						\item  \textbf{Opis osnovnog tijeka:}
-						
-						\item[] \begin{packed_enum}
-							
-							\item Tragač odabire određenu akciju
-							\item Tragač odabire opciju za napuštanje akcije
-	
-						\end{packed_enum}
-						
-						\item  \textbf{Opis mogućih odstupanja:}
-						
-						\item[] \begin{packed_item}
-							
-							\item[1.a] Tragač pokušava napustiti akciju, a nije izvršio sve zadatke
-							\item[] \begin{packed_enum}
-								
-								\item Sustav obavještava tragača da nije ispunio sve zadatke te mu ne dopušta napustiti akciju
-								
-							\end{packed_enum}
-							
-						\end{packed_item}
-						
-					\end{packed_item}
-					
-					
-					\noindent \underbar{\textbf{UC10 - Prikaz karte za istraživača}}
-					\begin{packed_item}
-						
-						\item \textbf{Glavni sudionik: }Istraživač
-						\item  \textbf{Cilj:} Prikaz karte za istraživača
-						\item  \textbf{Sudionici:} Baza podataka
-						\item  \textbf{Preduvjet:} Istraživač je prijavljen i izradio je akciju
-						\item  \textbf{Opis osnovnog tijeka:}
-						
-						\item[] \begin{packed_enum}
-							
-							\item Odabir prikaza karte
-							\item Odabir informacija koje će se prikazivati na karti (povijesne pozicije svih praćenih životinja filtrirano po vrsti ili pojedinačno po jedinki, trenutne pozicije praćenih životinja, povijesne pozicije svih tragača na nekoj akciji filtrirano po tipu prijevoza ili pojedinačno po tragaču, trenutne pozicije tragača aktivnih na akciji)
-							\item Istraživač odabire opciju generiranja karte
-							\item Sustav generira kartu na temelju odabranih podataka (za informacije o povijesnim pozicijama generira se toplinska karta)
-							\item Istraživač može unijeti komentar na odabrane životinje
-							\item Istraživač potvrđuje unešeni komentar
-						\end{packed_enum}
-						
-						\item  \textbf{Opis mogućih odstupanja:}
-						
-						\item[] \begin{packed_item}
-							
-							\item[6.a] Istraživač ne potvrđuje unesene podatke
-							\item[] \begin{packed_enum}
-								
-								\item Sustav obavještava korisnika da nije potvrdio podatke prije izlaska iz prozora
-								
-							\end{packed_enum}
-							
-						\end{packed_item}
-						
-					\end{packed_item}
-					
-					
-					
-					\noindent \underbar{\textbf{UC11 - Praćenje životinja}}
-					\begin{packed_item}
-						
-						\item \textbf{Glavni sudionik: }Gps uređaj
+						\item \textbf{Glavni sudionik:} Gps uređaj
 						\item  \textbf{Cilj:} Praćenje životinja
 						\item  \textbf{Sudionici:} Baza podataka
 						\item  \textbf{Preduvjet:} Postavljen gps uređaj na životinji
@@ -498,21 +403,41 @@
 						
 					\end{packed_item}
 					
-					\noindent \underbar{\textbf{UC12 - Bilježenje staza i kretanja tragača}}
+					\noindent \underbar{\textbf{UC9 - Stvaranje akcije pretraživanja i praćenja}}
 					\begin{packed_item}
 						
-						\item \textbf{Glavni sudionik: }Tragač
-						\item  \textbf{Cilj:} Bilježenje staza i kretanja tragača
+						\item \textbf{Glavni sudionik: }Istraživač
+						\item  \textbf{Cilj:} Stvoriti akciju pretraživanja i praćenja
 						\item  \textbf{Sudionici:} Baza podataka
-						\item  \textbf{Preduvjet:} Tragač je prijavljen i koristi gps uređaj
+						\item  \textbf{Preduvjet:} Prijavljen kao istraživač
 						\item  \textbf{Opis osnovnog tijeka:}
 						
 						\item[] \begin{packed_enum}
 							
-							\item Tragač ima uključen gps uređaj prilikom obavljanja zadatka
-							\item Gps uređaj odašilje svoju poziciju
-							\item Tragač ima opciju unijeti način kojim se kretao
-							\item Tragač potvrđuje unešeni način
+							\item Istraživač odabire opciju stvaranja nove akcije
+							\item Istraživač odabire postaju, broj tragača te potrebne kvalifikacije za akciju 
+							\item Istraživač šalje zahtjev za tragačima voditelju postaje
+							
+							
+						\end{packed_enum}
+							
+						
+					\end{packed_item}
+					
+						\noindent \underbar{\textbf{UC10 - Voditelj odabire tragače za akciju}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: }Voditelj
+						\item  \textbf{Cilj:} Odabrati tragače za akciju pretraživanja i praćenja
+						\item  \textbf{Sudionici:} Baza podataka
+						\item  \textbf{Preduvjet:} Prijavljen kao voditelj
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item Voditelj postaje prima zahtjev od istraživača za određenim brojem tragača s određenim kvalifikacijama
+							\item  Voditelj postaje odabire tragače za akciju
+							\item Voditelj postaje šalje popis odabranih tragača istraživaču
 							
 						\end{packed_enum}
 						
@@ -520,24 +445,10 @@
 						
 						\item[] \begin{packed_item}
 							
-							\item[1.a] Tragač nije uključio gps uređaj
+							\item[2.a] Voditelj postaje nema dovoljan broj tragača s potrebnim kvalifikacijama
 							\item[] \begin{packed_enum}
 								
-								\item Sustav obavještava tragača da nije uključen gps uređaj
-								
-							\end{packed_enum}
-							
-							\item[2.a] Gps uređaj ne radi
-							\item[] \begin{packed_enum}
-								
-								\item Sustav obavještava tragača da gps uređaj ne radi
-								
-							\end{packed_enum}
-							
-							\item[3.a] Tragač ne potvrđuje unesene podatke
-							\item[] \begin{packed_enum}
-								
-								\item Sustav obavještava korisnika da nije potvrdio podatke prije izlaska iz prozora
+								\item Voditelj obavještava istraživača kako nema dovoljan broja tragača te mu dodjeljuje one koje ima
 								
 							\end{packed_enum}
 							
@@ -547,7 +458,367 @@
 					
 					
 					
+					\noindent \underbar{\textbf{UC11 - Stvaranje zadataka}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: }Istraživač
+						\item  \textbf{Cilj:} Stvaranje zadataka na pojedinoj akciji
+						\item  \textbf{Sudionici:} Baza podataka
+						\item  \textbf{Preduvjet:} Istraživač je prijavljen
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item Odabir određenog tragača
+							\item Odabir opcije dodavanja novog zadatka odabranom tragaču
+							\item Odabir zadatka (prolazak određenom rutom i dolazak do određene lokacije, postavljanje
+							kamere ili uređaja za praćenje)
+							\item Istraživač potvrđuje unesene podatke i time dodijeljuje zadatak tragaču
+							\item Spremanje podataka u bazu podataka
+						\end{packed_enum}
+						
+						\item  \textbf{Opis mogućih odstupanja:}
+						
+						\item[] \begin{packed_item}
+							
+							
+							\item[4.a] Istraživač ne potvrđuje unesene podatke
+							\item[] \begin{packed_enum}
+								
+								\item Sustav obavještava korisnika da nije potvrdio podatke prije izlaska iz prozora
+								
+								\end{packed_enum}
+							
+						\end{packed_item}
+						
+					\end{packed_item}
+					
+					\noindent \underbar{\textbf{UC12 - Istraživač ostavlja komentare za tragače}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik:} Istraživač
+						\item  \textbf{Cilj:} Ostaviti komentare za akciju tragačima 
+						\item  \textbf{Sudionici:} Baza podataka
+						\item  \textbf{Preduvjet:} Prijavljen kao istraživač
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item Istraživaču se nudi opcija dodavanja komentara na zadatak
+							\item Istraživač unosi i sprema komentar
+							
+						\end{packed_enum}
+						
+						\item  \textbf{Opis mogućih odstupanja:}
+						
+						\item[] \begin{packed_item}
+							
+							\item[4.a]Korisnik ne odabire opciju "Spremi"
+						\item[] \begin{packed_enum}
+							
+							\item Sustav obavještava korisnika da nije spremio komentar
+							
+						\end{packed_enum}
+							
+						\end{packed_item}
+						
+					\end{packed_item}
+					
+					\noindent \underbar{\textbf{UC13 - Prikaz životinja na karti istraživača}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: }Istraživač
+						\item  \textbf{Cilj:} Prikaz životinja na karti
+						\item  \textbf{Sudionici:} Baza podataka
+						\item  \textbf{Preduvjet:} Istraživač je prijavljen i izradio je akciju
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
+							\item Odabir prikaza karte
+							\item Odabir prikaza životinja 
+							
+							\item Odabir informacija koje će se prikazivati na karti (povijesne pozicije svih praćenih životinja filtrirano po vrsti ili pojedinačno po jedinki, trenutne pozicije praćenih životinja)
+							\item Odabir opcije generiranja karte
+							\item Sustav generira kartu na temelju odabranih podataka (za informacije o povijesnim pozicijama generira se toplinska karta)
+							
+						\end{packed_enum}
+						\item  \textbf{Opis mogućih odstupanja:}
+						
+						\item[] \begin{packed_item}
+							
+							\item[5.a]Karta se ne generira 
+							\item[] \begin{packed_enum}
+								
+								\item Sustav obavještava korisnika da nije odabrao sve potrebne informacije
+								
+							\end{packed_enum}
+							
+						\end{packed_item}
+					\end{packed_item}
+						
+						
+						
+				\noindent \underbar{\textbf{UC14 - Prikaz tragača na karti istraživača}}
+				\begin{packed_item}
+					
+					\item \textbf{Glavni sudionik: }Istraživač
+					\item  \textbf{Cilj:} Prikaz tragača na karti
+					\item  \textbf{Sudionici:} Baza podataka
+					\item  \textbf{Preduvjet:} Istraživač je prijavljen i izradio je akciju
+					\item  \textbf{Opis osnovnog tijeka:}
+					
+					\item[] \begin{packed_enum}
+						
+						\item Odabir prikaza karte
+						\item Odabir prikaza tragača
+						\item Odabir informacija koje će se prikazivati na karti (povijesne pozicije svih tragača na nekoj akciji, filtrirano po tipu prijevoza ili pojedinačno po tragaču te trenutne pozicije tragača aktivnih na akciji)
+						\item Odabir opcije generiranja karte
+						\item Sustav generira kartu na temelju odabranih podataka (za informacije o povijesnim pozicijama generira se toplinska karta)
+						
+					\end{packed_enum}
+					
+					\item  \textbf{Opis mogućih odstupanja:}
+					
+					\item[] \begin{packed_item}
+						
+						\item[5.a]Karta se ne generira 
+						\item[] \begin{packed_enum}
+							
+							\item Sustav obavještava korisnika da nije odabrao sve potrebne informacije
+							
+						\end{packed_enum}
+						
+					\end{packed_item}
+				\end{packed_item}
 				
+	
+			
+			
+				
+				\noindent \underbar{\textbf{UC15 - Prikaz karte za tragača}}
+				\begin{packed_item}
+					
+					\item \textbf{Glavni sudionik:}Tragač
+					\item  \textbf{Cilj:} Prikaz karte za tragača na određenoj akciji
+					\item  \textbf{Sudionici:} Baza podataka
+					\item  \textbf{Preduvjet:} Tragač je prijavljen i sudjeluje u određenoj akciji
+					\item  \textbf{Opis osnovnog tijeka:}
+					
+					\item[] \begin{packed_enum}
+						
+						\item Odabir određene akcije
+						\item Odabir prikaza karte za odabranu akciju
+						\item Odabir prikaza popisa zadataka, trenutne pozicije ostalih tragača ili trenutne pozicije praćenih životinja za određenu akciju
+						\item Tragač može pojedini zadatak označiti odrađenim
+						\item Tragač može ostaviti komentar na zadatak ili na praćenu životinju
+						\item Tragač potvrđuje unesene podatke
+						\item Spremanje podataka u bazu podataka
+					\end{packed_enum}
+					
+					\item  \textbf{Opis mogućih odstupanja:}
+					
+					\item[] \begin{packed_item}
+						
+						
+						\item[5.a] Tragač ne potvrđuje unesene podatke
+						\item[] \begin{packed_enum}
+							
+							\item Sustav obavještava korisnika da nije potvrdio podatke prije izlaska iz prozora
+							
+						\end{packed_enum}
+						
+					\end{packed_item}
+					
+				\end{packed_item}
+				
+				\noindent \underbar{\textbf{UC16 - Tragač ostavlja komentar o životinji}}
+				\begin{packed_item}
+					
+					\item \textbf{Glavni sudionik:}Tragač
+					\item  \textbf{Cilj:} Komentar za životinju od
+				 strane tragača
+					\item  \textbf{Sudionici:} Baza podataka
+					\item  \textbf{Preduvjet:} Tragač je sudjelovao u akciji
+					\item  \textbf{Opis osnovnog tijeka:}
+					
+					\item[] \begin{packed_enum}
+					 
+						\item Tragaču se pri prikazu karte i životinja	nudi opcija "Komentiraj"
+					\item Tragač piše komentar na praćenu životinju
+						\item Tragač sprema komentar
+					\end{packed_enum}
+					
+						\item  \textbf{Opis mogućih odstupanja:}
+					
+					\item[] \begin{packed_item}
+						
+						\item[4.a]Korisnik ne odabire opciju "Spremi"
+						\item[] \begin{packed_enum}
+							
+							\item Sustav obavještava korisnika da nije spremio komentar
+							
+						\end{packed_enum}
+						
+					\end{packed_item}
+					
+				\end{packed_item}
+				
+				
+				
+				\noindent \underbar{\textbf{UC17 - Tragač napušta akciju}}
+				\begin{packed_item}
+					
+					\item \textbf{Glavni sudionik: }Tragač
+					\item  \textbf{Cilj:} Tragač više ne sudjeluje u akciji
+					\item  \textbf{Sudionici:} Baza podataka
+					\item  \textbf{Preduvjet:} Tragač je ispunio sve dodijeljene zadatke
+					\item  \textbf{Opis osnovnog tijeka:}
+					
+					\item[] \begin{packed_enum}
+						
+						\item Tragač odabire određenu akciju
+						\item Tragač odabire opciju za napuštanje akcije
+
+					\end{packed_enum}
+					
+					\item  \textbf{Opis mogućih odstupanja:}
+					
+					\item[] \begin{packed_item}
+						
+						\item[1.a] Tragač pokušava napustiti akciju, a nije izvršio sve zadatke
+						\item[] \begin{packed_enum}
+							
+							\item Sustav obavještava tragača da nije ispunio sve zadatke te mu ne dopušta napustiti akciju
+							
+						\end{packed_enum}
+						
+					\end{packed_item}
+					
+				\end{packed_item}
+				
+				\noindent \underbar{\textbf{UC18 - Tragač ocijenjuje i piše komentar}}
+				\begin{packed_item}
+					
+					\item \textbf{Glavni sudionik: }Tragač
+					\item  \textbf{Cilj:} Tragač ostavlja ocjenu i komentar
+					\item  \textbf{Sudionici:} Baza podataka
+					\item  \textbf{Preduvjet:} Tragač je završio akciju
+					\item  \textbf{Opis osnovnog tijeka:}
+					
+					\item[] \begin{packed_enum}
+						
+						\item Nakon završetka akcije, tragaču se nudi opcija "Ocijeni"
+						\item Tragač odabire ocjenu za odrađenu akciju
+						\item Tragaču se nudi opcija "Komentiraj"
+						\item Tragač piše komentar na akciju
+						\item Tragač sprema ocjenu i komentar
+						
+					\end{packed_enum}
+					
+						\item  \textbf{Opis mogućih odstupanja:}
+					
+					\item[] \begin{packed_item}
+						
+						\item[4.a]Korisnik ne odabire opciju "Spremi"
+						\item[] \begin{packed_enum}
+							
+							\item Sustav obavještava korisnika da nije spremio komentar
+							
+						\end{packed_enum}
+						
+					\end{packed_item}
+				\end{packed_item}
+				
+
+					
+				
+				\noindent \underbar{\textbf{UC19 - Istraživač ostavlja komentar na životinju
+					}}
+				\begin{packed_item}
+					
+					\item \textbf{Glavni sudionik:} Istraživač
+					\item  \textbf{Cilj:} Komentar na životinju
+					\item  \textbf{Sudionici:} Baza podataka
+					\item  \textbf{Preduvjet:} Istraživač je prijavljen
+					\item  \textbf{Opis osnovnog tijeka:}
+					
+					\item[] \begin{packed_enum}
+						
+						\item Istraživaču se pri prikazu karte nudi opcija "Komentiraj"
+					
+						\item Istraživač piše komentar na životinju
+						item Istraživač potvrđuje unešeni komentar
+						
+						
+					\end{packed_enum}
+					
+					\item  \textbf{Opis mogućih odstupanja:}
+				
+				\item[] \begin{packed_item}
+					
+					\item[4.a]Korisnik ne odabire opciju "Spremi"
+					\item[] \begin{packed_enum}
+						
+						\item Sustav obavještava korisnika da nije spremio komentar
+						
+					\end{packed_enum}
+					
+				\end{packed_item}
+						
+				\end{packed_item}
+				
+					
+				
+				
+				\noindent \underbar{\textbf{UC20 - Blježenje staza i kretanja tragača}}
+				\begin{packed_item}
+					
+					\item \textbf{Glavni sudionik:}Tragač
+					\item  \textbf{Cilj:} Bilježenje staza i kretanja tragača
+					\item  \textbf{Sudionici:} Baza podataka
+					\item  \textbf{Preduvjet:} Tragač je prijavljen i koristi gps uređaj
+					\item  \textbf{Opis osnovnog tijeka:}
+					
+					\item[] \begin{packed_enum}
+						
+						\item Tragač ima uključen gps uređaj prilikom obavljanja zadatka
+						\item Gps uređaj odašilje svoju poziciju
+						\item Tragač ima opciju unijeti način kojim se kretao
+						\item Tragač potvrđuje unešeni način
+						
+					\end{packed_enum}
+					
+					\item  \textbf{Opis mogućih odstupanja:}
+					
+					\item[] \begin{packed_item}
+						
+						\item[1.a] Tragač nije uključio gps uređaj
+						\item[] \begin{packed_enum}
+							
+							\item Sustav obavještava tragača da nije uključen gps uređaj
+							
+						\end{packed_enum}
+						
+						\item[2.a] Gps uređaj ne radi
+						\item[] \begin{packed_enum}
+							
+							\item Sustav obavještava tragača da gps uređaj ne radi
+							
+						\end{packed_enum}
+						
+						\item[3.a] Tragač ne potvrđuje unesene podatke
+						\item[] \begin{packed_enum}
+							
+							\item Sustav obavještava korisnika da nije potvrdio podatke prije izlaska iz prozora
+							
+						\end{packed_enum}
+						
+					\end{packed_item}
+					
+				\end{packed_item}
+					
+					
 					
 				\subsubsection{Dijagrami obrazaca uporabe}
 					
