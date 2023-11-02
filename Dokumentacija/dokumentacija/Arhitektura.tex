@@ -250,8 +250,8 @@
 					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
 					\hline \SetCell[c=3]{c}{\textbf{TRACKER\_IN\_ACTION}}	 \\ \hline[3pt]
 					\SetCell{LightGreen}idTracker & INT & ID tragača (TRACKER.id), ujedno i primarni ključ \\ \hline
-					idAction & INT & ID akcije (ACTION.id) \\ \hline
-					typeMedium & VARCHAR & tip (ujedno i ID) sredstva prijevoza (MEDIUM.type) \\ \hline
+					\SetCell{LightBlue}idAction & INT & ID akcije (ACTION.id) \\ \hline
+					\SetCell{LightBlue}typeMedium & VARCHAR & tip (ujedno i ID) sredstva prijevoza (MEDIUM.type) \\ \hline
 				\end{longtblr}
 				
 				\noindent \textbf{TRACKER\_IN\_ACTION\_ARCHIVE} \hspace{1em} Ovaj entitet sadržava sve važne informacije vezane za prošle odnose akcija i tragača, arhiva koja nastaje iz podataka koji migriraju iz tablice TRACKER\_IN\_ACTION kada neki tragač završi svoj posao na nekoj akciji. Sadrži atribute ID tragača, ID akcije te sredstvo prijevoza. Ovaj entitet u vezi je \textit{Many-to-One} s entitetima TRACKER preko ID-a tragača, ACTION preko ID-a akcije, MEDIUM preko tipa sredstva prijevoza.
