@@ -69,7 +69,7 @@
 				\end{longtblr}
 				
 				
-				\noindent \textbf{RESEARCHER} \hspace{1em} Ovaj entitet sadrži dodatne atribute koji opisuju korisnika koji se odlučio za ulogu istraživača u aplikaciji. Povezna je s klasom USER vezom \textit{One-to-One} preko ID ključa. Dodatni atribut nam govori je li korisnik odobren kao istraživač od strane administratora jer je to preduvjet za obavljanje te uloge. U vezi je \textit{One-to-Many} s klasom ACTION (svaki istraživač može organizirati više radnih akcija). S klasom MAP\_COMMENT je indirektno (pomoću USER.id) u vezi \textit{One-to-Many} jer više korisnika može ostaviti komentar na mapi.
+				\noindent \textbf{RESEARCHER} \hspace{1em} Ovaj entitet sadrži dodatni atribut odobrenja koji je potreban korisniku koji se odlučio za ulogu istraživača u aplikaciji. Povezan je s klasom USER vezom \textit{One-to-One} preko ID ključa. Dodatni atribut nam govori je li korisnik odobren kao istraživač od strane administratora jer je to preduvjet za obavljanje te uloge. U vezi je \textit{One-to-Many} s klasom ACTION (svaki istraživač može organizirati više radnih akcija). S klasom MAP\_COMMENT je indirektno (pomoću USER.id) u vezi \textit{One-to-Many} jer više korisnika može ostaviti komentar na mapi.
 				
 				\begin{longtblr}[
 					label=none,
@@ -85,7 +85,7 @@
 				\end{longtblr}				
 				
 				
-				\noindent \textbf{MANAGER} \hspace{1em} Ovaj entitet sadrži dodatne atribute koji opisuju korisnika koji ima ulogu voditelja neke stanice. Moguće je da voditelj vodi samo jednu stanicu i također da jedna stanica ima samo jednog voditelja zato je veza klase STATION i MANAGER \textit{One-to-One}. Dodatni atribut approved  označava je li korisniku odobren zahtjev za ulogu voditelja od strane administratora (isto kao i istraživaču) te atribut idStation koji označava jedinstveni identifikator stanice kojoj je korisnik voditelj.
+				\noindent \textbf{MANAGER} \hspace{1em} Ovaj entitet sadrži dodatne atribute koji opisuju korisnika koji ima ulogu voditelja neke stanice. Moguće je da voditelj vodi samo jednu stanicu i također da jedna stanica ima samo jednog voditelja i zato je veza klase STATION i MANAGER \textit{One-to-One}. Dodatni atribut approved  označava je li korisniku odobren zahtjev za ulogu voditelja od strane administratora (isto kao kod istraživača) te atribut idStation označava jedinstveni identifikator stanice kojoj je korisnik voditelj.
 				
 				
 				\begin{longtblr}[
@@ -103,7 +103,7 @@
 				\end{longtblr}
 				
 				
-				\noindent \textbf{TRACKER} \hspace{1em} Ovaj entitet označava korisnika koji obavlja ulogu tragača. Povezan je vezama \textit{One-to-One} s klasom USER, s klasom TRACKER\_IN\_ACTION, koja označava tragača koji trenutno obavlja zadatke neke akcije i vozilo kojim se koristi, te vezom \textit{Many-to-One} s klasom STATION i vezom \textit{One-to-Many} s klasama TASK, jer jedan tragač može imati više zadatka, klasom TRACKER\_IN\_ACTION\_ARCHIVE koja čuva podatke o tragačima koji su obavljali neke zadatke. Tragač može obavljati zadatke koji su zadani od strane istraživača samo na jednoj stanici, dok stanica može imati više tragača na različitim zadatcima. S klasom ANIMAL\_COMMENT je u vezi \textit{One-to-Many} jer više tragača može ostaviti komentar na nekoj životinji te je također u vezi \textit{One-to-One} s klasom TRACKER\_LOCATION koja služi za čuvanje lokacija tragača.  Također je u vezi \textit{Many-to-Many} s klasom MEDIUM što se razrješava tablicom QUALIFICATION. S klasom MAP\_COMMENT je indirektno (pomoću USER.id) u vezi \textit{One-to-Many} jer više korisnika može ostaviti komentar na mapi.
+				\noindent \textbf{TRACKER} \hspace{1em} Ovaj entitet označava korisnika koji obavlja ulogu tragača. Povezan je vezama \textit{One-to-One} s klasom USER i klasom TRACKER\_IN\_ACTION koja označava tragača koji trenutno obavlja zadatke neke akcije i vozilo kojim se koristi, te vezom \textit{Many-to-One} s klasom STATION i vezom \textit{One-to-Many} s klasom TASK jer jedan tragač može imati više zadataka te klasom TRACKER\_IN\_ACTION\_ARCHIVE koja čuva podatke o tragačima koji su sudjelovali u nekoj akciji. Tragač može obavljati zadatke koji su zadani od strane istraživača samo na jednoj stanici, dok stanica može imati više tragača na različitim zadatcima. S klasom ANIMAL\_COMMENT je u vezi \textit{One-to-Many} jer više tragača može ostaviti komentar na nekoj životinji te je također u vezi \textit{One-to-One} s klasom TRACKER\_LOCATION koja služi za čuvanje lokacija tragača.  Također je u vezi \textit{Many-to-Many} s klasom MEDIUM što se razrješava tablicom QUALIFICATION. S klasom MAP\_COMMENT je indirektno (pomoću USER.id) u vezi \textit{One-to-Many} jer više korisnika može ostaviti komentar na mapi.
 				
 				\begin{longtblr}[
 					label=none,
@@ -118,7 +118,7 @@
 					\SetCell{LightBlue} idStation & INT & jedinstveni identifikator stanice (STATION.id)\\ \hline
 				\end{longtblr}
 				
-				\noindent \textbf{ANIMAL} \hspace{1em} Ovaj entitet predstavlja klasu životinja i sadrži sve atribute koji opisuje neku životinju. Sadrži atribute ID životinje, vrstu životinje, fotografiju životinje, tekst koji opisuje životinju i oznaku koja govori je li postavljen GPS na životinju ili nije. U vezi je \textit{One-to-Many} s klasom  TASK jer na nekom zadatku se može pratiti jedna životinja dok više zadataka može pratiti istu životinju. S klasom ANIMAL\_COMMENT je u vezi \textit{One-to-Many} jer više komentara se može ostaviti za istu životinju. Također je u vezi \textit{One-to-One} s klasom ANIMAL\_LOCATION koja zapisuje trenutnu lokaciju životinje, ali je u vezi \textit{One-to-Many} s klasom ANIMAL\_HISTORY koja sprema podatke o kretanju životinje.
+				\noindent \textbf{ANIMAL} \hspace{1em} Ovaj entitet predstavlja klasu životinja i sadrži sve atribute koji opisuju neku životinju. Sadrži atribute ID životinje, vrstu životinje, fotografiju životinje, tekst koji opisuje životinju i oznaku koja govori je li postavljen GPS na životinju ili nije. U vezi je \textit{One-to-Many} s klasom  TASK jer na nekom zadatku se može pratiti jedna životinja dok više zadataka može pratiti istu životinju. S klasom ANIMAL\_COMMENT je u vezi \textit{One-to-Many} jer više komentara se može ostaviti za istu životinju. Također je u vezi \textit{One-to-One} s klasom ANIMAL\_LOCATION koja zapisuje trenutnu lokaciju životinje, ali je u vezi \textit{One-to-Many} s klasom ANIMAL\_HISTORY koja sprema podatke o kretanju životinje.
 				
 				
 				\begin{longtblr}[
@@ -139,7 +139,7 @@
 				
 				
 				
-				\noindent \textbf{STATION} \hspace{1em} Ovaj entitet predstavlja klasu stanice koja sadrži atribute koje opisuju stanicu; ID stanice, ime stanice te kratki opis stanice. U vezi je \textit{One-to-One} s klasom STATION\_LOCATION, koja sadrži podatke o lokaciji stanice, i s klasom MANAGER, za svaku stanicu zadužen je točno jedan voditelj.
+				\noindent \textbf{STATION} \hspace{1em} Ovaj entitet predstavlja klasu stanice koja sadrži atribute koje opisuju stanicu; ID stanice, ime stanice te kratki opis stanice. U vezi je \textit{One-to-One} s klasom STATION\_LOCATION koja sadrži podatke o lokaciji stanice i s klasom MANAGER jer je za svaku stanicu zadužen je točno jedan voditelj te je u vezi \textit{One-to-Many} s klasom TRACKER jer više tragača može raditi za istu stanicu.
 				
 				\begin{longtblr}[
 					label=none,
