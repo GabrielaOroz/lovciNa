@@ -16,6 +16,75 @@ export default function Register() {
 
   const [showPass, setShowPass] = useState(false);
 
+  const [rightEmail, setRightEmail] = useState(true);
+  const [rightFirstName, setRightFirstName] = useState(true);
+  const [rightLastName, setRightLastName] = useState(true)
+  const [rightPass, setRightPass] = useState(true)
+  const [rightUsername, setRightUsername] = useState(true)
+
+    //////////////validacije inputa. Staviti u zasebnu datoteku!
+    const validateEmail = () => {
+      const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/i //sensitive case email??
+     if (emailRegex.test(email))
+      {
+        setRightEmail(true)
+        return true
+      }else{
+        
+        setRightEmail(false)
+        return false
+      }
+    }
+    const validateFirstName = () => {
+      const nameRegex = /^[a-z ,.'-]+$/i
+      if (nameRegex.test(firstName))
+      {
+        setRightFirstName(true)
+        return true
+      }else{
+        
+        setRightFirstName(false)
+        return false
+      }
+    }
+    const validateLastName = () => {
+      const nameRegex = /^[a-z ,.'-]+$/i
+      if (nameRegex.test(lastName))
+      {
+        setRightLastName(true)
+        return true
+      }else{
+        
+        setRightLastName(false)
+        return false
+      }
+    }
+    const validatePass = () => {
+      const passRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[\w!@#$%^&*]{8,16}$/
+      if (passRegex.test(password))
+      {
+        setRightPass(true)
+        return true
+      }else{
+        
+        setRightPass(false)
+        return false
+      }
+    }
+    const validateUsername = () => {
+      const usernameRegex = /^\w+$/
+      if (usernameRegex.test(username))
+      {
+        setRightUsername(true)
+        return true
+      }else{
+        
+        setRightUsername(false)
+        return false
+      }
+    }
+  /////////////////////////////////////////
+
   const inputRef = useRef(null);
   const handleFileUpload = () => {
     inputRef.current.click();
@@ -29,7 +98,6 @@ export default function Register() {
     setSelectedFile(file);
   }
 
-
   const handleSubmit = () => {
     const formData = new FormData();
     formData.append('file', selectedFile);
@@ -39,6 +107,14 @@ export default function Register() {
     formData.append('username', username);
     formData.append('password', password);
 
+    //za ukloniti validaciju, izbrisati iduce pozive funkcija
+    validateFirstName()
+    validateLastName()
+    validateEmail()
+    validateUsername()
+    validatePass() //dva puta se pozivaju funkcije validacije radi ispravne funkcionalnosti
+    //za ukloniti validaciju, izbrisati ove pozive funkcija u "if" uvjetu
+    if(validateFirstName() && validateLastName() && validateEmail() && validatePass() && validateUsername()) {
     fetch('http://localhost:5173', {
       method: 'POST',
       body: formData,
@@ -46,6 +122,7 @@ export default function Register() {
     .then((res) => res.json())
     .then((data) => console.log(data))
     .catch((err) => console.error(err))
+    }
   }
 
   
@@ -74,8 +151,8 @@ export default function Register() {
           type="text" 
           placeholder="First name" 
           _placeholder={{ color: '#FFFBE0' }} 
-          focusBorderColor="#FFFBE0"
-          borderColor="#FFFBE0"
+          focusBorderColor={rightFirstName ? "#FFFBE0" : "#AA0000"}
+          borderColor={rightFirstName ? "#FFFBE0" : "#FF0000"}
           value={firstName}
           onChange={(e) => setFirstName(e.target.value)}
           id="firstName"
@@ -84,8 +161,8 @@ export default function Register() {
           type="text" 
           placeholder="Last name" 
           _placeholder={{ color: '#FFFBE0' }}
-          focusBorderColor="#FFFBE0"
-          borderColor="#FFFBE0"
+          focusBorderColor={rightFirstName ? "#FFFBE0" : "#AA0000"}
+          borderColor={rightLastName ? "#FFFBE0" : "#FF0000"}
           value={lastName}
           onChange={(e) => setLastName(e.target.value)}
           id="lastName"
@@ -108,18 +185,19 @@ export default function Register() {
           type="email" 
           placeholder="Email adress" 
           _placeholder={{ color: '#FFFBE0' }}
-          focusBorderColor="#FFFBE0"
-          borderColor="#FFFBE0"
+          focusBorderColor={rightEmail ? "#FFFBE0" : "#AA0000"}
+          borderColor={rightEmail ? "#FFFBE0" : "#FF0000"}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           id="email"
         />
+        <Text style={{display: rightEmail ? "none" : "block"}} fontSize="sm" fontWeight="bold" color="#CC0000">Invalid email format</Text>
         <Input 
           type="text" 
           placeholder="Username" 
           _placeholder={{ color: '#FFFBE0' }}
-          focusBorderColor="#FFFBE0"
-          borderColor="#FFFBE0"
+          focusBorderColor={rightUsername ? "#FFFBE0" : "#AA0000"}
+          borderColor={rightUsername ? "#FFFBE0" : "#FF0000"}
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           id="username"
@@ -129,8 +207,8 @@ export default function Register() {
             type={showPass ? 'text' : 'password'} 
             placeholder='Enter password' 
             _placeholder={{ color: '#FFFBE0' }}
-            focusBorderColor="#FFFBE0"
-            borderColor="#FFFBE0"
+            focusBorderColor={rightPass ? "#FFFBE0" : "#AA0000"}
+            borderColor={rightPass ? "#FFFBE0" : "#FF0000"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             id="password"
@@ -141,6 +219,8 @@ export default function Register() {
             </Button>
           </InputRightElement>
         </InputGroup>
+
+        <Text style={{display: rightPass ? "none" : "block"}} fontSize="sm" fontWeight="bold" color="#CC0000">Password must be between 8 and 16 characters and include letters, numbers and special characters</Text>
 
         <Button 
           type="submit" 
