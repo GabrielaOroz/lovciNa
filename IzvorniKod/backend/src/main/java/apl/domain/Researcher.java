@@ -3,6 +3,7 @@ package apl.domain;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import org.jetbrains.annotations.NotNull;
 
 @Entity
 public class Researcher {
@@ -11,6 +12,7 @@ public class Researcher {
     @GeneratedValue
     private Long id;
 
+    @NotNull
     private boolean approved;
 
     public Long getId() {
