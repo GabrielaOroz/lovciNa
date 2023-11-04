@@ -6,8 +6,9 @@ export default function Form({children}) {
             w={{base: "300px", md: "400px", lg: "500px"}}
             marginTop="20px"
             alignSelf="center" 
-            bgGradient="linear(to-t, green.500, green.800)"
-            color="white"
+           // bgGradient="linear(to-t, green.500, green.800)"
+            background="#f9f7e8"
+            color="#174134"
             boxShadow='dark-lg'
         >
             <FormControl display="flex" flexDirection="column" gap="20px">

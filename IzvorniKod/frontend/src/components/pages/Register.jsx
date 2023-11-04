@@ -18,9 +18,10 @@ export default function Register() {
 
   const [rightEmail, setRightEmail] = useState(true);
   const [rightFirstName, setRightFirstName] = useState(true);
-  const [rightLastName, setRightLastName] = useState(true)
-  const [rightPass, setRightPass] = useState(true)
-  const [rightUsername, setRightUsername] = useState(true)
+  const [rightLastName, setRightLastName] = useState(true);
+  const [rightPicture, setRightPicture] = useState(true);
+  const [rightPass, setRightPass] = useState(true);
+  const [rightUsername, setRightUsername] = useState(true);
 
     //////////////validacije inputa. Staviti u zasebnu datoteku!
     const validateEmail = () => {
@@ -83,6 +84,17 @@ export default function Register() {
         return false
       }
     }
+
+    const validatePicture = () => {
+      if(selectedFile == null) 
+      {
+        setRightPicture(false)
+        return false
+      }else {
+        setRightPicture(false)
+        return true
+      }
+    }
   /////////////////////////////////////////
 
   const inputRef = useRef(null);
@@ -114,7 +126,7 @@ export default function Register() {
     validateUsername()
     validatePass() //dva puta se pozivaju funkcije validacije radi ispravne funkcionalnosti
     //za ukloniti validaciju, izbrisati ove pozive funkcija u "if" uvjetu
-    if(validateFirstName() && validateLastName() && validateEmail() && validatePass() && validateUsername()) {
+    if(validateFirstName() && validateLastName() && validateEmail() && validatePass() && validateUsername() && validatePicture()) {
     fetch('http://localhost:5173', {
       method: 'POST',
       body: formData,
@@ -131,15 +143,15 @@ export default function Register() {
       <FormCard>
         <Flex justifyContent="space-around" alignItems="center">
           <Show above='md'>
-            <GiBearFace size="30px" color="#FFFBE0" />
+            <GiBearFace size="30px" color="green.700" />
           </Show>
-          <Text fontSize="lg" color="#FFFBE0">CREATE YOUR ACCOUNT</Text>
+          <Text fontSize="lg" color="#green.700">CREATE YOUR ACCOUNT</Text>
           <Show above='md'>
-            <GiBearFace size="30px" color="#FFFBE0" />
+            <GiBearFace size="30px" color="green.700" />
           </Show>
         </Flex>
         
-        <RadioGroup value={role} onChange={(newValue) => setRole(newValue)} alignSelf="center" color="#FFFBE0">
+        <RadioGroup value={role} onChange={(newValue) => setRole(newValue)} alignSelf="center" color="gree700">
           <Stack direction={['column', 'column', 'column', 'row']} spacing="20px" align="center">
             <Radio colorScheme='green' value="tracker">Tracker</Radio>
             <Radio colorScheme='yellow' value="researcher">Researcher</Radio>
@@ -150,9 +162,9 @@ export default function Register() {
         <Input 
           type="text" 
           placeholder="First name" 
-          _placeholder={{ color: '#FFFBE0' }} 
-          focusBorderColor={rightFirstName ? "#FFFBE0" : "#AA0000"}
-          borderColor={rightFirstName ? "#FFFBE0" : "#FF0000"}
+          _placeholder={{ color: 'green700' }} 
+          focusBorderColor={rightFirstName ? "green700" : "#AA0000"}
+          borderColor={rightFirstName ? "green700" : "#FF0000"}
           value={firstName}
           onChange={(e) => setFirstName(e.target.value)}
           id="firstName"
@@ -160,9 +172,9 @@ export default function Register() {
         <Input 
           type="text" 
           placeholder="Last name" 
-          _placeholder={{ color: '#FFFBE0' }}
-          focusBorderColor={rightFirstName ? "#FFFBE0" : "#AA0000"}
-          borderColor={rightLastName ? "#FFFBE0" : "#FF0000"}
+          _placeholder={{ color: 'green700' }}
+          focusBorderColor={rightFirstName ? "green700" : "#AA0000"}
+          borderColor={rightLastName ? "green700" : "#FF0000"}
           value={lastName}
           onChange={(e) => setLastName(e.target.value)}
           id="lastName"
@@ -175,18 +187,19 @@ export default function Register() {
           onChange={handleFileChange}
           id="file"
         />
-        <Button marginTop="15px" onClick={handleFileUpload} bgColor="#F1EDD4" _hover={{bg:"#FFFBE0"}} border="0">Upload profile picture</Button>
-        <img src={selectedFile && URL.createObjectURL(selectedFile)} color="#FFFBE0" alt={selectedFile ? selectedFile.name : ''} />
+        <Button marginTop="15px" onClick={handleFileUpload} bgColor="#F1EDD4" _hover={{bg:"gree700"}} border="0">Upload profile picture</Button>
+        <img src={selectedFile && URL.createObjectURL(selectedFile)} color="gree700" alt={selectedFile ? selectedFile.name : ''} />
         {selectedFile && (
-          <Button w="200px" alignSelf="center" bgColor="#F1EDD4" _hover={{bg:"#FFFBE0"}} onClick={() => setSelectedFile('')}>Remove picture</Button>
+          <Button w="200px" alignSelf="center" bgColor="#F1EDD4" _hover={{bg:"green700"}} onClick={() => setSelectedFile('')}>Remove picture</Button>
         )}  
+        <Text style={{display: rightPicture ? "none" : "block"}} fontSize="sm" fontWeight="bold" color="#CC0000">Please, upload your profile picture</Text>
 
         <Input 
           type="email" 
           placeholder="Email adress" 
-          _placeholder={{ color: '#FFFBE0' }}
-          focusBorderColor={rightEmail ? "#FFFBE0" : "#AA0000"}
-          borderColor={rightEmail ? "#FFFBE0" : "#FF0000"}
+          _placeholder={{ color: 'green700' }}
+          focusBorderColor={rightEmail ? "green700" : "#AA0000"}
+          borderColor={rightEmail ? "green700" : "#FF0000"}
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           id="email"
@@ -195,9 +208,9 @@ export default function Register() {
         <Input 
           type="text" 
           placeholder="Username" 
-          _placeholder={{ color: '#FFFBE0' }}
-          focusBorderColor={rightUsername ? "#FFFBE0" : "#AA0000"}
-          borderColor={rightUsername ? "#FFFBE0" : "#FF0000"}
+          _placeholder={{ color: 'green700' }}
+          focusBorderColor={rightUsername ? "green700" : "#AA0000"}
+          borderColor={rightUsername ? "green700" : "#FF0000"}
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           id="username"
@@ -206,15 +219,16 @@ export default function Register() {
           <Input 
             type={showPass ? 'text' : 'password'} 
             placeholder='Enter password' 
-            _placeholder={{ color: '#FFFBE0' }}
-            focusBorderColor={rightPass ? "#FFFBE0" : "#AA0000"}
-            borderColor={rightPass ? "#FFFBE0" : "#FF0000"}
+            _placeholder={{ color: 'green.700' }}
+            focusBorderColor={rightPass ? "green.700" : "#AA0000"}
+            borderColor={rightPass ? "green.700" : "#FF0000"}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             id="password"
+            
           />
           <InputRightElement width='4.5rem'>
-            <Button h='1.75rem' size='sm' bgColor="#F1EDD4" _hover={{bg:"#FFFBE0"}} onClick={() => setShowPass(!showPass)}>
+            <Button h='1.75rem' size='sm' bgColor="#F1EDD4" _hover={{bg:"green.700"}} onClick={() => setShowPass(!showPass)}>
               {showPass ? 'Hide' : 'Show'}
             </Button>
           </InputRightElement>
@@ -236,7 +250,7 @@ export default function Register() {
         
         <Text alignSelf="center" color="black">Already have an account?
           <Link to="/login">
-            <Button paddingLeft="5px" variant="unstyled" color="#FFFBE0">Log In</Button>
+            <Button paddingLeft="5px" variant="unstyled" color="green.700">Log In</Button>
           </Link>
         </Text>
         

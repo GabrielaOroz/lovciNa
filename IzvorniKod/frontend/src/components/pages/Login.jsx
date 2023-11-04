@@ -11,6 +11,8 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [missingFieldsError, setMissingFieldsError] = useState('');
+  const [loginError, setLoginError] = useState('');
 
   const handleSubmit = () => {
     const formData = new FormData();
@@ -18,33 +20,49 @@ export default function Login() {
     formData.append('username', username);
     formData.append('password', password);
 
-    fetch('http://localhost:5173', {
+    if (!email || !username || !password) {
+      setMissingFieldsError('Please fill out all the required fields.');
+      return;
+
+    } else {
+      fetch('http://localhost:8000', {
       method: 'POST',
       body: formData,
     })
     .then((res) => res.json())
-    .then((data) => console.log(data))
+    .then((data) => {
+      if (data.isCorrect) {
+        //korisi Redirect
+      } else {
+        setLoginError('Incorrect username or password.');
+      }
+
+    })
     .catch((err) => console.error(err))
+    }
+  
   }
+
+  
 
   return (
     <Base>
       <FormCard>
         <Flex justifyContent="center" gap="10px" alignItems="center">
           <Show above="md">
-            <GiDeerHead size="30px" color="#FFFBE0" />
+            <GiDeerHead size="30px" color="green.700" />
           </Show>
-          <Text fontSize="lg" color="#FFFBE0">Start using Wild Track</Text>
+          <Text fontSize="lg" color="green.700">Start using Wild Track</Text>
           <Show above="md">
-            <GiDeerHead size="30px" color="#FFFBE0" />
+            <GiDeerHead size="30px" color="green.700" />
           </Show>
         </Flex>
         <Input 
           type="email" 
           placeholder="Email adress" 
-          _placeholder={{ color: '#FFFBE0' }}
-          borderColor="#FFFBE0"
-          focusBorderColor="#FFFBE0"
+          _placeholder={{ color: 'green.700' }}
+          borderColor="green.700"
+          focusBorderColor="green.700"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           id="email"
@@ -52,9 +70,9 @@ export default function Login() {
         <Input 
           type="text" 
           placeholder="Username" 
-          _placeholder={{ color: '#FFFBE0' }}
-          borderColor="#FFFBE0"
-          focusBorderColor="#FFFBE0"
+          _placeholder={{ color: 'green.700' }}
+          borderColor="green.700"
+          focusBorderColor="green.700"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           id="username"
@@ -63,19 +81,22 @@ export default function Login() {
           <Input 
             type={showPass ? 'text' : 'password'} 
             placeholder='Enter password' 
-            _placeholder={{ color: '#FFFBE0' }}
-            borderColor="#FFFBE0"
-            focusBorderColor="#FFFBE0"
+            _placeholder={{ color: 'green.700' }}
+            borderColor="green.700"
+            focusBorderColor="green.700"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             id="password"
           />
           <InputRightElement width='4.5rem'>
-            <Button h='1.75rem' size='sm' bgColor="#F1EDD4" _hover={{bg:"#FFFBE0"}} onClick={() => setShowPass(!showPass)}>
+            <Button h='1.75rem' size='sm' bgColor="#F1EDD4" _hover={{bg:"green.700"}} onClick={() => setShowPass(!showPass)}>
               {showPass ? 'Hide' : 'Show'}
             </Button>
           </InputRightElement>
         </InputGroup>
+
+        <Text color="#CC0000">{missingFieldsError}</Text>
+        <Text color="#CC0000">{loginError}</Text>
 
         <Button 
           type="submit" 
@@ -91,7 +112,7 @@ export default function Login() {
         
         <Text alignSelf="center" color="black">Don't have an account?
           <Link to="/register">
-            <Button paddingLeft="5px" variant="unstyled" color="#FFFBE0">Register</Button>
+            <Button paddingLeft="5px" variant="unstyled" color="green.700">Register</Button>
           </Link>
         </Text>
       </FormCard>
