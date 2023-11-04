@@ -257,4 +257,5 @@ export default function Register() {
       </FormCard> 
     </Base>
   )
+  }
 }
