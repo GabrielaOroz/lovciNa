@@ -134,6 +134,7 @@ export default function Register() {
     .then((res) => res.json())
     .then((data) => console.log(data))
     .catch((err) => console.error(err))
+    }
 
   }
 
@@ -257,5 +258,5 @@ export default function Register() {
       </FormCard> 
     </Base>
   )
-  }
+
 }
