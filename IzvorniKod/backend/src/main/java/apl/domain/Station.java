@@ -1,23 +1,21 @@
 package apl.domain;
 
-import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import org.jetbrains.annotations.NotNull;
 
 @Entity
-public class Manager {
+public class Station {
+
     @Id
     @GeneratedValue
     private Long id;
 
     @NotNull
-    private boolean approved;
+    private String name;
 
-    @NotNull
-    @Column(unique = true)
-    private Long stationId;
+    private String description;
 
     public Long getId() {
         return id;
@@ -29,10 +27,10 @@ public class Manager {
 
     @Override
     public String toString() {
-        return "Manager{" +
+        return "Station{" +
                 "id=" + id +
-                ", approved=" + approved +
-                ", stationId=" + stationId +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
                 '}';
     }
 }

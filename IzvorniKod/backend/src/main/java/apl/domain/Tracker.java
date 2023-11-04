@@ -3,6 +3,8 @@ package apl.domain;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import org.jetbrains.annotations.NotNull;
 
 @Entity
 public class Tracker {
@@ -11,7 +13,7 @@ public class Tracker {
     @GeneratedValue
     private Long id;
 
-    @GeneratedValue
+    @NotNull
     private Long stationId;
 
     public Long getId() {
