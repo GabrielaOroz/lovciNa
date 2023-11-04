@@ -6,6 +6,7 @@ import { Link } from "react-router-dom";
 import { GiBearFace } from "react-icons/gi"
 
 export default function Register() {
+
   const [role, setRole] = useState('tracker');
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
@@ -99,29 +100,35 @@ export default function Register() {
   }
 
   const handleSubmit = () => {
-    const formData = new FormData();
-    formData.append('file', selectedFile);
-    formData.append('firstName', firstName);
-    formData.append('lastName', lastName);
-    formData.append('email', email);
-    formData.append('username', username);
-    formData.append('password', password);
+    const isFirstNameValid = validateFirstName();
+    const isLastNameValid = validateLastName();
+    const isEmailValid = validateEmail();
+    const isUsernameValid = validateUsername();
+    const isPasswordValid = validatePass();
 
-    //za ukloniti validaciju, izbrisati iduce pozive funkcija
-    validateFirstName()
-    validateLastName()
-    validateEmail()
-    validateUsername()
-    validatePass() //dva puta se pozivaju funkcije validacije radi ispravne funkcionalnosti
-    //za ukloniti validaciju, izbrisati ove pozive funkcija u "if" uvjetu
-    if(validateFirstName() && validateLastName() && validateEmail() && validatePass() && validateUsername()) {
-    fetch('http://localhost:5173', {
-      method: 'POST',
-      body: formData,
-    })
-    .then((res) => res.json())
-    .then((data) => console.log(data))
-    .catch((err) => console.error(err))
+    if(isFirstNameValid && isLastNameValid && isEmailValid && isUsernameValid && isPasswordValid) {
+      const formData = {
+        username: username,
+        password: password,
+        name: firstName,
+        surname: lastName,
+        email: email,
+        registered: true
+  
+      };
+
+      
+      fetch('http://localhost:8000/users/register', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(formData),
+        mode: "no-cors"
+      })
+      .then((res) => console.log(res))
+      .then((data) => console.log(data))
+      .catch((err) => console.error(err))
     }
   }
 
