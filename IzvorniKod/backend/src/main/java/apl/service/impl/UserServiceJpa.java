@@ -5,14 +5,17 @@ import apl.domain.Manager;
 import apl.domain.Researcher;
 import apl.domain.Tracker;
 import apl.domain.User;
+import apl.domain.ConfirmationToken;
+import apl.service.ConfirmationTokenService;
 import apl.service.RequestDeniedException;
 import apl.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 //ovdje se pišu sve funkcije koje nam trebaju
 
@@ -31,7 +34,10 @@ public class UserServiceJpa implements UserService {
     @Autowired
     private TrackerRepository trackerRepo;
 
-    private BCryptPasswordEncoder bCryptPasswordEncoder;
+    //private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
+    private ConfirmationTokenService confirmationTokenService;
 
 
     @Override
@@ -40,7 +46,7 @@ public class UserServiceJpa implements UserService {
     }
 
     @Override
-    public Boolean createUser(User user) {
+    public String createUser(User user) {
         Assert.notNull(user, "User object must be given");  //moramo dobit objekt, ne možemo u bazu stavit null
         Assert.isNull(user.getId(), "Student ID must be null, not " + user.getId());    //zato što ga mi settiramo autom s generated value
 
@@ -62,11 +68,22 @@ public class UserServiceJpa implements UserService {
         if(user.getRole() == 1){
             researcherRepo.save(new Researcher(user.getId()));
         } else if(user.getRole() == 2){
-            managerRepo.save(new Manager(user.getId(), 25L));
+            managerRepo.save(new Manager(user.getId(), 0L));
         } else {
-            trackerRepo.save(new Tracker(user.getId(), 36L));
+            trackerRepo.save(new Tracker(user.getId(), 0L));
         }
 
-        return true;
+        String token = UUID.randomUUID().toString();
+        ConfirmationToken confirmationToken = new ConfirmationToken(token, LocalDateTime.now(), LocalDateTime.now().plusMinutes(20), user);
+
+        confirmationTokenService.saveConfirmationToken(confirmationToken);
+
+
+        return token;
+    }
+
+    @Override
+    public Boolean logInUser(User user) {
+        return false;
     }
 }
