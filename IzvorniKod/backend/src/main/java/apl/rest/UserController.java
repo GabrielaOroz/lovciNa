@@ -33,15 +33,18 @@ public class UserController {
         return userService.listAll();
     }
 
-    @PostMapping("")    //kad dođe POST zahtjev, napravi sljedeće, zapravo REGISTRIRAJ
-    public User createUser(@RequestBody User user) {    //iz RequestBody-ja čitamo podatke koje nam je korisnik upisao(JSON)
-        return userService.createUser(user);
+    @PostMapping("/register")    //kad dođe POST zahtjev, napravi sljedeće, zapravo REGISTRIRAJ
+    public Boolean createUser(@RequestBody User user) {    //iz RequestBody-ja čitamo podatke koje nam je korisnik upisao(JSON)
+        userService.createUser(user);
+        return true;
     }
 
-    @PostMapping("/register")
-    public ResponseEntity<String> handleData(@RequestBody User data) {
 
-        System.out.println(data.toString());
-        return ResponseEntity.ok("Data received and processed");
-    }
+
+    //@PostMapping("/register")
+    //public ResponseEntity<String> handleData(@RequestBody User data) {
+
+    //    System.out.println(data.toString());
+     //   return ResponseEntity.ok("Data received and processed");
+    //}
 }

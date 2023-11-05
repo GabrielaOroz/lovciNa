@@ -10,5 +10,5 @@ import java.util.List;
 public interface UserService {
     List<User> listAll();
 
-    User createUser(User user);
+    Boolean createUser(User user);
 }

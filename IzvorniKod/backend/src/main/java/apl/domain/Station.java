@@ -7,6 +7,10 @@ import org.jetbrains.annotations.NotNull;
 
 @Entity
 public class Station {
+    public Station(@NotNull String name, String description) {
+        this.name = name;
+        this.description = description;
+    }
 
     @Id
     @GeneratedValue

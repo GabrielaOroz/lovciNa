@@ -8,8 +8,15 @@ import org.jetbrains.annotations.NotNull;
 
 @Entity
 public class Manager {
+    public Manager(Long id, @NotNull Long stationId) {
+        this.id = id;
+        this.stationId = stationId;
+    }
+
+    public Manager() {
+    }
+
     @Id
-    @GeneratedValue
     private Long id;
 
     @NotNull

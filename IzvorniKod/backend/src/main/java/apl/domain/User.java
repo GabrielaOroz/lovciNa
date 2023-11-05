@@ -7,6 +7,8 @@ import org.jetbrains.annotations.NotNull;
 @Entity
 @Table(name = "my_user")
 public class User {
+
+
     @Id
     @GeneratedValue
     private Long id;
@@ -17,7 +19,7 @@ public class User {
     private String username;
 
     @NotNull
-    private Long role;  //1-researcher, 2-manager, 3-tracker
+    private int role;  //1-researcher, 2-manager, 3-tracker
 
     @NotNull
     private String photo;
@@ -36,10 +38,10 @@ public class User {
     private String email;
 
     @NotNull
-    private boolean verified;   //je li potvrdio racun preko maila
+    private boolean registered = false;   //je li potvrdio racun preko maila, prvotno false
 
-    public boolean isVerified() {
-        return verified;
+    public boolean isRegistered() {
+        return registered;
     }
 
     public Long getId() {
@@ -70,12 +72,41 @@ public class User {
         return email;
     }
 
-    public Long getRole() {
+    public int getRole() {
         return role;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public void setRole(int role) {
+        this.role = role;
+    }
+
+    public void setPhoto(String photo) {
+        this.photo = photo;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public void setSurname(String surname) {
+        this.surname = surname;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public void setRegistered(boolean registered) {
+        this.registered = registered;
     }
 
     @Override

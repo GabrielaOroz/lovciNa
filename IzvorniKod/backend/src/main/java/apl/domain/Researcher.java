@@ -7,13 +7,18 @@ import org.jetbrains.annotations.NotNull;
 
 @Entity
 public class Researcher {
+    public Researcher(Long id) {
+        this.id = id;
+    }
+
+    public Researcher() {
+    }
 
     @Id
-    @GeneratedValue
     private Long id;
 
     @NotNull
-    private boolean approved;
+    private boolean approved = false;
 
     public Long getId() {
         return id;

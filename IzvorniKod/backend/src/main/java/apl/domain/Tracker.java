@@ -9,8 +9,15 @@ import org.jetbrains.annotations.NotNull;
 @Entity
 public class Tracker {
 
+    public Tracker(Long id, @NotNull Long stationId) {
+        this.id = id;
+        this.stationId = stationId;
+    }
+
+    public Tracker() {
+    }
+
     @Id
-    @GeneratedValue
     private Long id;
 
     @NotNull
