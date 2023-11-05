@@ -1,4 +1,4 @@
-package apl.domain;
+package apl.token;
 
 import apl.domain.User;
 import jakarta.persistence.*;
@@ -8,13 +8,12 @@ import java.time.LocalDateTime;
 @Entity
 public class ConfirmationToken {
 
-    public ConfirmationToken(String token, LocalDateTime createdAt, LocalDateTime expiredAt, User user) {
+    public ConfirmationToken(String token, LocalDateTime createdAt, LocalDateTime expiresAt, User user) {
         this.token = token;
         this.createdAt = createdAt;
-        this.expiresAt = expiredAt;
+        this.expiresAt = expiresAt;
         this.user = user;
     }
-
 
     public ConfirmationToken() {
     }
@@ -24,6 +23,9 @@ public class ConfirmationToken {
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "token_sequence")
     private Long id;
 
+    @Column(nullable = true)
+    private LocalDateTime confirmedAt;
+
     @Column(nullable = false)
     private String token;
 
@@ -31,8 +33,8 @@ public class ConfirmationToken {
     private LocalDateTime createdAt;
     @Column(nullable = false)
     private LocalDateTime expiresAt;
-    @Column(nullable = false)
-    private LocalDateTime confirmedAt;
+
+
 
     @ManyToOne      //apl ima puno tokena, ali svaki user samo 1
     @JoinColumn(nullable = false, name = "user_id")
@@ -62,12 +64,12 @@ public class ConfirmationToken {
         this.createdAt = createdAt;
     }
 
-    public LocalDateTime getExpiredAt() {
+    public LocalDateTime getExpiresAt() {
         return expiresAt;
     }
 
-    public void setExpiredAt(LocalDateTime expiredAt) {
-        this.expiresAt = expiredAt;
+    public void setExpiresAt(LocalDateTime expiresAt) {
+        this.expiresAt = expiresAt;
     }
 
     public LocalDateTime getConfirmedAt() {
@@ -76,5 +78,13 @@ public class ConfirmationToken {
 
     public void setConfirmedAt(LocalDateTime confirmedAt) {
         this.confirmedAt = confirmedAt;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 }
