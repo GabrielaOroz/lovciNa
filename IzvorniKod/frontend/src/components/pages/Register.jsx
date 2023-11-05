@@ -2,7 +2,7 @@ import { Button, Flex, Input, InputGroup, InputRightElement, Radio, RadioGroup, 
 import Base from "../Base"
 import FormCard from "../FormCard"
 import { useRef, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { GiBearFace } from "react-icons/gi"
 
 export default function Register() {
@@ -23,6 +23,8 @@ export default function Register() {
   const [rightPicture, setRightPicture] = useState(true);
   const [rightPass, setRightPass] = useState(true);
   const [rightUsername, setRightUsername] = useState(true);
+
+  const navigate = useNavigate();
 
     //////////////validacije inputa. Staviti u zasebnu datoteku!
     const validateEmail = () => {
@@ -117,6 +119,7 @@ export default function Register() {
     const isEmailValid = validateEmail();
     const isUsernameValid = validateUsername();
     const isPasswordValid = validatePass();
+    
 
 
     //za ukloniti validaciju, izbrisati iduce pozive funkcija
@@ -127,13 +130,19 @@ export default function Register() {
     validatePass() //dva puta se pozivaju funkcije validacije radi ispravne funkcionalnosti
     //za ukloniti validaciju, izbrisati ove pozive funkcija u "if" uvjetu
     if(validateFirstName() && validateLastName() && validateEmail() && validatePass() && validateUsername() && validatePicture()) {
+    navigate("/confirm") //pozvati tek kad je fetch uspjesan
     fetch('http://localhost:5173', {
       method: 'POST',
       body: formData,
     })
     .then((res) => res.json())
-    .then((data) => console.log(data))
+    .then((data) => {
+      console.log(data)
+      //navigate("/confirm")
+    })
     .catch((err) => console.error(err))
+
+    
     }
 
   }

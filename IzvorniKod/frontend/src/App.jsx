@@ -3,6 +3,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from './components/pages/Home';
 import Login from './components/pages/Login';
 import Register from './components/pages/Register';
+import Confirm from './components/pages/Confirm';
 import Fonts from './styles/Fonts';
 import theme from './styles/theme';
 
@@ -15,6 +16,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/confirm" element={<Confirm />} />
           
         </Routes>
       </BrowserRouter>
