@@ -2,8 +2,14 @@ package apl.domain;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 @Entity
+@Getter
+@Setter
+@ToString
 public class LogInDTO {
 
     @Id
@@ -12,18 +18,4 @@ public class LogInDTO {
 
     public void LogInDto() {
     }
-
-    public String getUsername() {
-        return username;
-    }
-    public void setUsername(String username) {
-        this.username = username;
-    }
-    public String getPassword() {
-        return password;
-    }
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
 }

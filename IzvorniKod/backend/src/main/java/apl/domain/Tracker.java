@@ -4,9 +4,15 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 
 @Entity
+@Getter
+@Setter
+@ToString
 public class Tracker {
 
     public Tracker(Long id, @NotNull Long stationId) {
@@ -22,20 +28,4 @@ public class Tracker {
 
     @NotNull
     private Long stationId;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    @Override
-    public String toString() {
-        return "Tracker{" +
-                "id=" + id +
-                ", stationId=" + stationId +
-                '}';
-    }
 }
