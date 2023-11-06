@@ -6,10 +6,12 @@ import apl.domain.Researcher;
 import apl.domain.Tracker;
 import apl.domain.User;
 import apl.email.EmailSender;
+import apl.email.EmailValidator;
 import apl.token.ConfirmationToken;
 import apl.token.ConfirmationTokenService;
 import apl.service.RequestDeniedException;
 import apl.service.UserService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
@@ -24,6 +26,8 @@ import java.util.UUID;
 @Service
 public class UserServiceJpa implements UserService {
     //Dependency injection
+    @Autowired
+    private EmailValidator emailValidator;
     @Autowired  //kažemo mu da nam automatski "pospaja" sve reference i objekte koje smo mi stvorili
     private UserRepository userRepo;    //varijabla objekta
     @Autowired
@@ -43,8 +47,8 @@ public class UserServiceJpa implements UserService {
     @Autowired
     private EmailSender emailSender;
 
-    @Autowired
-    private UserServiceJpa userService;
+    //@Autowired
+    //private UserServiceJpa userService;
 
 
     @Override
@@ -52,8 +56,17 @@ public class UserServiceJpa implements UserService {
         return userRepo.findAll();      //findAll nadljeduje iz JpaRepository
     }
 
+    public int enableUser(String email) {
+        return userRepo.enableUser(email);
+    }
     @Override
     public String createUser(User user) {
+        boolean isValidEmail = emailValidator.
+                test(user.getEmail());
+
+        if (!isValidEmail) {
+            throw new IllegalStateException("email not valid");
+        }
         Assert.notNull(user, "User object must be given");  //moramo dobit objekt, ne možemo u bazu stavit null
         Assert.isNull(user.getId(), "Student ID must be null, not " + user.getId());    //zato što ga mi settiramo autom s generated value
 
@@ -89,7 +102,7 @@ public class UserServiceJpa implements UserService {
 
         confirmationTokenService.saveConfirmationToken(confirmationToken);
 
-        String link = "http://localhost:8000/register/confirm?token=" + token;
+        String link = "http://localhost:8000/confirm?token=" + token;
         emailSender.send(user.getEmail(), buildEmail(user.getName(), link));
 
         return token;
@@ -100,8 +113,8 @@ public class UserServiceJpa implements UserService {
         return null;
     }
 
-    //@Transactional
-    public Boolean confirmToken(String token) {
+    @Transactional
+    public String confirmToken(String token) {
 
         ConfirmationToken confirmationToken = confirmationTokenService
                 .getToken(token)
@@ -119,10 +132,10 @@ public class UserServiceJpa implements UserService {
         }
 
         confirmationTokenService.setConfirmedAt(token);
-        userService.userRepo.enableUser(
+        enableUser(
                 confirmationToken.getUser().getEmail());
 
-        return true;
+        return "confirmed";
     }
 
 

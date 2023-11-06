@@ -45,6 +45,10 @@ public class UserController {
     }
 
 
+    @GetMapping(path = "/confirm")
+    public String confirm(@RequestParam("token") String token) {
+        return userService.confirmToken(token);
+    }
 
     //@PostMapping("/register")
     //public ResponseEntity<String> handleData(@RequestBody User data) {

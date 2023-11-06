@@ -13,4 +13,6 @@ public interface UserService {
     String createUser(User user);
 
     Boolean logInUser(User user);
+
+    String confirmToken(String token);
 }
