@@ -147,9 +147,10 @@ export default function Register() {
 			}
 
 			//navigate("/confirm"); //pozvati tek kad je fetch uspjesan
-			fetch("http://localhost:8000/auth/register", {
+			fetch("http://localhost:8000/users/register", {
 				method: "POST",
 				body: formData,
+				mode:"no-cors"
 			})
 				.then((res) => res.json())
 				.then((data) => {

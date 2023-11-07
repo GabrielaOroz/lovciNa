@@ -5,6 +5,7 @@ import apl.service.UserService;
 
 import ch.qos.logback.core.net.SyslogOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -13,13 +14,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.multipart.MultipartFile;
 
 
+import java.io.IOException;
 import java.util.List;
 
 //ovdje se definira reakcija app na http zahtjeve
 
-
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController                 //kažemo da je to komponenta koju treba pospojit i to controller
 @RequestMapping("/users")       //svi url koji ovako počinju će se tu ispitati
 public class UserController {
@@ -38,7 +41,34 @@ public class UserController {
     }
 
     @PostMapping("/register")    //kad dođe POST zahtjev, napravi sljedeće, zapravo REGISTRIRAJ
-    public ResponseEntity<String> createUser(@RequestBody User user) {    //iz RequestBody-ja čitamo podatke koje nam je korisnik upisao(JSON)s
+    public ResponseEntity<String> createUser(
+            @RequestParam("role") int role,
+            @RequestParam("firstname") String firstname,
+            @RequestParam("lastname") String lastname ,
+            @RequestParam("selectedFile") MultipartFile selectedFile,
+            @RequestParam("email") String email,
+            @RequestParam("username") String username,
+            @RequestParam("password") String password
+            ) {
+        User user = new User();
+        user.setRole(role);
+        user.setName(firstname);
+        user.setSurname(lastname);
+        user.setEmail(email);
+        user.setUsername(username);
+        user.setPassword(password);
+
+        if (selectedFile != null) {
+            try {
+                user.setPhoto(selectedFile.getBytes());
+                // You can save the profile photo to a file or database here
+            } catch (IOException e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing profile photo");
+            }
+        }
+
+
+
         userService.createUser(user);
         System.out.println("radim novog usera");
         return ResponseEntity.ok("Data received and processed");
