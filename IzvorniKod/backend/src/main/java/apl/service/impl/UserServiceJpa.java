@@ -61,13 +61,13 @@ public class UserServiceJpa implements UserService {
     }
     @Override
     public String createUser(User user) {
-        boolean isValidEmail = emailValidator.
-                test(user.getEmail());
+        //boolean isValidEmail = emailValidator.
+          //      test(user.getEmail());
 
 
-        if (!isValidEmail) {
-            throw new IllegalStateException("email not valid");
-        }
+        //if (!isValidEmail) {
+          //  throw new IllegalStateException("email not valid");
+        //}
         Assert.notNull(user, "User object must be given");  //moramo dobit objekt, ne možemo u bazu stavit null
         Assert.isNull(user.getId(), "Student ID must be null, not " + user.getId());    //zato što ga mi settiramo autom s generated value
 
