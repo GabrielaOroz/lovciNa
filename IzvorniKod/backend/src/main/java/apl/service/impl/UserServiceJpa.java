@@ -13,6 +13,8 @@ import apl.service.RequestDeniedException;
 import apl.service.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -60,7 +62,7 @@ public class UserServiceJpa implements UserService {
         return userRepo.enableUser(email);
     }
     @Override
-    public String createUser(User user) {
+    public ResponseEntity<String> createUser(User user) {
         //boolean isValidEmail = emailValidator.
           //      test(user.getEmail());
 
@@ -106,17 +108,31 @@ public class UserServiceJpa implements UserService {
         String link = "http://localhost:8000/users/confirm?token=" + token;
         emailSender.send(user.getEmail(), buildEmail(user.getName(), link));
 
-        return token;
+        return ResponseEntity.ok("Data received and processed");
     }
 
     @Override
-    public Boolean logInUser(User user) {
-        return null;
+    public ResponseEntity<String> logInUser(User user) {
+        if (userRepo.countByEmail(user.getEmail()) == 0){
+            throw new RequestDeniedException("User with email " + user.getEmail() + "doesn't exist!");
+        }
+        if (userRepo.countByUsername(user.getUsername()) == 0){
+            throw new RequestDeniedException("User with username " + user.getUsername() + "doesn't exist!");
+        }
+        if (userRepo.countByEmail(user.getEmail()) == 0 && userRepo.countByUsername(user.getUsername()) == 0){
+            throw new RequestDeniedException("User with email " + user.getEmail() + " and username " + user.getUsername() + "doesn't exist!");
+        }
+        if (user.isRegistered()) {
+            return ResponseEntity.ok("Data received and processed");
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Please register first!");
+        }
     }
 
     @Transactional
     public String confirmToken(String token) {
-
+        System.out.println("usao sam u confirmToken");
         ConfirmationToken confirmationToken = confirmationTokenService
                 .getToken(token)
                 .orElseThrow(() ->
@@ -131,8 +147,10 @@ public class UserServiceJpa implements UserService {
         if (expiredAt.isBefore(LocalDateTime.now())) {
             throw new IllegalStateException("token expired");
         }
+        System.out.println("usao sam dublje u confirmToken");
 
         confirmationTokenService.setConfirmedAt(token);
+
         enableUser(
                 confirmationToken.getUser().getEmail());
 

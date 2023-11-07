@@ -26,6 +26,7 @@ public class ConfirmationTokenService {
     }
 
     public int setConfirmedAt(String token) {
+        System.out.println("uso sam u setConfirmedAt");
         return confirmationTokenRepository.updateConfirmedAt(
                 token, LocalDateTime.now());
     }
