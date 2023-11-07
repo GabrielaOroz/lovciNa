@@ -29,6 +29,9 @@ export default function Login() {
     } else {
       fetch('http://localhost:8000/auth/login', {
       method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify(data),
     })
     .then((res) => res.json())

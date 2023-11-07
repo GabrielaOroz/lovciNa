@@ -51,6 +51,9 @@ export default function ListOfUsers() {
 
 		fetch("http://localhost:8000/admin/newInfo", {
 			method: "POST",
+			headers: {
+				'Content-Type': 'application/json'
+			  },
 			body: JSON.stringify(newDsata),
 			mode: "no-cors",
 		})

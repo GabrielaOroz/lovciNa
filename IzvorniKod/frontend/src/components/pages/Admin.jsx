@@ -20,6 +20,9 @@ export default function Admin() {
 		console.log(data);
 		fetch("http://localhost:8000/auth/admin", {
 			method: "POST",
+			headers: {
+				'Content-Type': 'application/json'
+			  },
 			body: JSON.stringify(data),
 		})
 			.then((res) => res.json())
