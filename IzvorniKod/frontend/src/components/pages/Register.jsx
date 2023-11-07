@@ -134,18 +134,17 @@ export default function Register() {
 			validateUsername() &&
 			validatePicture()
 		) {
-
-      const formData = new FormData();
-      formData.append('role', role);
-      formData.append('firstName', firstName);
-      formData.append('lastName', lastName);
-      formData.append('selectedFile', selectedFile);
-      formData.append('email', email);
-      formData.append('username', username);
-      formData.append('password', password);
-      for (const entry of formData.entries()) {
-        console.log(entry[0] + ':', entry[1]);
-    }
+			const formData = new FormData();
+			formData.append("role", role);
+			formData.append("firstName", firstName);
+			formData.append("lastName", lastName);
+			formData.append("selectedFile", selectedFile);
+			formData.append("email", email);
+			formData.append("username", username);
+			formData.append("password", password);
+			for (const entry of formData.entries()) {
+				console.log(entry[0] + ":", entry[1]);
+			}
 
 			//navigate("/confirm"); //pozvati tek kad je fetch uspjesan
 			fetch("http://localhost:8000/auth/register", {
@@ -155,7 +154,7 @@ export default function Register() {
 				.then((res) => res.json())
 				.then((data) => {
 					console.log(data);
-					navigate("/confirm")
+					navigate("/confirm");
 				})
 				.catch((err) => console.error(err));
 		}
