@@ -26,7 +26,7 @@ import java.util.UUID;
 @Service
 public class UserServiceJpa implements UserService {
     //Dependency injection
-    @Autowired
+    //@Autowired
     private EmailValidator emailValidator;
     @Autowired  //kažemo mu da nam automatski "pospaja" sve reference i objekte koje smo mi stvorili
     private UserRepository userRepo;    //varijabla objekta
@@ -41,10 +41,10 @@ public class UserServiceJpa implements UserService {
 
     //private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    @Autowired
+    //@Autowired
     private ConfirmationTokenService confirmationTokenService;
 
-    @Autowired
+    //@Autowired
     private EmailSender emailSender;
 
     //@Autowired
@@ -63,6 +63,7 @@ public class UserServiceJpa implements UserService {
     public String createUser(User user) {
         boolean isValidEmail = emailValidator.
                 test(user.getEmail());
+
 
         if (!isValidEmail) {
             throw new IllegalStateException("email not valid");
@@ -102,7 +103,7 @@ public class UserServiceJpa implements UserService {
 
         confirmationTokenService.saveConfirmationToken(confirmationToken);
 
-        String link = "http://localhost:8000/confirm?token=" + token;
+        String link = "http://localhost:8000/users/confirm?token=" + token;
         emailSender.send(user.getEmail(), buildEmail(user.getName(), link));
 
         return token;
