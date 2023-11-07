@@ -18,6 +18,7 @@ public class ConfirmationTokenService {
     private final ConfirmationTokenRepository confirmationTokenRepository;
 
     public void saveConfirmationToken(ConfirmationToken token){
+        System.out.println("usao u save conf token");
         confirmationTokenRepository.save(token);
     }
 
@@ -26,6 +27,9 @@ public class ConfirmationTokenService {
     }
 
     public int setConfirmedAt(String token) {
+
+        System.out.println("uso sam u setConfirmedAt");
+
         return confirmationTokenRepository.updateConfirmedAt(
                 token, LocalDateTime.now());
     }

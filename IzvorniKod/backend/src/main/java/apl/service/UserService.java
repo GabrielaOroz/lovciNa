@@ -1,6 +1,7 @@
 package apl.service;
 
 import apl.domain.User;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -10,9 +11,9 @@ import java.util.List;
 public interface UserService {
     List<User> listAll();
 
-    String createUser(User user);
+    ResponseEntity<String> createUser(User user);
 
-    Boolean logInUser(User user);
+    ResponseEntity<String> logInUser(User user);
 
     String confirmToken(String token);
 }

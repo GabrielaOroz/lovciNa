@@ -3,7 +3,9 @@ package apl.rest;
 import apl.domain.User;
 import apl.service.UserService;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +21,7 @@ import java.util.List;
 
 
 @RestController                 //kažemo da je to komponenta koju treba pospojit i to controller
-//@RequestMapping("/users")       //svi url koji ovako počinju će se tu ispitati
+@RequestMapping("/users")       //svi url koji ovako počinju će se tu ispitati
 public class UserController {
 
     @Autowired
@@ -36,21 +38,24 @@ public class UserController {
     }
 
     @PostMapping("/register")    //kad dođe POST zahtjev, napravi sljedeće, zapravo REGISTRIRAJ
-    public Boolean createUser(@RequestBody User user) {    //iz RequestBody-ja čitamo podatke koje nam je korisnik upisao(JSON)
-        System.out.println("dosao sam tu1");
+    public ResponseEntity<String> createUser(@RequestBody User user) {    //iz RequestBody-ja čitamo podatke koje nam je korisnik upisao(JSON)s
         userService.createUser(user);
-        System.out.println("dosao sam tu");
-        return true;
+        System.out.println("radim novog usera");
+        return ResponseEntity.ok("Data received and processed");
     }
 
-    @RequestMapping("/login")       //post, get ?
-    public Boolean logInUser(@RequestBody User user){
-        return false;
+    @PostMapping("/login")       //post, get ?
+    public ResponseEntity<String> logInUser(@RequestBody User user){
+        userService.logInUser(user);
+        return ResponseEntity.ok("Data received and processed");
     }
 
 
     @GetMapping(path = "/confirm")
     public String confirm(@RequestParam("token") String token) {
+
+        System.out.println("confirmam preko maila");
+
         return userService.confirmToken(token);
     }
 

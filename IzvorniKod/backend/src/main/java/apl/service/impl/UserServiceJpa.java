@@ -13,6 +13,8 @@ import apl.service.RequestDeniedException;
 import apl.service.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
@@ -41,10 +43,10 @@ public class UserServiceJpa implements UserService {
 
     //private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    //@Autowired
+    @Autowired
     private ConfirmationTokenService confirmationTokenService;
 
-    //@Autowired
+    @Autowired
     private EmailSender emailSender;
 
     //@Autowired
@@ -60,14 +62,14 @@ public class UserServiceJpa implements UserService {
         return userRepo.enableUser(email);
     }
     @Override
-    public String createUser(User user) {
-        boolean isValidEmail = emailValidator.
-                test(user.getEmail());
+    public ResponseEntity<String> createUser(User user) {
+        //boolean isValidEmail = emailValidator.
+          //      test(user.getEmail());
 
 
-        if (!isValidEmail) {
-            throw new IllegalStateException("email not valid");
-        }
+        //if (!isValidEmail) {
+          //  throw new IllegalStateException("email not valid");
+        //}
         Assert.notNull(user, "User object must be given");  //moramo dobit objekt, ne možemo u bazu stavit null
         Assert.isNull(user.getId(), "Student ID must be null, not " + user.getId());    //zato što ga mi settiramo autom s generated value
 
@@ -106,17 +108,31 @@ public class UserServiceJpa implements UserService {
         String link = "http://localhost:8000/users/confirm?token=" + token;
         emailSender.send(user.getEmail(), buildEmail(user.getName(), link));
 
-        return token;
+        return ResponseEntity.ok("Data received and processed");
     }
 
     @Override
-    public Boolean logInUser(User user) {
-        return null;
+    public ResponseEntity<String> logInUser(User user) {
+        if (userRepo.countByEmail(user.getEmail()) == 0){
+            throw new RequestDeniedException("User with email " + user.getEmail() + "doesn't exist!");
+        }
+        if (userRepo.countByUsername(user.getUsername()) == 0){
+            throw new RequestDeniedException("User with username " + user.getUsername() + "doesn't exist!");
+        }
+        if (userRepo.countByEmail(user.getEmail()) == 0 && userRepo.countByUsername(user.getUsername()) == 0){
+            throw new RequestDeniedException("User with email " + user.getEmail() + " and username " + user.getUsername() + "doesn't exist!");
+        }
+        if (user.isRegistered()) {
+            return ResponseEntity.ok("Data received and processed");
+        }
+        else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Please register first!");
+        }
     }
 
     @Transactional
     public String confirmToken(String token) {
-
+        System.out.println("usao sam u confirmToken");
         ConfirmationToken confirmationToken = confirmationTokenService
                 .getToken(token)
                 .orElseThrow(() ->
@@ -131,10 +147,12 @@ public class UserServiceJpa implements UserService {
         if (expiredAt.isBefore(LocalDateTime.now())) {
             throw new IllegalStateException("token expired");
         }
+        System.out.println("usao sam dublje u confirmToken");
 
         confirmationTokenService.setConfirmedAt(token);
-        enableUser(
-                confirmationToken.getUser().getEmail());
+
+
+        enableUser(confirmationToken.getUser().getEmail());
 
         return "confirmed";
     }
@@ -196,7 +214,7 @@ public class UserServiceJpa implements UserService {
                 "      <td width=\"10\" valign=\"middle\"><br></td>\n" +
                 "      <td style=\"font-family:Helvetica,Arial,sans-serif;font-size:19px;line-height:1.315789474;max-width:560px\">\n" +
                 "        \n" +
-                "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi " + name + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Thank you for registering. Please click on the below link to activate your account: </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\"" + link + "\">Activate Now</a> </p></blockquote>\n Link will expire in 15 minutes. <p>See you soon</p>" +
+                "            <p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\">Hi " + name + ",</p><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> Thank you for registering. Please click on the below link to activate your account: </p><blockquote style=\"Margin:0 0 20px 0;border-left:10px solid #b1b4b6;padding:15px 0 0.1px 15px;font-size:19px;line-height:25px\"><p style=\"Margin:0 0 20px 0;font-size:19px;line-height:25px;color:#0b0c0c\"> <a href=\"" + link + "\">Activate Now</a> </p></blockquote>\n Link will expire in 20 minutes. <p>See you soon</p>" +
                 "        \n" +
                 "      </td>\n" +
                 "      <td width=\"10\" valign=\"middle\"><br></td>\n" +
