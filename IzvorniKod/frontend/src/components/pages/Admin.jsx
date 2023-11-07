@@ -14,9 +14,13 @@ export default function Admin() {
 	const [showPass, setShowPass] = useState(false);
 
 	const handleSubmit = () => {
+		const data = {
+			password
+		}
+		console.log(data);
 		fetch("http://localhost:8000/auth/admin", {
 			method: "POST",
-			body: password,
+			body: JSON.stringify(data),
 		})
 			.then((res) => res.json())
 			.then((data) => {
