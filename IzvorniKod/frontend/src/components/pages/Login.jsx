@@ -2,7 +2,7 @@ import { Button, Flex, Input, InputGroup, InputRightElement, Show, Text } from "
 import Base from '../Base';
 import FormCard from '../FormCard';
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { GiDeerHead } from "react-icons/gi"
 
 export default function Login() {
@@ -13,6 +13,8 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [missingFieldsError, setMissingFieldsError] = useState('');
   const [loginError, setLoginError] = useState('');
+
+  const navigate = useNavigate()
 
   const handleSubmit = () => {
     const formData = new FormData();
@@ -25,6 +27,7 @@ export default function Login() {
       return;
 
     } else {
+      navigate("/start");
       fetch('http://localhost:8000', {
       method: 'POST',
       body: formData,

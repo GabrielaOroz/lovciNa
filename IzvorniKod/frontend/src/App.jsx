@@ -6,6 +6,7 @@ import Register from './components/pages/Register';
 import Confirm from './components/pages/Confirm';
 import Admin from './components/pages/Admin';
 import ListOfUsers from './components/pages/ListOfUsers';
+import Start from './components/pages/Start';
 import Fonts from './styles/Fonts';
 import theme from './styles/theme';
 
@@ -21,6 +22,7 @@ export default function App() {
           <Route path="/confirm" element={<Confirm />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/admin-listOfUsers" element={<ListOfUsers />} />
+          <Route path="/start" element={<Start />} />
           
         </Routes>
       </BrowserRouter>
