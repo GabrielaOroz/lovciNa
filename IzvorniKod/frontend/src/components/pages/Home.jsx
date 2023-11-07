@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 
 export default function Home() {
   return (
-    <Base>
+    <Base >
       <Flex alignSelf="center" gap="50px" marginBottom="30px">
         <Link to="/login">
           <Button shadow='dark-lg' size="lg" colorScheme="green">Log In</Button>

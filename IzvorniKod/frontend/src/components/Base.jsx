@@ -9,7 +9,7 @@ export default function Base({children}) {
             minH="100vh"
             display="flex"
             flexDirection="column"
-            //justifyContent="space-around"
+            justifyContent="space-between"
             padding="50px"
         >
             <Flex textAlign="center" flexDirection="column" gap="10px">
