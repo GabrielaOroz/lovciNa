@@ -41,10 +41,10 @@ public class UserServiceJpa implements UserService {
 
     //private BCryptPasswordEncoder bCryptPasswordEncoder;
 
-    //@Autowired
+    @Autowired
     private ConfirmationTokenService confirmationTokenService;
 
-    //@Autowired
+    @Autowired
     private EmailSender emailSender;
 
     //@Autowired
