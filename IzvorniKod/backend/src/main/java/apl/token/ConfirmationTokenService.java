@@ -18,6 +18,7 @@ public class ConfirmationTokenService {
     private final ConfirmationTokenRepository confirmationTokenRepository;
 
     public void saveConfirmationToken(ConfirmationToken token){
+        System.out.println("usao u save conf token");
         confirmationTokenRepository.save(token);
     }
 

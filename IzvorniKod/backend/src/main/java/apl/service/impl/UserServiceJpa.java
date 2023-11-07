@@ -105,7 +105,7 @@ public class UserServiceJpa implements UserService {
 
         confirmationTokenService.saveConfirmationToken(confirmationToken);
 
-        String link = "http://localhost:8000/confirm?token=" + token;
+        String link = "http://localhost:8000/users/confirm?token=" + token;
         emailSender.send(user.getEmail(), buildEmail(user.getName(), link));
 
         return ResponseEntity.ok("Data received and processed");
