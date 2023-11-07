@@ -51,9 +51,11 @@ public class UserController {
     }
 
 
-    @GetMapping(path = "/confirm")
+    @PutMapping(path = "/confirm")
     public String confirm(@RequestParam("token") String token) {
+
         System.out.println("confirmam preko maila");
+
         return userService.confirmToken(token);
     }
 
