@@ -37,9 +37,7 @@ public class UserController {
 
     @PostMapping("/register")    //kad dođe POST zahtjev, napravi sljedeće, zapravo REGISTRIRAJ
     public Boolean createUser(@RequestBody User user) {    //iz RequestBody-ja čitamo podatke koje nam je korisnik upisao(JSON)
-        System.out.println("dosao sam tu1");
         userService.createUser(user);
-        System.out.println("dosao sam tu");
         return true;
     }
 
