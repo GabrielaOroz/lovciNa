@@ -1,10 +1,7 @@
 package apl.service.impl;
 
 import apl.dao.*;
-import apl.domain.Manager;
-import apl.domain.Researcher;
-import apl.domain.Tracker;
-import apl.domain.User;
+import apl.domain.*;
 import apl.email.EmailSender;
 import apl.email.EmailValidator;
 import apl.token.ConfirmationToken;
@@ -105,14 +102,18 @@ public class UserServiceJpa implements UserService {
 
         confirmationTokenService.saveConfirmationToken(confirmationToken);
 
-        String link = "http://localhost:8000/users/confirm?token=" + token;
+        String link = "http://localhost:8000/auth/confirm?token=" + token;
         emailSender.send(user.getEmail(), buildEmail(user.getName(), link));
 
         return ResponseEntity.ok("Data received and processed");
     }
 
     @Override
-    public ResponseEntity<String> logInUser(User user) {
+    public ResponseEntity<String> logInUser(LogInDTO loginuser) {
+        User user = new User();
+        user.setUsername(loginuser.getUsername());
+        user.setPassword(loginuser.getPassword());
+        user.setEmail(loginuser.getEmail());
         if (userRepo.countByEmail(user.getEmail()) == 0){
             throw new RequestDeniedException("User with email " + user.getEmail() + "doesn't exist!");
         }
@@ -132,7 +133,6 @@ public class UserServiceJpa implements UserService {
 
     @Transactional
     public String confirmToken(String token) {
-        System.out.println("usao sam u confirmToken");
         ConfirmationToken confirmationToken = confirmationTokenService
                 .getToken(token)
                 .orElseThrow(() ->
@@ -147,7 +147,6 @@ public class UserServiceJpa implements UserService {
         if (expiredAt.isBefore(LocalDateTime.now())) {
             throw new IllegalStateException("token expired");
         }
-        System.out.println("usao sam dublje u confirmToken");
 
         confirmationTokenService.setConfirmedAt(token);
 

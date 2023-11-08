@@ -1,9 +1,9 @@
-package apl.rest;
+package apl.restController;
 
+import apl.domain.LogInDTO;
 import apl.domain.User;
 import apl.service.UserService;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -24,7 +24,7 @@ import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController                 //kažemo da je to komponenta koju treba pospojit i to controller
-@RequestMapping("/users")       //svi url koji ovako počinju će se tu ispitati
+@RequestMapping("/auth")       //svi url koji ovako počinju će se tu ispitati
 public class UserController {
 
     @Autowired
@@ -70,12 +70,12 @@ public class UserController {
 
 
         userService.createUser(user);
-        System.out.println("radim novog usera");
+        System.out.println("registrirao novog usera");
         return ResponseEntity.ok("Data received and processed");
     }
 
     @PostMapping("/login")       //post, get ?
-    public ResponseEntity<String> logInUser(@RequestBody User user){
+    public ResponseEntity<String> logInUser(@RequestBody LogInDTO user){
         userService.logInUser(user);
         return ResponseEntity.ok("Data received and processed");
     }
