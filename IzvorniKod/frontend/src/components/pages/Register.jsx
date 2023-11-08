@@ -93,7 +93,7 @@ export default function Register() {
 			setRightPicture(false);
 			return false;
 		} else {
-			setRightPicture(false);
+			setRightPicture(true);
 			return true;
 		}
 	};
@@ -113,17 +113,13 @@ export default function Register() {
 	};
 
 	const handleSubmit = () => {
-		const isFirstNameValid = validateFirstName();
-		const isLastNameValid = validateLastName();
-		const isEmailValid = validateEmail();
-		const isUsernameValid = validateUsername();
-		const isPasswordValid = validatePass();
 
 		//za ukloniti validaciju, izbrisati iduce pozive funkcija
 		validateFirstName();
 		validateLastName();
 		validateEmail();
 		validateUsername();
+		validatePicture()
 		validatePass(); //dva puta se pozivaju funkcije validacije radi ispravne funkcionalnosti
 		//za ukloniti validaciju, izbrisati ove pozive funkcija u "if" uvjetu
 		if (
