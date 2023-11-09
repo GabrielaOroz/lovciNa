@@ -42,6 +42,7 @@ public class User {
     @NotNull
     private String role;  //1-researcher, 2-manager, 3-tracker
 
+    @Lob
     private byte[] photo;
 
     @NotNull

@@ -4,6 +4,7 @@ import apl.domain.LogInDTO;
 import apl.domain.User;
 import apl.service.UserService;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 import java.io.IOException;
@@ -80,10 +82,17 @@ public class UserController {
 
 
     @GetMapping(path = "/confirm")
-    public String confirm(@RequestParam("token") String token) {
+    public void confirm(@RequestParam("token") String token, HttpServletResponse response, RedirectAttributes redirectAttributes) {
+        // Call the confirmToken method from your userService
+        String result = userService.confirmToken(token);
 
-        System.out.println("confirmam preko maila");
+        // Add flash attribute
+        redirectAttributes.addFlashAttribute("confirmationMessage", result);
 
-        return userService.confirmToken(token);
+        // Set status to HTTP 302
+        response.setStatus(HttpServletResponse.SC_FOUND);
+
+        // Set location header directly
+        response.setHeader("Location", "http://localhost:5173/login");
     }
 }
