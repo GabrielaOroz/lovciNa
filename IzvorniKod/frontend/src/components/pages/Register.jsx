@@ -145,12 +145,10 @@ export default function Register() {
 			//navigate("/confirm"); //pozvati tek kad je fetch uspjesan
 			fetch("http://localhost:8000/auth/register", {
 				method: "POST",
-				body: formData,
-				mode: "no-cors"
+				body: formData
 			})
-				.then((res) => res.json())
+				.then((res) => console.log(res))
 				.then((data) => {
-					console.log(data);
 					navigate("/confirm");
 				})
 				.catch((err) => console.error(err));

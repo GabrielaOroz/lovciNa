@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -60,6 +61,7 @@ public class UserServiceJpa implements UserService {
     }
     @Override
     public ResponseEntity<String> createUser(User user) {
+        System.out.println("usao sam u createUser");
         //boolean isValidEmail = emailValidator.
           //      test(user.getEmail());
 
@@ -85,9 +87,9 @@ public class UserServiceJpa implements UserService {
 
         userRepo.save(user);
 
-        if(user.getRole() == 1){
+        if(user.getRole().equals("researcher")){
             researcherRepo.save(new Researcher(user.getId()));
-        } else if(user.getRole() == 2){
+        } else if(user.getRole().equals("manager")){
             managerRepo.save(new Manager(user.getId(), 0L));
         } else {
             trackerRepo.save(new Tracker(user.getId(), 0L));

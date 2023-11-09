@@ -20,7 +20,7 @@ public class User {
     public User() {
     }
 
-    public User(@NotNull String username, int role, byte[] photo, @NotNull String password, @NotNull String name, @NotNull String surname, @NotNull String email) {
+    public User(@NotNull String username, String role, byte[] photo, @NotNull String password, @NotNull String name, @NotNull String surname, @NotNull String email) {
         this.username = username;
         this.role = role;
         this.photo = photo;
@@ -39,7 +39,8 @@ public class User {
     //@Pattern(regexp = "^[a-zA-Z0-9]+([._]?[a-zA-Z0-9]+)*$", message="")
     private String username;
 
-    private int role;  //1-researcher, 2-manager, 3-tracker
+    @NotNull
+    private String role;  //1-researcher, 2-manager, 3-tracker
 
     private byte[] photo;
 

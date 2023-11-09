@@ -42,10 +42,10 @@ public class UserController {
 
     @PostMapping("/register")    //kad dođe POST zahtjev, napravi sljedeće, zapravo REGISTRIRAJ
     public ResponseEntity<String> createUser(
-            @RequestParam("role") int role,
-            @RequestParam("firstname") String firstname,
-            @RequestParam("lastname") String lastname ,
-            @RequestParam("selectedFile") MultipartFile selectedFile,
+            @RequestParam("role") String role,
+            @RequestParam("firstName") String firstname,
+            @RequestParam("lastName") String lastname ,
+            @RequestPart("selectedFile") MultipartFile selectedFile,
             @RequestParam("email") String email,
             @RequestParam("username") String username,
             @RequestParam("password") String password
@@ -67,8 +67,6 @@ public class UserController {
             }
         }
 
-
-
         userService.createUser(user);
         System.out.println("registrirao novog usera");
         return ResponseEntity.ok("Data received and processed");
@@ -88,11 +86,4 @@ public class UserController {
 
         return userService.confirmToken(token);
     }
-
-    //@PostMapping("/register")
-    //public ResponseEntity<String> handleData(@RequestBody User data) {
-
-    //    System.out.println(data.toString());
-     //   return ResponseEntity.ok("Data received and processed");
-    //}
 }
