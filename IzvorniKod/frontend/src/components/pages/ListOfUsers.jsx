@@ -2,6 +2,7 @@ import {
 	Box,
 	Button,
 	Card,
+	Image,
 	Input,
 	Modal,
 	ModalBody,
@@ -13,15 +14,16 @@ import {
 	Text,
 	useDisclosure,
 } from "@chakra-ui/react";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function ListOfUsers() {
-	const [registeredUsers, setRegisteredUsers] = useState('');
+	const [registeredUsers, setRegisteredUsers] = useState("");
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
 	const [username, setUsername] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [selectedFile, setSelectedFile] = useState("");
 
 	const changeFirstName = (e) => {
 		setFirstName(e.target.value);
@@ -39,6 +41,19 @@ export default function ListOfUsers() {
 		setPassword(e.target.value);
 	};
 
+	const inputRef = useRef(null);
+	const handleFileUpload = () => {
+		inputRef.current.click();
+	};
+	const handleFileChange = (e) => {
+		const file = e.target.files[0];
+		if (!file) {
+			return;
+		}
+		e.target.value = "";
+		setSelectedFile(file);
+	};
+
 	const handleSubmit = () => {
 		const newData = {
 			firstName,
@@ -46,70 +61,40 @@ export default function ListOfUsers() {
 			username,
 			email,
 			password,
+			selectedFile,
 		};
 		console.log(newData);
 
 		fetch("http://localhost:8000/admin/newInfo", {
 			method: "POST",
 			headers: {
-				'Content-Type': 'application/json'
-			  },
-			body: JSON.stringify(newDsata),
-			mode: "no-cors",
+				"Content-Type": "application/json",
+			},
+			body: JSON.stringify(newData),
 		})
-			.then((res) => res.json())
+			.then((res) => console.log(res))
 			.then((data) => {
 				console.log(data);
-				navigate("/confirm");
+				navigate("/admin-listOfUsers");
 			})
 			.catch((err) => console.error(err));
 	};
 
-  /*
-	const fakeData = [
-		{
-			id: 1,
-			role: "Tracker",
-			firstName: "John",
-			lastName: "Doe",
-			email: "johndoe@email.com",
-			username: "johndoe123",
-			password: "jdP!ssw0rd",
-		},
-		{
-			id: 2,
-			role: "Researcher",
-			firstName: "Alice",
-			lastName: "Johnson",
-			email: "alicejohnson@email.com",
-			username: "alicej",
-			password: "Alic3P!ss",
-		},
-		{
-			id: 3,
-			role: "Manager",
-			firstName: "Michael",
-			lastName: "Smith",
-			email: "michaelsmith@email.com",
-			username: "mikesmith",
-			password: "SmithyP!55",
-		},
-	];*/
-
+	
+	
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
-	/*
 	useEffect(() => {
 		fetch("http://localhost:8000/admin/registeredUsers", {
 			method: "GET",
 		})
-			.then((res) => res.json())
+			.then((res) => console.log(res))
 			.then((data) => {
-				console.log("Received data:", data);
-				setRegisteredUsers(data);
+				console.log(data);
+				setRegisteredUsers(JSON.parse(data));
 			})
 			.catch((err) => console.error(err));
-	}, []);*/
+	}, []);
 
 	return (
 		<Box
@@ -132,7 +117,7 @@ export default function ListOfUsers() {
 				<Text fontSize="2xl">REGISTERED USERS:</Text>
 				{!registeredUsers && (
 					<Text>There are no registered users.</Text>
-        )}
+				)}
 				{registeredUsers && (
 					<>
 						{registeredUsers.map((user) => (
@@ -147,6 +132,7 @@ export default function ListOfUsers() {
 										setUsername(user.username);
 										setEmail(user.email);
 										setPassword(user.password);
+										setSelectedFile(user.selectedFile);
 									}}
 									p="10px"
 								>
@@ -187,6 +173,37 @@ export default function ListOfUsers() {
 												defaultValue={password}
 												onChange={changePassword}
 												placeholder="Password"
+											/>
+
+											<Input
+												style={{ display: "none" }}
+												type="file"
+												ref={inputRef}
+												onChange={handleFileChange}
+												id="file"
+											/>
+											<Button
+												marginBottom="10px"
+												onClick={handleFileUpload}
+												bgColor="#F1EDD4"
+												_hover={{ bg: "gree700" }}
+												border="0"
+											>
+												Upload profile picture
+											</Button>
+											<Image
+												src={
+													selectedFile &&
+													URL.createObjectURL(
+														selectedFile
+													)
+												}
+												color="gree700"
+												alt={
+													selectedFile
+														? selectedFile.name
+														: ""
+												}
 											/>
 										</ModalBody>
 										<ModalFooter>
