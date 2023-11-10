@@ -139,29 +139,18 @@ public class UserServiceJpa implements UserService {
         User user = new User();
         user.setUsername(loginuser.getUsername());
         user.setPassword(loginuser.getPassword());
-        user.setEmail(loginuser.getEmail());
-        System.out.println(loginuser.toString());
-        if (userRepo.countByEmail(user.getEmail()) == 0){
-            System.out.println("ne postoji user1");
-            return -1;
-        }
+
         if (userRepo.countByUsername(user.getUsername()) == 0){
             System.out.println("ne postoji user2");
             return -1;
         }
-        if (userRepo.countByEmail(user.getEmail()) == 0 && userRepo.countByUsername(user.getUsername()) == 0){
-            System.out.println("ne postoji user3");
-            return -1;
-        }
+
         User user1=userRepo.findByUsername(user.getUsername()).orElse(null);
-
-
 
         if (!(user1.isRegistered())) {
             System.out.println("nije potvrđen");
             return -2;
         }
-
 
         if(!(user1.getPassword().equals(user.getPassword()))) {
             System.out.println("krivi password");
