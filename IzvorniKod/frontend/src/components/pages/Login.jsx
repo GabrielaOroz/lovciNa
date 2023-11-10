@@ -7,25 +7,22 @@ import { GiDeerHead } from "react-icons/gi"
 
 export default function Login() {
   const [showPass, setShowPass] = useState(false);
-
-  const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [missingFieldsError, setMissingFieldsError] = useState('');
-  const [loginError, setLoginError] = useState('');
+  const [Error, setError] = useState('');
+  //const [loginError, setLoginError] = useState('');
 
   const navigate = useNavigate();
 
   const handleSubmit = () => {
     const data = {
-      email,
       username,
 			password
 		}
     console.log(data);
 
-    if (!email || !username || !password) {
-      setMissingFieldsError('Please fill out all the required fields.');
+    if (!username || !password) {
+      setError('Please fill out all the required fields.');
       return;
 
     } else {
@@ -36,9 +33,13 @@ export default function Login() {
       },
       body: JSON.stringify(data),
     })
-    .then((res) => {if(res.ok) {
+    .then((res) => {
+      if(res.ok) {
       navigate("/start")
-    }})
+      } else {
+        setError("Incorrect username or password.");
+      }
+    })
     .then((data) => console.log(data))
     .catch((err) => console.error(err))
     }
@@ -59,16 +60,7 @@ export default function Login() {
             <GiDeerHead size="30px" color="green.700" />
           </Show>
         </Flex>
-        <Input 
-          type="email" 
-          placeholder="Email adress" 
-          _placeholder={{ color: 'green.700' }}
-          borderColor="green.700"
-          focusBorderColor="green.700"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          id="email"
-        />
+       
         <Input 
           type="text" 
           placeholder="Username" 
@@ -97,8 +89,8 @@ export default function Login() {
           </InputRightElement>
         </InputGroup>
 
-        <Text color="#CC0000">{missingFieldsError}</Text>
-        <Text color="#CC0000">{loginError}</Text>
+        <Text color="#CC0000">{Error}</Text>
+        
 
         <Button 
           type="submit" 
