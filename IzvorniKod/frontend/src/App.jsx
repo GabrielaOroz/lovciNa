@@ -9,6 +9,7 @@ import ListOfUsers from './components/pages/ListOfUsers';
 import Start from './components/pages/Start';
 import Fonts from './styles/Fonts';
 import theme from './styles/theme';
+import "./styles/Base.css"
 
 export default function App() {
   return (

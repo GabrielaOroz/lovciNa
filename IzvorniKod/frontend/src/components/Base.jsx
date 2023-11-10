@@ -4,8 +4,8 @@ import { Box, Flex, Heading, Text } from "@chakra-ui/react";
 export default function Base({children}) {
     return (
         <Box 
-            bgImage="url(/forest.jpg)" 
-            bgPosition="center"
+            //bgImage="url(/forest.jpg)" 
+            //bgPosition="center"
             minH="100vh"
             display="flex"
             flexDirection="column"
