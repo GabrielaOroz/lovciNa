@@ -13,18 +13,22 @@ import org.jetbrains.annotations.NotNull;
 @Getter
 @Setter
 @ToString
-public class Tracker {
+public class Tracker extends User {
 
-    public Tracker(Long id, @NotNull Long stationId) {
-        this.id = id;
+    public Tracker(User user, @NotNull Long stationId) {
+        this.setId(user.getId());
+        this.setUsername(user.getUsername());
+        this.setRole(user.getRole());
+        this.setPhoto(user.getPhoto());
+        this.setPassword(user.getPassword());
+        this.setName(user.getName());
+        this.setSurname(user.getSurname());
+        this.setEmail(user.getEmail());
         this.stationId = stationId;
     }
 
     public Tracker() {
     }
-
-    @Id
-    private Long id;
 
     @NotNull
     private Long stationId;

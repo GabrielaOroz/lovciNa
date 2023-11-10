@@ -60,77 +60,115 @@ public class UserServiceJpa implements UserService {
         return userRepo.enableUser(email);
     }
     @Override
-    public ResponseEntity<String> createUser(User user) {
+    public int createUser(User user, Long stationId) {
         System.out.println("usao sam u createUser");
         //boolean isValidEmail = emailValidator.
           //      test(user.getEmail());
 
-
+        boolean success=false;
         //if (!isValidEmail) {
           //  throw new IllegalStateException("email not valid");
         //}
         Assert.notNull(user, "User object must be given");  //moramo dobit objekt, ne možemo u bazu stavit null
         Assert.isNull(user.getId(), "Student ID must be null, not " + user.getId());    //zato što ga mi settiramo autom s generated value
 
+
+        if (userRepo.countByEmail(user.getEmail()) > 0 && userRepo.countByUsername(user.getUsername()) > 0){
+            return 1;
+        }
         if (userRepo.countByEmail(user.getEmail()) > 0){
-            throw new RequestDeniedException("User with email " + user.getEmail() + "already exists!");
+            return 2;
         }
         if (userRepo.countByUsername(user.getUsername()) > 0){
-            throw new RequestDeniedException("User with username " + user.getUsername() + "already exists!");
-        }
-        if (userRepo.countByEmail(user.getEmail()) > 0 && userRepo.countByUsername(user.getUsername()) > 0){
-            throw new RequestDeniedException("User with email " + user.getEmail() + " and username " + user.getUsername() + "already exists!");
+            return 3;
         }
 
         //String encodedPswd = bCryptPasswordEncoder.encode(user.getPassword());
         //user.setPassword(encodedPswd);      //kodiranje lozinke
 
-        userRepo.save(user);
-
-        if(user.getRole().equals("researcher")){
-            researcherRepo.save(new Researcher(user.getId()));
-        } else if(user.getRole().equals("manager")){
-            managerRepo.save(new Manager(user.getId(), 0L));
-        } else {
-            trackerRepo.save(new Tracker(user.getId(), 0L));
-        }
 
 
-        String token = UUID.randomUUID().toString();
-        ConfirmationToken confirmationToken = new ConfirmationToken(token,
-                LocalDateTime.now(),
-                LocalDateTime.now().plusMinutes(20),
-                user);
+        if(user.getRole().equals("researcher") && stationId==null){
+            try {
+                System.out.println("uso u researcher");
+                user=researcherRepo.save(new Researcher(user));
+                success=true;
+            } catch (Exception e) {return -1;}
 
-        confirmationTokenService.saveConfirmationToken(confirmationToken);
+        } else if (stationId!=null) {
+            if (user.getRole().equals("manager")) {
+                try {
+                    System.out.println("presave");
+                    user=managerRepo.save(new Manager(user,stationId));
+                    success=true;
+                    System.out.println("postsave");
+                } catch (Exception e) {return -1;}
 
-        String link = "http://localhost:8000/auth/confirm?token=" + token;
-        emailSender.send(user.getEmail(), buildEmail(user.getName(), link));
+            } else if (user.getRole().equals("tracker")) {
+                try {
+                    user=trackerRepo.save(new Tracker(user, stationId));
+                    success = true;
+                } catch (Exception e) {
+                    return -1;
+                }
+            } else return -1;
 
-        return ResponseEntity.ok("Data received and processed");
+        } else return -1;
+
+
+
+
+        if (success==true) {
+            String token = UUID.randomUUID().toString();
+            ConfirmationToken confirmationToken = new ConfirmationToken(token,
+                    LocalDateTime.now(),
+                    LocalDateTime.now().plusMinutes(20),
+                    user);
+
+            confirmationTokenService.saveConfirmationToken(confirmationToken);
+            System.out.println("bllbablbabla");
+            String link = "http://localhost:8000/auth/confirm?token=" + token;
+            emailSender.send(user.getEmail(), buildEmail(user.getName(), link));
+
+            return 0;
+        } else return -1;
     }
 
     @Override
-    public ResponseEntity<String> logInUser(LogInDTO loginuser) {
+    public int logInUser(LogInDTO loginuser) {
         User user = new User();
         user.setUsername(loginuser.getUsername());
         user.setPassword(loginuser.getPassword());
         user.setEmail(loginuser.getEmail());
+        System.out.println(loginuser.toString());
         if (userRepo.countByEmail(user.getEmail()) == 0){
-            throw new RequestDeniedException("User with email " + user.getEmail() + "doesn't exist!");
+            System.out.println("ne postoji user1");
+            return -1;
         }
         if (userRepo.countByUsername(user.getUsername()) == 0){
-            throw new RequestDeniedException("User with username " + user.getUsername() + "doesn't exist!");
+            System.out.println("ne postoji user2");
+            return -1;
         }
         if (userRepo.countByEmail(user.getEmail()) == 0 && userRepo.countByUsername(user.getUsername()) == 0){
-            throw new RequestDeniedException("User with email " + user.getEmail() + " and username " + user.getUsername() + "doesn't exist!");
+            System.out.println("ne postoji user3");
+            return -1;
         }
-        if (user.isRegistered()) {
-            return ResponseEntity.ok("Data received and processed");
+        User user1=userRepo.findByUsername(user.getUsername()).orElse(null);
+
+
+
+        if (!(user1.isRegistered())) {
+            System.out.println("nije potvrđen");
+            return -2;
         }
-        else {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Please register first!");
+
+
+        if(!(user1.getPassword().equals(user.getPassword()))) {
+            System.out.println("krivi password");
+            return -3;
         }
+
+        return 0;
     }
 
     @Transactional

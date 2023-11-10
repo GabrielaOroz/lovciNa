@@ -12,9 +12,9 @@ import java.util.List;
 public interface UserService {
     List<User> listAll();
 
-    ResponseEntity<String> createUser(User user);
+    int createUser(User user, Long stationId);
 
-    ResponseEntity<String> logInUser(LogInDTO user);
+    int logInUser(LogInDTO user);
 
     String confirmToken(String token);
 }

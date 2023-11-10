@@ -13,21 +13,26 @@ import org.jetbrains.annotations.NotNull;
 @Getter
 @Setter
 @ToString
-public class Manager {
-    public Manager(Long id, @NotNull Long stationId) {
-        this.id = id;
+public class Manager extends User {
+    public Manager(User user, @NotNull Long stationId) {
+        this.setId(user.getId());
+        this.setUsername(user.getUsername());
+        this.setRole(user.getRole());
+        this.setPhoto(user.getPhoto());
+        this.setPassword(user.getPassword());
+        this.setName(user.getName());
+        this.setSurname(user.getSurname());
+        this.setEmail(user.getEmail());
         this.stationId = stationId;
     }
 
     public Manager() {
     }
 
-    @Id
-    private Long id;
 
     private boolean approved = false;
 
     @NotNull
-    @Column(unique = true)
+    //@Column(unique = true)
     private Long stationId;
 }

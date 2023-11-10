@@ -13,14 +13,14 @@ import org.jetbrains.annotations.NotNull;
 @Getter
 @Setter
 @ToString
-
+@Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "my_user")
 public class User {
 
     public User() {
     }
 
-    public User(@NotNull String username, String role, byte[] photo, @NotNull String password, @NotNull String name, @NotNull String surname, @NotNull String email) {
+    public User(@NotNull String username, @NotNull String role, byte[] photo, @NotNull String password, @NotNull String name, @NotNull String surname, @NotNull String email) {
         this.username = username;
         this.role = role;
         this.photo = photo;
@@ -42,7 +42,9 @@ public class User {
     @NotNull
     private String role;  //1-researcher, 2-manager, 3-tracker
 
-    @Lob
+
+
+    @Column(name = "photo", columnDefinition = "bytea")
     private byte[] photo;
 
     @NotNull

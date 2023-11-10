@@ -50,7 +50,8 @@ public class UserController {
             @RequestPart("selectedFile") MultipartFile selectedFile,
             @RequestParam("email") String email,
             @RequestParam("username") String username,
-            @RequestParam("password") String password
+            @RequestParam("password") String password,
+            @RequestParam(name = "stationId", required = false) Long stationId
             ) {
         User user = new User();
         user.setRole(role);
@@ -60,23 +61,49 @@ public class UserController {
         user.setUsername(username);
         user.setPassword(password);
 
+        if (user.getRole().equals("tracker") || user.getRole().equals("manager")) stationId=0L;
+        else if (user.getRole().equals("researcher")) stationId=null;
+        else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Non-existent role");
+
         if (selectedFile != null) {
             try {
                 user.setPhoto(selectedFile.getBytes());
                 // You can save the profile photo to a file or database here
             } catch (IOException e) {
+                System.out.println("Error processing profile phot");
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing profile photo");
             }
         }
+        else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Photo not sent");
 
-        userService.createUser(user);
+        int status=userService.createUser(user,stationId);
+        System.out.println("status  "+status);
+        if (status==-1) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Data not valid");
+
+        if (status==1) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User with email " + user.getEmail() + " and username " + user.getUsername() + "already exists!");
+        if (status==2) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User with email " + user.getEmail() + "already exists!");
+        if (status==3) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User with username " + user.getUsername() + "already exists!");
+
+
+        if (status!=0) {
+            System.out.println("Error on server");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error on server");
+        }
+
         System.out.println("registrirao novog usera");
-        return ResponseEntity.ok("Data received and processed");
+        return ResponseEntity.ok("Register successful");
     }
 
     @PostMapping("/login")       //post, get ?
     public ResponseEntity<String> logInUser(@RequestBody LogInDTO user){
-        userService.logInUser(user);
+        int res = userService.logInUser(user);
+        if(res == -1) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("User doesn't exist!");
+        } else if(res == -2) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Please confirm your email!");
+        } else if (res == -3) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Incorrect username or password");
+        }
         return ResponseEntity.ok("Data received and processed");
     }
 

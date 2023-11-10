@@ -7,6 +7,9 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+import java.util.Optional;
+
 //ovdje pisemo funkcije koje rade s podacima, vecinom necemo morat definirat funkciju jer on sve vec pretpostavi sam
 //ravno iz baze uzimamo, takve su funkcije
 
@@ -16,8 +19,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
     //komunicira s bazom
     //<User, Long> tip entiteta i tip IDa
 
-    int countByUsername(String username);
+    Optional<User> findByUsername(String username);
+    List<User> findByRole(String role);
+    List<User> findByName(String name);
+    List<User> findBySurname(String surname);
+    Optional<User> findByEmail(String email);
+    List<User> findByRegistered(boolean registered);
 
+    int countByUsername(String username);
     int countByEmail(String email);
 
     //@Query("UPDATE my_user a " +

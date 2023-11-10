@@ -2,7 +2,7 @@ import { Button, Flex, Input, InputGroup, InputRightElement, Show, Text } from "
 import Base from '../Base';
 import FormCard from '../FormCard';
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { GiDeerHead } from "react-icons/gi"
 
 export default function Login() {
@@ -13,6 +13,8 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [missingFieldsError, setMissingFieldsError] = useState('');
   const [loginError, setLoginError] = useState('');
+
+  const navigate = useNavigate();
 
   const handleSubmit = () => {
     const data = {
@@ -34,15 +36,10 @@ export default function Login() {
       },
       body: JSON.stringify(data),
     })
-    .then((res) => res.json())
-    .then((data) => {
-      if (data.isCorrect) {
-        //korisi Redirect
-      } else {
-        setLoginError('Incorrect username or password.');
-      }
-
-    })
+    .then((res) => {if(res.ok) {
+      navigate("/start")
+    }})
+    .then((data) => console.log(data))
     .catch((err) => console.error(err))
     }
   

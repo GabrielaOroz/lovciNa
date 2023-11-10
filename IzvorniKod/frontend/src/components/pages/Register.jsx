@@ -187,7 +187,7 @@ export default function Register() {
 						<Radio colorScheme="yellow" value="researcher">
 							Researcher
 						</Radio>
-						<Radio colorScheme="red" value="stationManager">
+						<Radio colorScheme="red" value="manager">
 							Station Manager
 						</Radio>
 					</Stack>
