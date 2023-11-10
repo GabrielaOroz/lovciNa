@@ -50,7 +50,7 @@ export default function Register() {
 		}
 	};
 	const validateFirstName = () => {
-		const nameRegex = /^[a-z ,.'-]+$/i;
+		const nameRegex = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u //^[a-z ,.'-]+$/i;
 		if (nameRegex.test(firstName)) {
 			setRightFirstName(true);
 			return true;
@@ -60,7 +60,7 @@ export default function Register() {
 		}
 	};
 	const validateLastName = () => {
-		const nameRegex = /^[a-z ,.'-]+$/i;
+		const nameRegex = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u //^[a-z ,.'-]+$/i;
 		if (nameRegex.test(lastName)) {
 			setRightLastName(true);
 			return true;
@@ -321,7 +321,7 @@ export default function Register() {
 					color="#CC0000"
 				>
 					Password must be between 8 and 16 characters and include
-					letters, numbers and special characters.
+					letters(A-Z), numbers(0-9) and special characters(!,@,#,$,%,^,&,*)
 				</Text>
 
 				<Button
