@@ -6,6 +6,14 @@ const theme = extendTheme({
     //body: `Comic Sans MS`
     body: `Century Gothic`
   },
+  styles: {
+    global: {
+      // styles for the `body`
+      body: {
+        bg: '',
+      },
+    },
+  },
 })
 
 export default theme;
