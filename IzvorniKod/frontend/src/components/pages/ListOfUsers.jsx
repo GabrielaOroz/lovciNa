@@ -16,7 +16,7 @@ import {
 import { useEffect, useState } from "react";
 
 export default function ListOfUsers() {
-	const [registeredUsers, setRegisteredUsers] = useState(null);
+	const [registeredUsers, setRegisteredUsers] = useState('');
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
 	const [username, setUsername] = useState("");
@@ -98,6 +98,7 @@ export default function ListOfUsers() {
 
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
+	/*
 	useEffect(() => {
 		fetch("http://localhost:8000/admin/registeredUsers", {
 			method: "GET",
@@ -108,7 +109,7 @@ export default function ListOfUsers() {
 				setRegisteredUsers(data);
 			})
 			.catch((err) => console.error(err));
-	}, []);
+	}, []);*/
 
 	return (
 		<Box

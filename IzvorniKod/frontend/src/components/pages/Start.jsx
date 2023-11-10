@@ -3,7 +3,9 @@ import MainBase from "../MainBase"
 
 export default function Start(){
     return(
-        <MainBase>
+        <>
+        <Text p="20px" textAlign="center">In building... see you soon.</Text>
+        {/*<MainBase>
             <Text 
                 color="green.700" 
                 fontSize={{base: "2xl", md: "4xl", lg: "5xl"}} 
@@ -13,7 +15,7 @@ export default function Start(){
                 fontSize={{base: "1xl", md: "2xl", lg: "3xl"}}
                 color="teal">
                     Action
-            </Text> */}
+            </Text> *}
             
             <Card w={{base: "300px", md: "450px", lg: "700px"}} alignSelf="center">
                 <CardHeader>
@@ -28,6 +30,7 @@ export default function Start(){
                     <Button>Leave</Button>
                 </CardFooter>
             </Card>
-        </MainBase>
+        </MainBase>*/}
+        </>
     )
 }

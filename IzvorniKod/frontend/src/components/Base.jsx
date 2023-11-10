@@ -15,7 +15,7 @@ export default function Base({children}) {
             <Flex textAlign="center" flexDirection="column" gap="10px">
                 <Text fontSize={{base: "2xl", md: "4xl", lg: "5xl"}} fontFamily="Century Gothic">Welcome to</Text>
                 <Link to="/">
-                    <Heading fontSize={{base: "4xl", md: "5xl", lg: "6xl"}} color="green.700" fontFamily="Nature">WILD TRACKER</Heading>
+                    <Heading fontSize={{base: "4xl", md: "5xl", lg: "6xl"}} color="green.700" fontFamily="Nature">WILD TRACK</Heading>
                 </Link>
             </Flex>
             {children}

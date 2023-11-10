@@ -34,6 +34,8 @@ export default function Register() {
 	const [rightPass, setRightPass] = useState(true);
 	const [rightUsername, setRightUsername] = useState(true);
 
+	const [error, setError] = useState("");
+
 	const navigate = useNavigate();
 
 	//////////////validacije inputa. Staviti u zasebnu datoteku!
@@ -113,13 +115,13 @@ export default function Register() {
 	};
 
 	const handleSubmit = () => {
-
+		setError("");
 		//za ukloniti validaciju, izbrisati iduce pozive funkcija
 		validateFirstName();
 		validateLastName();
 		validateEmail();
 		validateUsername();
-		validatePicture()
+		validatePicture();
 		validatePass(); //dva puta se pozivaju funkcije validacije radi ispravne funkcionalnosti
 		//za ukloniti validaciju, izbrisati ove pozive funkcija u "if" uvjetu
 		if (
@@ -145,12 +147,17 @@ export default function Register() {
 			//navigate("/confirm"); //pozvati tek kad je fetch uspjesan
 			fetch("http://localhost:8000/auth/register", {
 				method: "POST",
-				body: formData
+				body: formData,
 			})
-				.then((res) => console.log(res))
-				.then((data) => {
-					navigate("/confirm");
+				.then((res) => {
+					console.log(res);
+					if (res.ok) {
+						navigate("/confirm");
+					} else {
+						setError("User already exists.");
+					}
 				})
+				.then((data) => console.log(data))
 				.catch((err) => console.error(err));
 		}
 	};
@@ -314,7 +321,7 @@ export default function Register() {
 					color="#CC0000"
 				>
 					Password must be between 8 and 16 characters and include
-					letters, numbers and special characters
+					letters, numbers and special characters.
 				</Text>
 
 				<Button
@@ -328,6 +335,8 @@ export default function Register() {
 				>
 					Submit
 				</Button>
+
+				<Text alignSelf="center" color="#CC0000">{error}</Text>
 
 				<Text alignSelf="center" color="black">
 					Already have an account?

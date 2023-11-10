@@ -25,9 +25,6 @@ export default function Confirm() {
 				<Text alignSelf="center">
 					Check your email, confirm registration and log in.
 				</Text>
-				<Button shadow="dark-lg" size="lg" m="20px" w="200px" alignSelf="center" colorScheme="green">
-                    <Link to="/login">Log In</Link>
-				</Button>
 				
 			</Card>
 		</Box>
