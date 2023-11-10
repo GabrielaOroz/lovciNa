@@ -9,6 +9,7 @@ import ListOfUsers from './components/pages/ListOfUsers';
 import Start from './components/pages/Start';
 import Fonts from './styles/Fonts';
 import theme from './styles/theme';
+import MissingPage from "./components/pages/MissingPage"
 import "./styles/Base.css"
 
 export default function App() {
@@ -24,6 +25,7 @@ export default function App() {
           <Route path="/admin" element={<Admin />} />
           <Route path="/admin-listOfUsers" element={<ListOfUsers />} />
           <Route path="/start" element={<Start />} />
+          <Route path="*" element={<MissingPage />} />
           
         </Routes>
       </BrowserRouter>
