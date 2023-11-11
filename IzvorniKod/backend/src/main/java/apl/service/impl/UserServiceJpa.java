@@ -160,6 +160,14 @@ public class UserServiceJpa implements UserService {
         return 0;
     }
 
+    @Override
+    public int logInAdmin(String pass) {
+        if (pass.equals("admin")) {
+            return 0;
+        }
+        return -1;
+    }
+
     @Transactional
     public String confirmToken(String token) {
         ConfirmationToken confirmationToken = confirmationTokenService

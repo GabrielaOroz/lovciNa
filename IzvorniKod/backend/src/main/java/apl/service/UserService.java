@@ -2,7 +2,6 @@ package apl.service;
 
 import apl.domain.LogInDTO;
 import apl.domain.User;
-import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -16,5 +15,6 @@ public interface UserService {
 
     int logInUser(LogInDTO user);
 
+    int logInAdmin(String pass);
     String confirmToken(String token);
 }

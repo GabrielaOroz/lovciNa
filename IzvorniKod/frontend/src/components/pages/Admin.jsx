@@ -25,7 +25,7 @@ export default function Admin() {
 			  },
 			body: JSON.stringify(data),
 		})
-			.then((res) => res.json())
+			.then((res) => console.log(res))
 			.then((data) => {
 				console.log(data);
 				navigate("/admin-listOfUsers");
