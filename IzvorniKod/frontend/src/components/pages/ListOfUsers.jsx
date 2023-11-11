@@ -157,7 +157,10 @@ export default function ListOfUsers() {
 								>
 									{user.name} {user.surname}
 								</Button>
-								<Modal isOpen={isOpen} onClose={onClose}>
+								<Modal scrollBehavior="inside" blockScrollOnMount={false} closeOnOverlayClick={false} isOpen={isOpen} onClose={() => {
+                  setSelectedFile("");
+                  onClose()
+                }}>
 									<ModalOverlay />
 									<ModalContent>
 										<ModalHeader>USER INFO</ModalHeader>
@@ -239,7 +242,7 @@ export default function ListOfUsers() {
 
 											{!selectedFile && (
 												<Image
-													maxHeight="150px"
+													maxHeight="300px"
 													src={photoURL}
 													color="gree700"
 												/>
@@ -247,7 +250,7 @@ export default function ListOfUsers() {
 
 											{selectedFile && (
 												<Image
-													maxHeight="150px"
+													maxHeight="300px"
 													src={
 														selectedFile && URL.createObjectURL(selectedFile)
 													}
