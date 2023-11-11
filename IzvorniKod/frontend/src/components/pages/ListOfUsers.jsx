@@ -21,6 +21,7 @@ import { useEffect, useRef, useState } from "react";
 
 export default function ListOfUsers() {
 	const [role, setRole] = useState("");
+  const [id, setId] = useState("");
 	const [requestedRole, setRequestedRole] = useState("");
 	const [registeredUsers, setRegisteredUsers] = useState("");
 	const [firstName, setFirstName] = useState("");
@@ -67,6 +68,7 @@ export default function ListOfUsers() {
 
 	const handleSubmit = () => {
 		const formData = new FormData();
+    formData.append("id", id);
 		formData.append("allowedRole", role);
 		formData.append("firstName", firstName);
 		formData.append("lastName", lastName);
