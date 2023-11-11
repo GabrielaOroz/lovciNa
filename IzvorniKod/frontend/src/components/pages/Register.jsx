@@ -38,7 +38,6 @@ export default function Register() {
 
 	const navigate = useNavigate();
 
-	//////////////validacije inputa. Staviti u zasebnu datoteku!
 	const validateEmail = () => {
 		const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/i; //sensitive case email??
 		if (emailRegex.test(email)) {
@@ -99,7 +98,6 @@ export default function Register() {
 			return true;
 		}
 	};
-	/////////////////////////////////////////
 
 	const inputRef = useRef(null);
 	const handleFileUpload = () => {
@@ -116,14 +114,13 @@ export default function Register() {
 
 	const handleSubmit = () => {
 		setError("");
-		//za ukloniti validaciju, izbrisati iduce pozive funkcija
 		validateFirstName();
 		validateLastName();
 		validateEmail();
 		validateUsername();
 		validatePicture();
-		validatePass(); //dva puta se pozivaju funkcije validacije radi ispravne funkcionalnosti
-		//za ukloniti validaciju, izbrisati ove pozive funkcija u "if" uvjetu
+		validatePass();
+
 		if (
 			validateFirstName() &&
 			validateLastName() &&
@@ -144,7 +141,6 @@ export default function Register() {
 				console.log(entry[0] + ":", entry[1]);
 			}
 
-			//navigate("/confirm"); //pozvati tek kad je fetch uspjesan
 			fetch("http://localhost:8000/auth/register", {
 				method: "POST",
 				body: formData,

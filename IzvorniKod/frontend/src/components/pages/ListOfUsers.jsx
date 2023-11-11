@@ -11,18 +11,24 @@ import {
 	ModalFooter,
 	ModalHeader,
 	ModalOverlay,
+	Radio,
+	RadioGroup,
+	Stack,
 	Text,
 	useDisclosure,
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
 
 export default function ListOfUsers() {
+	const [role, setRole] = useState("");
+	const [requestedRole, setRequestedRole] = useState("");
 	const [registeredUsers, setRegisteredUsers] = useState("");
 	const [firstName, setFirstName] = useState("");
 	const [lastName, setLastName] = useState("");
 	const [username, setUsername] = useState("");
 	const [email, setEmail] = useState("");
 	const [password, setPassword] = useState("");
+	const [photoURL, setPhotoURL] = useState("");
 	const [selectedFile, setSelectedFile] = useState("");
 
 	const changeFirstName = (e) => {
@@ -54,47 +60,50 @@ export default function ListOfUsers() {
 		setSelectedFile(file);
 	};
 
+	const convertByteArrayToUrl = (photo) => {
+		const url = "data:image/jpeg;base64," + photo;
+		setPhotoURL(url);
+	};
+
 	const handleSubmit = () => {
-		const newData = {
-			firstName,
-			lastName,
-			username,
-			email,
-			password,
-			selectedFile,
-		};
-		console.log(newData);
+		const formData = new FormData();
+		formData.append("allowedRole", role);
+		formData.append("firstName", firstName);
+		formData.append("lastName", lastName);
+		formData.append("selectedFile", selectedFile);
+		formData.append("email", email);
+		formData.append("username", username);
+		formData.append("password", password);
+		for (const entry of formData.entries()) {
+			console.log(entry[0] + ":", entry[1]);
+		}
 
 		fetch("http://localhost:8000/admin/newInfo", {
 			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(newData),
+			body: formData,
 		})
-			.then((res) => console.log(res))
-			.then((data) => {
-				console.log(data);
-				navigate("/admin-listOfUsers");
+			.then((res) => {
+				console.log(res);
+				if (res.ok) {
+					navigate("/admin-listOfUsers");
+				}
 			})
+			.then((data) => console.log(data))
 			.catch((err) => console.error(err));
 	};
-
-	
-	
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
-	useEffect(() => {
+	const handleUsers = () => {
 		fetch("http://localhost:8000/admin/registeredUsers", {
 			method: "GET",
 		})
-			.then((res) => console.log(res))
+			.then((res) => res.json())
 			.then((data) => {
 				console.log(data);
-				setRegisteredUsers(JSON.parse(data));
+				setRegisteredUsers(data);
 			})
 			.catch((err) => console.error(err));
-	}, []);
+	};
 
 	return (
 		<Box
@@ -115,9 +124,15 @@ export default function ListOfUsers() {
 				align="center"
 			>
 				<Text fontSize="2xl">REGISTERED USERS:</Text>
-				{!registeredUsers && (
-					<Text>There are no registered users.</Text>
-				)}
+				<Button
+					marginTop="8px"
+					marginBottom="8px"
+					colorScheme="green"
+					onClick={() => handleUsers()}
+				>
+					Load all registered users.
+				</Button>
+				{!registeredUsers && <Text>There are no registered users.</Text>}
 				{registeredUsers && (
 					<>
 						{registeredUsers.map((user) => (
@@ -127,16 +142,18 @@ export default function ListOfUsers() {
 									_hover={{ color: "green" }}
 									onClick={() => {
 										onOpen();
-										setFirstName(user.firstName);
-										setLastName(user.lastName);
+										setId(user.id);
+										setFirstName(user.name);
+										setLastName(user.surname);
 										setUsername(user.username);
 										setEmail(user.email);
 										setPassword(user.password);
-										setSelectedFile(user.selectedFile);
+										setRequestedRole(user.role);
+										convertByteArrayToUrl(user.photo);
 									}}
 									p="10px"
 								>
-									{user.firstName} {user.lastName}
+									{user.name} {user.surname}
 								</Button>
 								<Modal isOpen={isOpen} onClose={onClose}>
 									<ModalOverlay />
@@ -144,6 +161,32 @@ export default function ListOfUsers() {
 										<ModalHeader>USER INFO</ModalHeader>
 										<ModalCloseButton />
 										<ModalBody>
+											<Text textAlign="center" p="8px">Requested role: <b>{requestedRole}</b></Text>
+											<Text textAlign="center" p="8px">Choose allowed role:</Text>
+											<RadioGroup
+												value={role}
+												onChange={(newValue) => setRole(newValue)}
+												alignSelf="center"
+												color="gree700"
+											>
+												<Stack
+													direction="column"
+													spacing="20px"
+													align="center"
+													marginBottom="16px"
+												>
+													<Radio colorScheme="green" value="tracker">
+														Tracker
+													</Radio>
+													<Radio colorScheme="yellow" value="researcher">
+														Researcher
+													</Radio>
+													<Radio colorScheme="red" value="manager">
+														Station Manager
+													</Radio>
+												</Stack>
+											</RadioGroup>
+
 											<Input
 												marginBottom="10px"
 												defaultValue={firstName}
@@ -189,33 +232,42 @@ export default function ListOfUsers() {
 												_hover={{ bg: "gree700" }}
 												border="0"
 											>
-												Upload profile picture
+												Upload new profile picture
 											</Button>
-											<Image
-												src={
-													selectedFile &&
-													URL.createObjectURL(
-														selectedFile
-													)
-												}
-												color="gree700"
-												alt={
-													selectedFile
-														? selectedFile.name
-														: ""
-												}
-											/>
+
+											{!selectedFile && (
+												<Image
+													maxHeight="150px"
+													src={photoURL}
+													color="gree700"
+												/>
+											)}
+
+											{selectedFile && (
+												<Image
+													maxHeight="150px"
+													src={
+														selectedFile && URL.createObjectURL(selectedFile)
+													}
+													color="gree700"
+													alt={selectedFile ? selectedFile.name : ""}
+												/>
+											)}
 										</ModalBody>
 										<ModalFooter>
 											<Button
 												variant="ghost"
-												onClick={onClose}
+												onClick={() => {
+													setSelectedFile("");
+													onClose();
+												}}
 											>
-												Close
+												Cancel
 											</Button>
 											<Button
 												colorScheme="green"
 												onClick={() => {
+													setSelectedFile("");
 													handleSubmit();
 													onClose();
 												}}

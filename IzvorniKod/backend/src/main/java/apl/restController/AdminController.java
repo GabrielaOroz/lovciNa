@@ -17,12 +17,12 @@ public class AdminController {
     @Autowired
     private UserService userService;
 
-    @GetMapping("/admin") //kad dođe GET zahtjev, on će se spojit ovdje i pozvati metodu deklariranu u userService
+    @GetMapping("/admin/registeredUsers") //kad dođe GET zahtjev, on će se spojit ovdje i pozvati metodu deklariranu u userService
     public ResponseEntity<List<User>> listUsers() {
         List<User> listOfUsers = userService.listAll();
         return ResponseEntity.ok(listOfUsers);
     }
-    @PostMapping("/admin/registeredUsers")
+    @PostMapping("/admin")
     public ResponseEntity<String> logInAdmin(@RequestBody AdminLogInDTO admin) {
         int res = userService.logInAdmin(admin.getPassword());
         if (res == 0) {

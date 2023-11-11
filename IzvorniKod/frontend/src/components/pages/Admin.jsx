@@ -8,27 +8,35 @@ import {
 	Text,
 } from "@chakra-ui/react";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 
 export default function Admin() {
 	const [password, setPassword] = useState("");
 	const [showPass, setShowPass] = useState(false);
+	const navigate = useNavigate();
 
 	const handleSubmit = () => {
 		const data = {
 			password
 		}
 		console.log(data);
-		fetch("http://localhost:8000/auth/admin", {
+		fetch("http://localhost:8000/admin", {
 			method: "POST",
 			headers: {
 				'Content-Type': 'application/json'
 			  },
 			body: JSON.stringify(data),
 		})
-			.then((res) => console.log(res))
+			.then((res) => {
+				if (res.ok){
+					navigate("/admin-listOfUsers");
+				}
+				console.log(res)
+			})
 			.then((data) => {
 				console.log(data);
-				navigate("/admin-listOfUsers");
+				
 			})
 			.catch((err) => console.error(err));
 	};
