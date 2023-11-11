@@ -12,7 +12,6 @@ import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:5173")
 @RestController
-@RequestMapping("/auth")
 public class AdminController {
 
     @Autowired
@@ -23,7 +22,7 @@ public class AdminController {
         List<User> listOfUsers = userService.listAll();
         return ResponseEntity.ok(listOfUsers);
     }
-    @PostMapping("/admin")
+    @PostMapping("/admin/registeredUsers")
     public ResponseEntity<String> logInAdmin(@RequestBody AdminLogInDTO admin) {
         int res = userService.logInAdmin(admin.getPassword());
         if (res == 0) {
