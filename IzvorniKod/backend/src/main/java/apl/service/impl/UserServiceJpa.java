@@ -9,9 +9,14 @@ import apl.token.ConfirmationTokenService;
 import apl.service.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +28,7 @@ import java.util.UUID;
 
 @Service
 public class UserServiceJpa implements UserService {
+
     //Dependency injection
     //@Autowired
     private EmailValidator emailValidator;
@@ -38,6 +44,8 @@ public class UserServiceJpa implements UserService {
     private TrackerRepository trackerRepo;
 
     //private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    PasswordEncoder passwordEncoder;
 
     @Autowired
     private ConfirmationTokenService confirmationTokenService;
@@ -127,7 +135,7 @@ public class UserServiceJpa implements UserService {
             return 3;
         }
 
-        //String encodedPswd = bCryptPasswordEncoder.encode(user.getPassword());
+        //String encodedPswd = this.passwordEncoder.encode(user.getPassword());
         //user.setPassword(encodedPswd);      //kodiranje lozinke
 
 
@@ -215,15 +223,22 @@ public class UserServiceJpa implements UserService {
     @Override
     public int updateUser(User userD) {
         Optional<User> userOptional = userRepo.findById(userD.getId());
+
         if (userOptional.isPresent()) {
+
             User user = userOptional.get();
+            if(userD.getPhoto() != null){
+                user.setPhoto(userD.getPhoto());
+            } else{
+                user.setPhoto(user.getPhoto());
+            }
 
             user.setName(userD.getName());
             user.setSurname(userD.getSurname());
             user.setEmail(userD.getEmail());
             user.setUsername(userD.getUsername());
             user.setPassword(userD.getPassword());
-            user.setPhoto(userD.getPhoto());
+
             try {
                 userRepo.save(user);
             } catch (Exception e) {

@@ -81,7 +81,7 @@ public class UserController {
         }
         else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Photo not sent");
 
-        int status=userService.createUser(user,stationId);
+        int status = userService.createUser(user,stationId);
         System.out.println("status  "+status);
         if (status==-1) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Data not valid");
 

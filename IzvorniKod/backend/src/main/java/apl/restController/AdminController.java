@@ -22,6 +22,7 @@ public class AdminController {
     @Autowired
     private UserService userService;
 
+
     @GetMapping("/admin/registeredUsers") //kad dođe GET zahtjev, on će se spojit ovdje i pozvati metodu deklariranu u userService
     public ResponseEntity<List<RegisteredDTO>> listUsers() {
         List<RegisteredDTO> listOfUsers = userService.listAllRegistered();
@@ -36,31 +37,35 @@ public class AdminController {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Wrong admin password!");
     }
 
-    @PutMapping("/admin-listOfUsers")
+    @PutMapping("/admin/newInfo")
     public ResponseEntity<String> changeAttributes(@RequestParam("id") Long id,
-                                                   @RequestParam("firstName") String firstname,
-                                                   @RequestParam("lastName") String lastname ,
-                                                   @RequestPart("selectedFile") MultipartFile selectedFile,
+                                                   @RequestParam("firstName") String firstName,
+                                                   @RequestParam("lastName") String lastName ,
+                                                   @RequestPart(name ="selectedFile", required = false) MultipartFile selectedFile,
                                                    @RequestParam("email") String email,
                                                    @RequestParam("username") String username,
                                                    @RequestParam("password") String password
     ) {
+        System.out.println("nestooooo");
         User user = new User();
         user.setId(id);
-        user.setName(firstname);
-        user.setSurname(lastname);
+        user.setName(firstName);
+        user.setSurname(lastName);
         user.setEmail(email);
         user.setUsername(username);
         user.setPassword(password);
 
         if (selectedFile != null) {
+            System.out.println("slika jee:" + selectedFile.toString());
             try {
                 user.setPhoto(selectedFile.getBytes());
-                // You can save the profile photo to a file or database here
             } catch (IOException e) {
                 System.out.println("Error processing profile photo");
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing profile photo");
             }
+        } else {
+            user.setPhoto(null);
+            System.out.println("slika jee:");
         }
 
         int res = userService.updateUser(user);
