@@ -1,15 +1,6 @@
-import {
-	Box,
-	Button,
-	Card,
-	Input,
-	InputGroup,
-	InputRightElement,
-	Text,
-} from "@chakra-ui/react";
+import { Box, Button, Card, Input, InputGroup, InputRightElement, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
 
 export default function Admin() {
 	const [password, setPassword] = useState("");
@@ -18,48 +9,32 @@ export default function Admin() {
 
 	const handleSubmit = () => {
 		const data = {
-			password
-		}
+			password,
+		};
 		console.log(data);
 		fetch("http://localhost:8000/admin", {
 			method: "POST",
 			headers: {
-				'Content-Type': 'application/json'
-			  },
+				"Content-Type": "application/json",
+			},
 			body: JSON.stringify(data),
 		})
 			.then((res) => {
-				if (res.ok){
+				if (res.ok) {
 					navigate("/admin-listOfUsers");
 				}
-				console.log(res)
+				console.log(res);
 			})
 			.then((data) => {
 				console.log(data);
-				
 			})
 			.catch((err) => console.error(err));
 	};
 
 	return (
-		<Box
-			bgImage="url(/forest.jpg)"
-			bgPosition="center"
-			minH="100vh"
-			display="flex"
-			justifyContent="center"
-		>
-			<Card
-				w={{ base: "300px", md: "600px", lg: "800px" }}
-				background="#f9f7e8"
-				alignSelf="center"
-				padding="20px"
-			>
-				<Text
-					fontSize={{ base: "20px", md: "30px", lg: "50px" }}
-					paddingBottom="5px"
-					alignSelf="center"
-				>
+		<Box bgImage="url(/forest.jpg)" bgPosition="center" minH="100vh" display="flex" justifyContent="center">
+			<Card w={{ base: "300px", md: "600px", lg: "800px" }} background="#f9f7e8" alignSelf="center" padding="20px">
+				<Text fontSize={{ base: "20px", md: "30px", lg: "50px" }} paddingBottom="5px" alignSelf="center">
 					Welcome back ADMIN!
 				</Text>
 				<InputGroup size="md">

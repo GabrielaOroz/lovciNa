@@ -1,11 +1,13 @@
-import {Text, Card, CardHeader, CardBody, CardFooter, Heading, Button, Flex} from "@chakra-ui/react"
-import MainBase from "../MainBase"
+import { Text, Card, CardHeader, CardBody, CardFooter, Heading, Button, Flex } from "@chakra-ui/react";
+import MainBase from "../MainBase";
 
-export default function Start(){
-    return(
-        <>
-        <Text p="20px" textAlign="center">In building... see you soon.</Text>
-        {/*<MainBase>
+export default function Start() {
+	return (
+		<>
+			<Text p="20px" textAlign="center">
+				In building... see you soon.
+			</Text>
+			{/*<MainBase>
             <Text 
                 color="green.700" 
                 fontSize={{base: "2xl", md: "4xl", lg: "5xl"}} 
@@ -31,6 +33,6 @@ export default function Start(){
                 </CardFooter>
             </Card>
         </MainBase>*/}
-        </>
-    )
+		</>
+	);
 }

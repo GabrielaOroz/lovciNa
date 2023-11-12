@@ -39,7 +39,7 @@ export default function Register() {
 	const navigate = useNavigate();
 
 	const validateEmail = () => {
-		const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/i; //sensitive case email??
+		const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/i;
 		if (emailRegex.test(email)) {
 			setRightEmail(true);
 			return true;
@@ -49,7 +49,8 @@ export default function Register() {
 		}
 	};
 	const validateFirstName = () => {
-		const nameRegex = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u //^[a-z ,.'-]+$/i;
+		const nameRegex =
+			/^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u;
 		if (nameRegex.test(firstName)) {
 			setRightFirstName(true);
 			return true;
@@ -59,7 +60,8 @@ export default function Register() {
 		}
 	};
 	const validateLastName = () => {
-		const nameRegex = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u //^[a-z ,.'-]+$/i;
+		const nameRegex =
+			/^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u;
 		if (nameRegex.test(lastName)) {
 			setRightLastName(true);
 			return true;
@@ -173,17 +175,8 @@ export default function Register() {
 					</Show>
 				</Flex>
 
-				<RadioGroup
-					value={role}
-					onChange={(newValue) => setRole(newValue)}
-					alignSelf="center"
-					color="gree700"
-				>
-					<Stack
-						direction={["column", "column", "column", "row"]}
-						spacing="20px"
-						align="center"
-					>
+				<RadioGroup value={role} onChange={(newValue) => setRole(newValue)} alignSelf="center" color="gree700">
+					<Stack direction={["column", "column", "column", "row"]} spacing="20px" align="center">
 						<Radio colorScheme="green" value="tracker">
 							Tracker
 						</Radio>
@@ -199,9 +192,8 @@ export default function Register() {
 				<Input
 					type="text"
 					placeholder="First name"
-					_placeholder={{ color: "green700" }}
-					focusBorderColor={rightFirstName ? "green700" : "#AA0000"}
-					borderColor={rightFirstName ? "green700" : "#FF0000"}
+					focusBorderColor={rightFirstName ? "" : "#AA0000"}
+					borderColor={rightFirstName ? "" : "#FF0000"}
 					value={firstName}
 					onChange={(e) => setFirstName(e.target.value)}
 					id="firstName"
@@ -209,79 +201,44 @@ export default function Register() {
 				<Input
 					type="text"
 					placeholder="Last name"
-					_placeholder={{ color: "green700" }}
-					focusBorderColor={rightFirstName ? "green700" : "#AA0000"}
-					borderColor={rightLastName ? "green700" : "#FF0000"}
+					focusBorderColor={rightFirstName ? "" : "#AA0000"}
+					borderColor={rightLastName ? "" : "#FF0000"}
 					value={lastName}
 					onChange={(e) => setLastName(e.target.value)}
 					id="lastName"
 				/>
 
-				<Input
-					style={{ display: "none" }}
-					type="file"
-					ref={inputRef}
-					onChange={handleFileChange}
-					id="file"
-				/>
-				<Button
-					marginTop="15px"
-					onClick={handleFileUpload}
-					bgColor="#F1EDD4"
-					_hover={{ bg: "gree700" }}
-					border="0"
-				>
+				<Input style={{ display: "none" }} type="file" ref={inputRef} onChange={handleFileChange} id="file" />
+				<Button marginTop="15px" onClick={handleFileUpload} bgColor="#F1EDD4" border="0">
 					Upload profile picture
 				</Button>
-				<img
-					src={selectedFile && URL.createObjectURL(selectedFile)}
-					color="gree700"
-					alt={selectedFile ? selectedFile.name : ""}
-				/>
+				<img src={selectedFile && URL.createObjectURL(selectedFile)} alt={selectedFile ? selectedFile.name : ""} />
 				{selectedFile && (
-					<Button
-						w="200px"
-						alignSelf="center"
-						bgColor="#F1EDD4"
-						_hover={{ bg: "green700" }}
-						onClick={() => setSelectedFile("")}
-					>
+					<Button w="200px" alignSelf="center" bgColor="#F1EDD4" onClick={() => setSelectedFile("")}>
 						Remove picture
 					</Button>
 				)}
-				<Text
-					style={{ display: rightPicture ? "none" : "block" }}
-					fontSize="sm"
-					fontWeight="bold"
-					color="#CC0000"
-				>
+				<Text style={{ display: rightPicture ? "none" : "block" }} fontSize="sm" fontWeight="bold" color="#CC0000">
 					Please, upload your profile picture
 				</Text>
 
 				<Input
 					type="email"
 					placeholder="Email adress"
-					_placeholder={{ color: "green700" }}
-					focusBorderColor={rightEmail ? "green700" : "#AA0000"}
-					borderColor={rightEmail ? "green700" : "#FF0000"}
+					focusBorderColor={rightEmail ? "" : "#AA0000"}
+					borderColor={rightEmail ? "" : "#FF0000"}
 					value={email}
 					onChange={(e) => setEmail(e.target.value)}
 					id="email"
 				/>
-				<Text
-					style={{ display: rightEmail ? "none" : "block" }}
-					fontSize="sm"
-					fontWeight="bold"
-					color="#CC0000"
-				>
+				<Text style={{ display: rightEmail ? "none" : "block" }} fontSize="sm" fontWeight="bold" color="#CC0000">
 					Invalid email format
 				</Text>
 				<Input
 					type="text"
 					placeholder="Username"
-					_placeholder={{ color: "green700" }}
-					focusBorderColor={rightUsername ? "green700" : "#AA0000"}
-					borderColor={rightUsername ? "green700" : "#FF0000"}
+					focusBorderColor={rightUsername ? "" : "#AA0000"}
+					borderColor={rightUsername ? "" : "#FF0000"}
 					value={username}
 					onChange={(e) => setUsername(e.target.value)}
 					id="username"
@@ -290,9 +247,8 @@ export default function Register() {
 					<Input
 						type={showPass ? "text" : "password"}
 						placeholder="Enter password"
-						_placeholder={{ color: "green.700" }}
-						focusBorderColor={rightPass ? "green.700" : "#AA0000"}
-						borderColor={rightPass ? "green.700" : "#FF0000"}
+						focusBorderColor={rightPass ? "" : "#AA0000"}
+						borderColor={rightPass ? "" : "#FF0000"}
 						value={password}
 						onChange={(e) => setPassword(e.target.value)}
 						id="password"
@@ -310,14 +266,9 @@ export default function Register() {
 					</InputRightElement>
 				</InputGroup>
 
-				<Text
-					style={{ display: rightPass ? "none" : "block" }}
-					fontSize="sm"
-					fontWeight="bold"
-					color="#CC0000"
-				>
-					Password must be between 8 and 16 characters and include
-					letters(A-Z), numbers(0-9) and special characters(!,@,#,$,%,^,&,*)
+				<Text style={{ display: rightPass ? "none" : "block" }} fontSize="sm" fontWeight="bold" color="#CC0000">
+					Password must be between 8 and 16 characters and include letters(A-Z), numbers(0-9) and special
+					characters(!,@,#,$,%,^,&,*)
 				</Text>
 
 				<Button
@@ -332,16 +283,14 @@ export default function Register() {
 					Submit
 				</Button>
 
-				<Text alignSelf="center" color="#CC0000">{error}</Text>
+				<Text alignSelf="center" color="#CC0000">
+					{error}
+				</Text>
 
 				<Text alignSelf="center" color="black">
 					Already have an account?
 					<Link to="/login">
-						<Button
-							paddingLeft="5px"
-							variant="unstyled"
-							color="green.700"
-						>
+						<Button paddingLeft="5px" variant="unstyled" color="green.700">
 							Log In
 						</Button>
 					</Link>

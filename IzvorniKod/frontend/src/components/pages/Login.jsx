@@ -1,12 +1,4 @@
-import {
-	Button,
-	Flex,
-	Input,
-	InputGroup,
-	InputRightElement,
-	Show,
-	Text,
-} from "@chakra-ui/react";
+import { Button, Flex, Input, InputGroup, InputRightElement, Show, Text } from "@chakra-ui/react";
 import Base from "../Base";
 import FormCard from "../FormCard";
 import { useState } from "react";
@@ -18,7 +10,6 @@ export default function Login() {
 	const [username, setUsername] = useState("");
 	const [password, setPassword] = useState("");
 	const [error, setError] = useState("");
-	//const [loginError, setLoginError] = useState('');
 
 	const navigate = useNavigate();
 
@@ -120,11 +111,7 @@ export default function Login() {
 				<Text alignSelf="center" color="black">
 					Don't have an account?
 					<Link to="/register">
-						<Button
-							paddingLeft="5px"
-							variant="unstyled"
-							color="green.700"
-						>
+						<Button paddingLeft="5px" variant="unstyled" color="green.700">
 							Register
 						</Button>
 					</Link>
