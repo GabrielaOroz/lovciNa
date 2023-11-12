@@ -32,6 +32,74 @@ export default function ListOfUsers() {
 	const [photoURL, setPhotoURL] = useState("");
 	const [selectedFile, setSelectedFile] = useState("");
 
+	const [rightEmail, setRightEmail] = useState(true);
+	const [rightFirstName, setRightFirstName] = useState(true);
+	const [rightLastName, setRightLastName] = useState(true);
+	const [rightPicture, setRightPicture] = useState(true);
+	const [rightPass, setRightPass] = useState(true);
+	const [rightUsername, setRightUsername] = useState(true);
+
+	const validateEmail = () => {
+		const emailRegex = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/i; //sensitive case email??
+		if (emailRegex.test(email)) {
+			setRightEmail(true);
+			return true;
+		} else {
+			setRightEmail(false);
+			return false;
+		}
+	};
+	const validateFirstName = () => {
+		const nameRegex = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u //^[a-z ,.'-]+$/i;
+		if (nameRegex.test(firstName)) {
+			setRightFirstName(true);
+			return true;
+		} else {
+			setRightFirstName(false);
+			return false;
+		}
+	};
+	const validateLastName = () => {
+		const nameRegex = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/u //^[a-z ,.'-]+$/i;
+		if (nameRegex.test(lastName)) {
+			setRightLastName(true);
+			return true;
+		} else {
+			setRightLastName(false);
+			return false;
+		}
+	};
+	const validatePass = () => {
+		const passRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[\w!@#$%^&*]{8,16}$/;
+		if (passRegex.test(password)) {
+			setRightPass(true);
+			return true;
+		} else {
+			setRightPass(false);
+			return false;
+		}
+	};
+	const validateUsername = () => {
+		const usernameRegex = /^\w+$/;
+		if (usernameRegex.test(username)) {
+			setRightUsername(true);
+			return true;
+		} else {
+			setRightUsername(false);
+			return false;
+		}
+	};
+
+	const validatePicture = () => {
+		if (selectedFile == null) {
+			setRightPicture(false);
+			return false;
+		} else {
+			setRightPicture(true);
+			return true;
+		}
+	};
+
 	const changeFirstName = (e) => {
 		setFirstName(e.target.value);
 	};
@@ -67,31 +135,37 @@ export default function ListOfUsers() {
 	};
 
 	const handleSubmit = () => {
-		const formData = new FormData();
-    formData.append("id", id);
-		formData.append("allowedRole", role);
-		formData.append("firstName", firstName);
-		formData.append("lastName", lastName);
-		formData.append("selectedFile", selectedFile);
-		formData.append("email", email);
-		formData.append("username", username);
-		formData.append("password", password);
-		for (const entry of formData.entries()) {
-			console.log(entry[0] + ":", entry[1]);
-		}
 
-		fetch("http://localhost:8000/admin/newInfo", {
-			method: "POST",
-			body: formData,
-		})
-			.then((res) => {
-				console.log(res);
-				if (res.ok) {
-					navigate("/admin-listOfUsers");
-				}
+		
+
+		
+			const formData = new FormData();
+			formData.append("id", id);
+			formData.append("allowedRole", role);
+			formData.append("firstName", firstName);
+			formData.append("lastName", lastName);
+			formData.append("selectedFile", selectedFile);
+			formData.append("email", email);
+			formData.append("username", username);
+			formData.append("password", password);
+			for (const entry of formData.entries()) {
+				console.log(entry[0] + ":", entry[1]);
+			}
+
+			fetch("http://localhost:8000/admin/newInfo", {
+				method: "POST",
+				body: formData,
 			})
-			.then((data) => console.log(data))
-			.catch((err) => console.error(err));
+				.then((res) => {
+					console.log(res);
+					if (res.ok) {
+						navigate("/admin-listOfUsers");
+					}
+				})
+				.then((data) => console.log(data))
+				.catch((err) => console.error(err));
+			
+		
 	};
 	const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -105,8 +179,9 @@ export default function ListOfUsers() {
 				setRegisteredUsers(data);
 			})
 			.catch((err) => console.error(err));
-	};
 
+		}
+ 
 	return (
 		<Box
 			bgImage="url(/forest.jpg)"
@@ -216,12 +291,29 @@ export default function ListOfUsers() {
 												onChange={changeEmail}
 												placeholder="Email"
 											/>
+											<Text
+												style={{ display: rightEmail ? "none" : "block" }}
+												fontSize="sm"
+												fontWeight="bold"
+												color="#CC0000"
+											>
+												Invalid email format
+											</Text>
 											<Input
 												marginBottom="10px"
 												defaultValue={password}
 												onChange={changePassword}
 												placeholder="Password"
 											/>
+											<Text
+												style={{ display: rightPass ? "none" : "block" }}
+												fontSize="sm"
+												fontWeight="bold"
+												color="#CC0000"
+											>
+												Password must be between 8 and 16 characters and include
+												letters(A-Z), numbers(0-9) and special characters(!,@,#,$,%,^,&,*)
+											</Text>
 
 											<Input
 												style={{ display: "none" }}
@@ -272,9 +364,19 @@ export default function ListOfUsers() {
 											<Button
 												colorScheme="green"
 												onClick={() => {
-													setSelectedFile("");
-													handleSubmit();
-													onClose();
+													validateFirstName();
+													validateLastName();
+													validateEmail();
+													validateUsername();
+													validatePicture();
+													validatePass();
+													if(validateFirstName() && validateLastName() && validateEmail() && validateUsername() && 
+													validatePicture() && validatePass()) {
+														setSelectedFile("");
+														handleSubmit();
+														onClose();
+													}
+													
 												}}
 											>
 												Confirm
