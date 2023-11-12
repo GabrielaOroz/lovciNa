@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
@@ -49,8 +50,48 @@ public class UserServiceJpa implements UserService {
 
 
     @Override
-    public List<User> listAllRegistered() {
-        return userRepo.listAllRegistered();      //findAll nadljeduje iz JpaRepository
+    public List<RegisteredDTO> listAllRegistered() {
+        System.out.println("tu sam 1 prije");
+        List<User> lista = userRepo.listAllRegistered();
+        List<RegisteredDTO> listaDTO = new ArrayList<>();
+        System.out.println("tu sam 2 polsije");
+
+        for(User user : lista){
+            RegisteredDTO regUser = new RegisteredDTO();
+
+            regUser.setName(user.getName());
+            regUser.setSurname(user.getSurname());
+            regUser.setEmail(user.getEmail());
+            regUser.setUsername(user.getUsername());
+            regUser.setPassword(user.getPassword());
+            regUser.setPhoto(user.getPhoto());
+            regUser.setRole(user.getRole());
+            regUser.setId(user.getId());
+
+            listaDTO.add(regUser);
+        }
+
+        for (RegisteredDTO user : listaDTO) {
+
+            if (user.getRole().equals("manager")){
+                Optional<Manager> manager = managerRepo.findById(user.getId());
+                if(manager.isPresent()){
+                    if(!manager.get().isApproved()){
+                        user.setApproved(false);
+                    }
+                }
+            }
+            else if (user.getRole().equals("researcher")){
+                Optional<Researcher> researcher = researcherRepo.findById(user.getId());
+                if(researcher.isPresent()){
+                    if(!researcher.get().isApproved()){
+                        user.setApproved(false);
+                    }
+                }
+            }
+        }
+
+        return listaDTO;      //findAll nadljeduje iz JpaRepository
     }
 
     public int enableUser(String email) {

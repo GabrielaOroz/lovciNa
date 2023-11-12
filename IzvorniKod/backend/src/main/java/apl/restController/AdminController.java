@@ -2,6 +2,7 @@ package apl.restController;
 
 import apl.domain.AdminLogInDTO;
 import apl.domain.ChangeUserDTO;
+import apl.domain.RegisteredDTO;
 import apl.domain.User;
 import apl.service.UserService;
 import org.hibernate.mapping.Column;
@@ -22,8 +23,8 @@ public class AdminController {
     private UserService userService;
 
     @GetMapping("/admin/registeredUsers") //kad dođe GET zahtjev, on će se spojit ovdje i pozvati metodu deklariranu u userService
-    public ResponseEntity<List<User>> listUsers() {
-        List<User> listOfUsers = userService.listAllRegistered();
+    public ResponseEntity<List<RegisteredDTO>> listUsers() {
+        List<RegisteredDTO> listOfUsers = userService.listAllRegistered();
         return ResponseEntity.ok(listOfUsers);
     }
     @PostMapping("/admin")

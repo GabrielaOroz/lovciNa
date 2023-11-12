@@ -2,6 +2,7 @@ package apl.service;
 
 import apl.domain.ChangeUserDTO;
 import apl.domain.LogInDTO;
+import apl.domain.RegisteredDTO;
 import apl.domain.User;
 
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
 
 
 public interface UserService {
-    List<User> listAllRegistered();
+    List<RegisteredDTO> listAllRegistered();
 
     List<User> listAll();
 
@@ -21,5 +22,6 @@ public interface UserService {
     int logInAdmin(String pass);
 
     int updateUser(User user);
+
     String confirmToken(String token);
 }
