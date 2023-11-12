@@ -20,7 +20,7 @@ export default function MissingPage(){
             
         >
             <Text>Invalid link</Text>
-            <Text>You got lost in the woods</Text>
+            <Text>You got lost in the woods.</Text>
         </Card>
             
         </Box>

@@ -75,7 +75,7 @@ public class UserController {
                 user.setPhoto(selectedFile.getBytes());
                 // You can save the profile photo to a file or database here
             } catch (IOException e) {
-                System.out.println("Error processing profile phot");
+                System.out.println("Error processing profile photo");
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing profile photo");
             }
         }

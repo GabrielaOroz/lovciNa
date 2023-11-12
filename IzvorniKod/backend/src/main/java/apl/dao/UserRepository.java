@@ -1,5 +1,6 @@
 package apl.dao;
 
+import apl.domain.ChangeUserDTO;
 import apl.domain.User;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -26,8 +27,16 @@ public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByEmail(String email);
     List<User> findByRegistered(boolean registered);
 
+    //@Override
+    //Optional<User> findById(Long id);
+
     int countByUsername(String username);
     int countByEmail(String email);
+
+
+    @Transactional
+    @Query("SELECT u FROM User u WHERE u.registered = true")
+    List<User> listAllRegistered();
 
     //@Query("UPDATE my_user a " +
      //       "SET a.registered = TRUE WHERE a.email = ?1")
@@ -35,4 +44,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Query("UPDATE User u SET u.registered = true WHERE u.email = ?1")
     int enableUser(String emailParam);
+
+
+
 }

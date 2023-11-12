@@ -6,18 +6,15 @@ import apl.email.EmailSender;
 import apl.email.EmailValidator;
 import apl.token.ConfirmationToken;
 import apl.token.ConfirmationTokenService;
-import apl.service.RequestDeniedException;
 import apl.service.UserService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
 
-import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 //ovdje se pišu sve funkcije koje nam trebaju
@@ -52,13 +49,19 @@ public class UserServiceJpa implements UserService {
 
 
     @Override
-    public List<User> listAll() {
-        return userRepo.findAll();      //findAll nadljeduje iz JpaRepository
+    public List<User> listAllRegistered() {
+        return userRepo.listAllRegistered();      //findAll nadljeduje iz JpaRepository
     }
 
     public int enableUser(String email) {
         return userRepo.enableUser(email);
     }
+
+    @Override
+    public List<User> listAll() {
+        return null;
+    }
+
     @Override
     public int createUser(User user, Long stationId) {
         System.out.println("usao sam u createUser");
@@ -163,6 +166,28 @@ public class UserServiceJpa implements UserService {
     @Override
     public int logInAdmin(String pass) {
         if (pass.equals("admin")) {
+            return 0;
+        }
+        return -1;
+    }
+
+    @Override
+    public int updateUser(User userD) {
+        Optional<User> userOptional = userRepo.findById(userD.getId());
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+
+            user.setName(userD.getName());
+            user.setSurname(userD.getSurname());
+            user.setEmail(userD.getEmail());
+            user.setUsername(userD.getUsername());
+            user.setPassword(userD.getPassword());
+            user.setPhoto(userD.getPhoto());
+            try {
+                userRepo.save(user);
+            } catch (Exception e) {
+                return -1;
+            }
             return 0;
         }
         return -1;
