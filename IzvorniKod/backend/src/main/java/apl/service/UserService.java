@@ -1,9 +1,6 @@
 package apl.service;
 
-import apl.domain.ChangeUserDTO;
-import apl.domain.LogInDTO;
-import apl.domain.RegisteredDTO;
-import apl.domain.User;
+import apl.domain.*;
 
 import java.util.List;
 
@@ -23,5 +20,6 @@ public interface UserService {
 
     int updateUser(User user);
 
+    int approveUser(ApprovedDTO user);
     String confirmToken(String token);
 }

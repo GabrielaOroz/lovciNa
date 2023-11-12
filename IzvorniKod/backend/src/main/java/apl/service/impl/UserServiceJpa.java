@@ -248,6 +248,36 @@ public class UserServiceJpa implements UserService {
         }
         return -1;
     }
+    @Override
+    public int approveUser(ApprovedDTO approvedDTO) {
+        Optional<User> userOptional = userRepo.findById(approvedDTO.getId());
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+
+            if (user.getRole().equals("manager")) {
+                Optional<Manager> managerOptional = managerRepo.findById(user.getId());
+                if(managerOptional.isPresent()){
+                    Manager manager = managerOptional.get();
+                    if (!manager.isApproved()) {
+                        manager.setApproved(true);
+                        managerRepo.save(manager);
+                    }
+                }
+            }
+            if (user.getRole().equals("researcher")) {
+                Optional<Researcher> researcherOptional = researcherRepo.findById(user.getId());
+                if(researcherOptional.isPresent()){
+                    Researcher researcher = researcherOptional.get();
+                    if (!researcher.isApproved()) {
+                        researcher.setApproved(true);
+                        researcherRepo.save(researcher);
+                    }
+                }
+            }
+            return 0;
+        }
+        return -1;
+    }
 
     @Transactional
     public String confirmToken(String token) {

@@ -1,9 +1,6 @@
 package apl.restController;
 
-import apl.domain.AdminLogInDTO;
-import apl.domain.ChangeUserDTO;
-import apl.domain.RegisteredDTO;
-import apl.domain.User;
+import apl.domain.*;
 import apl.service.UserService;
 import org.hibernate.mapping.Column;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,5 +70,15 @@ public class AdminController {
             return ResponseEntity.ok("Changes confirmed!");
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cannot update user!");
+    }
+
+    @PutMapping("/admin/approved")
+    public ResponseEntity<String> approveUser(@RequestBody ApprovedDTO approvedDTO) {
+        int res = userService.approveUser(approvedDTO);
+        if (res == 0) {
+            return ResponseEntity.ok("Status changed");
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cannot change status");
+
     }
 }
