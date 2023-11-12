@@ -19,7 +19,7 @@ import {
 import { useRef, useState } from "react";
 
 export default function ListOfUsers() {
-  
+
 	// USER INFO
 	const [id, setId] = useState();
 	const [firstName, setFirstName] = useState("");
@@ -143,6 +143,7 @@ export default function ListOfUsers() {
 		})
 			.then((res) => res.json())
 			.then((data) => {
+        console.log(data)
 				setRegisteredUsers(data);
 			});
 	};
@@ -202,7 +203,6 @@ export default function ListOfUsers() {
 				<Button marginTop="8px" marginBottom="8px" colorScheme="green" onClick={() => handleUsers()}>
 					Load all registered users.
 				</Button>
-				{!registeredUsers && <Text>There are no registered users.</Text>}
 				<Divider color="green" />
 				{registeredUsers && (
 					<>
@@ -226,7 +226,7 @@ export default function ListOfUsers() {
 									>
 										{user.name} {user.surname}
 									</Button>
-									{(user.role === "manager" || user.role === "researcher") && (
+									{(user.role === "manager" || user.role === "researcher") && !user.approved &&(
 										<Button onClick={() => handleApproval(user.id, user.role)} colorScheme="green" m="10px">
 											Approve role: {user.role}
 										</Button>
