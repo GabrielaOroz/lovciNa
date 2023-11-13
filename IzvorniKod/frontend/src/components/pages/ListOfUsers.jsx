@@ -110,7 +110,7 @@ export default function ListOfUsers() {
 	};
 	const validatePass = () => {
 		const passRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[\w!@#$%^&*]{8,16}$/;
-		if (passRegex.test(password)) {
+		if (passRegex.test(password) || password.length < 1) {
 			setRightPass(true);
 			return true;
 		} else {
@@ -219,7 +219,6 @@ export default function ListOfUsers() {
 											setLastName(user.surname);
 											setUsername(user.username);
 											setEmail(user.email);
-											setPassword(user.password);
 											convertByteArrayToUrl(user.photo);
 										}}
 										p="10px"
@@ -239,6 +238,7 @@ export default function ListOfUsers() {
 									isOpen={isOpen}
 									onClose={() => {
 										clearError();
+										setPassword("");
 										setSelectedFile("");
 										onClose();
 									}}
@@ -346,6 +346,7 @@ export default function ListOfUsers() {
 												variant="ghost"
 												onClick={() => {
 													clearError();
+													setPassword("");
 													setSelectedFile("");
 													onClose();
 												}}
@@ -367,6 +368,7 @@ export default function ListOfUsers() {
 														validateUsername() &&
 														validatePass()
 													) {
+														setPassword("");
 														setSelectedFile("");
 														handleSubmit();
 														onClose();

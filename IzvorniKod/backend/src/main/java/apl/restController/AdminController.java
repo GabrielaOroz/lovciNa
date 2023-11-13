@@ -41,7 +41,7 @@ public class AdminController {
                                                    @RequestPart(name ="selectedFile", required = false) MultipartFile selectedFile,
                                                    @RequestParam("email") String email,
                                                    @RequestParam("username") String username,
-                                                   @RequestParam("password") String password
+                                                   @RequestParam(name ="password", required = false) String password
     ) {
         System.out.println("nestooooo");
         User user = new User();
