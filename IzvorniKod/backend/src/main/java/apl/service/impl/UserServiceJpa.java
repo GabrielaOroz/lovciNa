@@ -55,7 +55,30 @@ public class UserServiceJpa implements UserService {
 
     //@Autowired
     //private UserServiceJpa userService;
+    public UserServiceJpa(UserRepository userRepo, PasswordEncoder passwordEncoder) {
+        this.userRepo = userRepo;
+        this.passwordEncoder = passwordEncoder;
+    }
 
+    public User saveManager(Manager manager) {
+        manager.setPassword(this.passwordEncoder.encode(manager.getPassword()));
+        return this.managerRepo.save(manager);
+    }
+
+    public User saveResearcher(Researcher researcher) {
+        researcher.setPassword(this.passwordEncoder.encode(researcher.getPassword()));
+        return this.researcherRepo.save(researcher);
+    }
+
+    public User saveTracker(Tracker tracker) {
+        tracker.setPassword(this.passwordEncoder.encode(tracker.getPassword()));
+        return this.trackerRepo.save(tracker);
+    }
+
+    public User saveUser(User user ) {
+        user.setPassword(this.passwordEncoder.encode(user.getPassword()));
+        return this.userRepo.save(user);
+    }
 
     @Override
     public List<RegisteredDTO> listAllRegistered() {
@@ -140,25 +163,25 @@ public class UserServiceJpa implements UserService {
 
 
 
-        if(user.getRole().equals("researcher") && stationId==null){
+        if(user.getRole().equals("researcher") && stationId == null){
             try {
                 System.out.println("uso u researcher");
-                user=researcherRepo.save(new Researcher(user));
-                success=true;
+                user = saveResearcher(new Researcher(user));
+                success = true;
             } catch (Exception e) {return -1;}
 
-        } else if (stationId!=null) {
+        } else if (stationId != null) {
             if (user.getRole().equals("manager")) {
                 try {
                     System.out.println("presave");
-                    user=managerRepo.save(new Manager(user,stationId));
-                    success=true;
+                    user = saveManager(new Manager(user,stationId));
+                    success = true;
                     System.out.println("postsave");
                 } catch (Exception e) {return -1;}
 
             } else if (user.getRole().equals("tracker")) {
                 try {
-                    user=trackerRepo.save(new Tracker(user, stationId));
+                    user = saveTracker(new Tracker(user, stationId));
                     success = true;
                 } catch (Exception e) {
                     return -1;
@@ -170,7 +193,7 @@ public class UserServiceJpa implements UserService {
 
 
 
-        if (success==true) {
+        if (success == true) {
             String token = UUID.randomUUID().toString();
             ConfirmationToken confirmationToken = new ConfirmationToken(token,
                     LocalDateTime.now(),
@@ -189,8 +212,13 @@ public class UserServiceJpa implements UserService {
     @Override
     public int logInUser(LogInDTO loginuser) {
         User user = new User();
+
+
         user.setUsername(loginuser.getUsername());
-        user.setPassword(loginuser.getPassword());
+        //user.setPassword(this.passwordEncoder.encode(loginuser.getPassword()));
+        //System.out.println(user.getPassword());
+
+
 
         if (userRepo.countByUsername(user.getUsername()) == 0){
             System.out.println("ne postoji user2");
@@ -204,7 +232,8 @@ public class UserServiceJpa implements UserService {
             return -2;
         }
 
-        if(!(user1.getPassword().equals(user.getPassword()))) {
+        String storedPassword = user1.getPassword();
+        if(!(passwordEncoder.matches(loginuser.getPassword(),storedPassword))) {
             System.out.println("krivi password");
             return -3;
         }
@@ -240,7 +269,7 @@ public class UserServiceJpa implements UserService {
             user.setPassword(userD.getPassword());
 
             try {
-                userRepo.save(user);
+                saveUser(user);
             } catch (Exception e) {
                 return -1;
             }
