@@ -43,7 +43,7 @@ public class AdminController {
                                                    @RequestParam("username") String username,
                                                    @RequestParam(name ="password", required = false) String password
     ) {
-        System.out.println("nestooooo");
+
         User user = new User();
         user.setId(id);
         user.setName(firstName);
@@ -53,7 +53,6 @@ public class AdminController {
         user.setPassword(password);
 
         if (selectedFile != null) {
-            System.out.println("slika jee:" + selectedFile.toString());
             try {
                 user.setPhoto(selectedFile.getBytes());
             } catch (IOException e) {
@@ -62,7 +61,6 @@ public class AdminController {
             }
         } else {
             user.setPhoto(null);
-            System.out.println("slika jee:");
         }
 
         int res = userService.updateUser(user);

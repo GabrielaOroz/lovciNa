@@ -33,6 +33,5 @@ public class Manager extends User {
     private boolean approved = false;
 
     @NotNull
-    //@Column(unique = true)
     private Long stationId;
 }

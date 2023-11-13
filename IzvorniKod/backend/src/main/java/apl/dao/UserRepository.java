@@ -18,8 +18,6 @@ import java.util.Optional;
 @Repository
 @Transactional
 public interface UserRepository extends JpaRepository<User, Long> {
-    //komunicira s bazom
-    //<User, Long> tip entiteta i tip IDa
 
     Optional<User> findByUsername(String username);
     List<User> findByRole(String role);
@@ -27,9 +25,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     List<User> findBySurname(String surname);
     Optional<User> findByEmail(String email);
     List<User> findByRegistered(boolean registered);
-
-    //@Override
-    //Optional<User> findById(Long id);
 
     int countByUsername(String username);
     int countByEmail(String email);
@@ -39,8 +34,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u WHERE u.registered = true")
     List<User> listAllRegistered();
 
-    //@Query("UPDATE my_user a " +
-     //       "SET a.registered = TRUE WHERE a.email = ?1")
     @Transactional
     @Modifying
     @Query("UPDATE User u SET u.registered = true WHERE u.email = ?1")

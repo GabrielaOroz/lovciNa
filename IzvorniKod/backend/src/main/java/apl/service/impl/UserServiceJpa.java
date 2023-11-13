@@ -3,7 +3,6 @@ package apl.service.impl;
 import apl.dao.*;
 import apl.domain.*;
 import apl.email.EmailSender;
-import apl.email.EmailValidator;
 import apl.token.ConfirmationToken;
 import apl.token.ConfirmationTokenService;
 import apl.service.UserService;
@@ -29,9 +28,6 @@ import java.util.UUID;
 @Service
 public class UserServiceJpa implements UserService {
 
-    //Dependency injection
-    //@Autowired
-    private EmailValidator emailValidator;
     @Autowired  //kažemo mu da nam automatski "pospaja" sve reference i objekte koje smo mi stvorili
     private UserRepository userRepo;    //varijabla objekta
     @Autowired
@@ -43,7 +39,6 @@ public class UserServiceJpa implements UserService {
     @Autowired
     private TrackerRepository trackerRepo;
 
-    //private BCryptPasswordEncoder bCryptPasswordEncoder;
 
     PasswordEncoder passwordEncoder;
 
@@ -53,8 +48,6 @@ public class UserServiceJpa implements UserService {
     @Autowired
     private EmailSender emailSender;
 
-    //@Autowired
-    //private UserServiceJpa userService;
     public UserServiceJpa(UserRepository userRepo, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
         this.passwordEncoder = passwordEncoder;
@@ -82,10 +75,8 @@ public class UserServiceJpa implements UserService {
 
     @Override
     public List<RegisteredDTO> listAllRegistered() {
-        System.out.println("tu sam 1 prije");
         List<User> lista = userRepo.listAllRegistered();
         List<RegisteredDTO> listaDTO = new ArrayList<>();
-        System.out.println("tu sam 2 polsije");
 
         for(User user : lista){
             RegisteredDTO regUser = new RegisteredDTO();
@@ -122,7 +113,7 @@ public class UserServiceJpa implements UserService {
             }
         }
 
-        return listaDTO;      //findAll nadljeduje iz JpaRepository
+        return listaDTO;
     }
 
     public int enableUser(String email) {
@@ -136,14 +127,9 @@ public class UserServiceJpa implements UserService {
 
     @Override
     public int createUser(User user, Long stationId) {
-        System.out.println("usao sam u createUser");
-        //boolean isValidEmail = emailValidator.
-          //      test(user.getEmail());
 
         boolean success=false;
-        //if (!isValidEmail) {
-          //  throw new IllegalStateException("email not valid");
-        //}
+
         Assert.notNull(user, "User object must be given");  //moramo dobit objekt, ne možemo u bazu stavit null
         Assert.isNull(user.getId(), "Student ID must be null, not " + user.getId());    //zato što ga mi settiramo autom s generated value
 
@@ -158,14 +144,9 @@ public class UserServiceJpa implements UserService {
             return 3;
         }
 
-        //String encodedPswd = this.passwordEncoder.encode(user.getPassword());
-        //user.setPassword(encodedPswd);      //kodiranje lozinke
-
-
 
         if(user.getRole().equals("researcher") && stationId == null){
             try {
-                System.out.println("uso u researcher");
                 user = saveResearcher(new Researcher(user));
                 success = true;
             } catch (Exception e) {return -1;}
@@ -173,10 +154,8 @@ public class UserServiceJpa implements UserService {
         } else if (stationId != null) {
             if (user.getRole().equals("manager")) {
                 try {
-                    System.out.println("presave");
                     user = saveManager(new Manager(user,stationId));
                     success = true;
-                    System.out.println("postsave");
                 } catch (Exception e) {return -1;}
 
             } else if (user.getRole().equals("tracker")) {
@@ -201,7 +180,6 @@ public class UserServiceJpa implements UserService {
                     user);
 
             confirmationTokenService.saveConfirmationToken(confirmationToken);
-            System.out.println("bllbablbabla");
             String link = "http://localhost:8000/auth/confirm?token=" + token;
             emailSender.send(user.getEmail(), buildEmail(user.getName(), link));
 
@@ -213,28 +191,20 @@ public class UserServiceJpa implements UserService {
     public int logInUser(LogInDTO loginuser) {
         User user = new User();
 
-
         user.setUsername(loginuser.getUsername());
-        //user.setPassword(this.passwordEncoder.encode(loginuser.getPassword()));
-        //System.out.println(user.getPassword());
-
-
 
         if (userRepo.countByUsername(user.getUsername()) == 0){
-            System.out.println("ne postoji user2");
             return -1;
         }
 
         User user1=userRepo.findByUsername(user.getUsername()).orElse(null);
 
         if (!(user1.isRegistered())) {
-            System.out.println("nije potvrđen");
             return -2;
         }
 
         String storedPassword = user1.getPassword();
         if(!(passwordEncoder.matches(loginuser.getPassword(),storedPassword))) {
-            System.out.println("krivi password");
             return -3;
         }
 

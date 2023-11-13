@@ -41,7 +41,7 @@ public class ConfirmationToken {
 
 
 
-    @ManyToOne      //apl ima puno tokena, ali svaki user samo 1
+    @ManyToOne
     @JoinColumn(nullable = false, name = "user_id")
     private User user;
 

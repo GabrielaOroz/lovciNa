@@ -33,20 +33,6 @@ public class UserController {
     private UserService userService;
 
 
-    /*@GetMapping("/admin") //kad dođe GET zahtjev, on će se spojit ovdje i pozvati metodu deklariranu u userService
-    public ResponseEntity<List<User>> listUsers() {
-        List<User> listOfUsers = userService.listAll();
-        return ResponseEntity.ok(listOfUsers);
-    }
-    @PostMapping("/admin")
-    public ResponseEntity<String> logInAdmin(@RequestBody String adminPass) {
-        int res = userService.logInAdmin(adminPass);
-        if (res == 0) {
-            return ResponseEntity.ok("Admin page");
-        }
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Wrong admin password!");
-    }*/
-
     @PostMapping("/register")    //kad dođe POST zahtjev, napravi sljedeće, zapravo REGISTRIRAJ
     public ResponseEntity<String> createUser(
             @RequestParam("role") String role,
@@ -73,7 +59,6 @@ public class UserController {
         if (selectedFile != null) {
             try {
                 user.setPhoto(selectedFile.getBytes());
-                // You can save the profile photo to a file or database here
             } catch (IOException e) {
                 System.out.println("Error processing profile photo");
                 return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error processing profile photo");
@@ -82,7 +67,6 @@ public class UserController {
         else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Photo not sent");
 
         int status = userService.createUser(user,stationId);
-        System.out.println("status  "+status);
         if (status==-1) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Data not valid");
 
         if (status==1) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User with email " + user.getEmail() + " and username " + user.getUsername() + "already exists!");
@@ -95,11 +79,10 @@ public class UserController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error on server");
         }
 
-        System.out.println("registrirao novog usera");
         return ResponseEntity.ok("Register successful");
     }
 
-    @PostMapping("/login")       //post, get ?
+    @PostMapping("/login")
     public ResponseEntity<String> logInUser(@RequestBody LogInDTO user){
         int res = userService.logInUser(user);
         if(res == -1) {
@@ -115,16 +98,13 @@ public class UserController {
 
     @GetMapping(path = "/confirm")
     public void confirm(@RequestParam("token") String token, HttpServletResponse response, RedirectAttributes redirectAttributes) {
-        // Call the confirmToken method from your userService
+
         String result = userService.confirmToken(token);
 
-        // Add flash attribute
         redirectAttributes.addFlashAttribute("confirmationMessage", result);
 
-        // Set status to HTTP 302
         response.setStatus(HttpServletResponse.SC_FOUND);
 
-        // Set location header directly
         response.setHeader("Location", "http://localhost:5173/login");
     }
 }
