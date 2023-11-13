@@ -1,13 +1,5 @@
 \chapter{Arhitektura i dizajn sustava}
 		
-		\textbf{\textit{dio 1. revizije}}\\
-
-		\textit{ Potrebno je opisati stil arhitekture te identificirati: podsustave, preslikavanje na radnu platformu, spremišta podataka, mrežne protokole, globalni upravljački tok i sklopovsko-programske zahtjeve. Po točkama razraditi i popratiti odgovarajućim skicama:}
-	\begin{itemize}
-		\item 	\textit{izbor arhitekture temeljem principa oblikovanja pokazanih na predavanjima (objasniti zašto ste baš odabrali takvu arhitekturu)}
-		\item 	\textit{organizaciju sustava s najviše razine apstrakcije (npr. klijent-poslužitelj, baza podataka, datotečni sustav, grafičko sučelje)}
-		\item 	\textit{organizaciju aplikacije (npr. slojevi frontend i backend, MVC arhitektura) }		
-	\end{itemize}
 	
 	\noindent Arhitektura aplikacije je slojevita te zasnovana na događajima – MVC arhitektura, koja razdvaja aplikaciju na 3 osnovne komponente kako bi se smanjila međuovisnost te time olakšao razvoj i održavanje aplikacije. Komponente:
 	
@@ -47,9 +39,6 @@
 	
 				
 		\section{Baza podataka}
-			
-			\textbf{\textit{dio 1. revizije}}\\			
-		
 			
 				\noindent Za potrebe našeg sustava koristit ćemo relacijsku bazu podataka koja svojom strukturom olakšava modeliranje stvarnog svijeta. Temeljna jedinica baze je relacija, odnosno tablica koja je definirana svojim imenom i skupom atributa. Glavna svrha baze podataka je brza i jednostavna pohrana, izmjena i dohvaćanje podataka za daljnju obradu. Baza podataka ove aplikacije sastoji se od sljedećih entiteta:
 				

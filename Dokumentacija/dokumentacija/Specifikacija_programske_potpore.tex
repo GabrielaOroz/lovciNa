@@ -2,12 +2,6 @@
 		
 	\section{Funkcionalni zahtjevi}
 			
-			\textbf{\textit{dio 1. revizije}}\\
-			
-			\textit{Navesti \textbf{dionike} koji imaju \textbf{interes u ovom sustavu} ili  \textbf{su nositelji odgovornosti}. To su prije svega korisnici, ali i administratori sustava, naručitelji, razvojni tim.}\\
-				
-			\textit{Navesti \textbf{aktore} koji izravno \textbf{koriste} ili \textbf{komuniciraju sa sustavom}. Oni mogu imati inicijatorsku ulogu, tj. započinju određene procese u sustavu ili samo sudioničku ulogu, tj. obavljaju određeni posao. Za svakog aktora navesti funkcionalne zahtjeve koji se na njega odnose.}\\
-			
 			
 			\noindent \textbf{Dionici:}
 			
@@ -110,10 +104,6 @@
 				
 			\subsection{Obrasci uporabe}
 				
-				\textbf{\textit{dio 1. revizije}}
-				
-				\subsubsection{Opis obrazaca uporabe}
-					\textit{Funkcionalne zahtjeve razraditi u obliku obrazaca uporabe. Svaki obrazac je potrebno razraditi prema donjem predlošku. Ukoliko u nekom koraku može doći do odstupanja, potrebno je to odstupanje opisati i po mogućnosti ponuditi rješenje kojim bi se tijek obrasca vratio na osnovni tijek.}\\
 					
 					\noindent \underbar{\textbf{UC1 - Registracija}}
 					\begin{packed_item}
@@ -821,9 +811,7 @@
 					
 					
 				\subsubsection{Dijagrami obrazaca uporabe}
-					
-					\textit{Prikazati odnos aktora i obrazaca uporabe odgovarajućim UML dijagramom. Nije nužno nacrtati sve na jednom dijagramu. Modelirati po razinama apstrakcije i skupovima srodnih funkcionalnosti.}
-				\eject		
+						
 				
 				\begin{figure}[H]
 					\includegraphics[scale=0.5]{slike/dijagram1.PNG} %veličina u odnosu na širinu linije
@@ -840,10 +828,6 @@
 				\end{figure}
 				
 			\subsection{Sekvencijski dijagrami}
-				
-				\textbf{\textit{dio 1. revizije}}\\
-				
-				\textit{Nacrtati sekvencijske dijagrame koji modeliraju najvažnije dijelove sustava (max. 4 dijagrama). Ukoliko postoji nedoumica oko odabira, razjasniti s asistentom. Uz svaki dijagram napisati detaljni opis dijagrama.}\\
 				
 				\noindent \textbf{Obrazac uporabe UC6 - Voditelj odabire svoje postaje i tragače}\\
 				
@@ -899,14 +883,18 @@
 			 \textit{Nefunkcionalni zahtjevi i zahtjevi domene primjene dopunjuju funkcionalne zahtjeve. Oni opisuju \textbf{kako se sustav treba ponašati} i koja \textbf{ograničenja} treba poštivati (performanse, korisničko iskustvo, pouzdanost, standardi kvalitete, sigurnost...). Primjeri takvih zahtjeva u Vašem projektu mogu biti: podržani jezici korisničkog sučelja, vrijeme odziva, najveći mogući podržani broj korisnika, podržane web/mobilne platforme, razina zaštite (protokoli komunikacije, kriptiranje...)... Svaki takav zahtjev potrebno je navesti u jednoj ili dvije rečenice.}
 			 
 			 \begin{packed_item}
-			 	\item Vrijeme odziva poslužitelja mora biti maksimalno 10 sekundi
-			 	\item Ne smiju postojati neautorizirane naredbe od strane registriranih korisnika
-			 	\item Neregistrirani korisnici ne smiju imati pristup informacijama akcija i karata
-			 	\item Neplanirano korištenje korisničkog sučelja ne smije narušiti sigurnost podataka
-			 	\item Stranica treba biti responzivna
-			 	\item Pregledna i lagana navigacija po aplikaciji
-			 	\item Prikaz se mora jednostavno i intuitivno prilagoditi veličini zaslona
-			 	\item Aplikacija ne smije preopteretiti radnu memoriju
+			 	\item Vrijeme odziva poslužitelja mora biti maksimalno 10 sekundi.
+			 	\item Ne smiju postojati neautorizirane naredbe od strane registriranih korisnika.
+			 	\item Neregistrirani korisnici ne smiju imati pristup informacijama akcija i karata.
+			 	\item Aplikacija treba podržavati hrvatsku abecedu.
+			 	\item Neplanirano korištenje korisničkog sučelja ne smije narušiti sigurnost podataka.
+			 	\item Aplikacija treba biti responzivna.
+			 	\item Pregledna i lagana navigacija po aplikaciji.
+			 	\item Prikaz se mora jednostavno i intuitivno prilagoditi veličini zaslona.
+			 	\item Aplikacija ne smije preopteretiti radnu memoriju.
+			 	\item Lozinka registriranog korisnika u bazi podataka treba biti kriptirana.
+			 	\item Komunikacija s bazom podataka treba biti kvalitetno zaštićena.
+			 	\item Aplikaciju treba moći koristiti više korisnika istovremeno bez poteškoća.
 			 \end{packed_item}
 			 
 			 
