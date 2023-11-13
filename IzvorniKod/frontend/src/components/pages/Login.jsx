@@ -1,4 +1,4 @@
-import { Button, Flex, Input, InputGroup, InputRightElement, Show, Text } from "@chakra-ui/react";
+import { Box, Button, Flex, Input, InputGroup, InputRightElement, Show, Text } from "@chakra-ui/react";
 import Base from "../Base";
 import FormCard from "../FormCard";
 import { useState } from "react";
@@ -52,7 +52,7 @@ export default function Login() {
 					<Show above="md">
 						<GiDeerHead size="30px" color="green.700" />
 					</Show>
-					<Text fontSize="lg" color="green.700">
+					<Text fontSize="lg">
 						Start using Wild Track
 					</Text>
 					<Show above="md">
@@ -63,7 +63,6 @@ export default function Login() {
 				<Input
 					type="text"
 					placeholder="Username"
-					_placeholder={{ color: "green.700" }}
 					borderColor="green.700"
 					focusBorderColor="green.700"
 					value={username}
@@ -74,7 +73,6 @@ export default function Login() {
 					<Input
 						type={showPass ? "text" : "password"}
 						placeholder="Enter password"
-						_placeholder={{ color: "green.700" }}
 						borderColor="green.700"
 						focusBorderColor="green.700"
 						value={password}
@@ -86,7 +84,7 @@ export default function Login() {
 							h="1.75rem"
 							size="sm"
 							bgColor="#F1EDD4"
-							_hover={{ bg: "green.700" }}
+							_hover={{ bg: "#F1EFD4" }}
 							onClick={() => setShowPass(!showPass)}
 						>
 							{showPass ? "Hide" : "Show"}
@@ -108,14 +106,24 @@ export default function Login() {
 					Log In
 				</Button>
 
-				<Text alignSelf="center" color="black">
-					Don't have an account?
-					<Link to="/register">
-						<Button paddingLeft="5px" variant="unstyled" color="green.700">
-							Register
-						</Button>
-					</Link>
-				</Text>
+        <Flex direction="column">
+          <Text alignSelf="center" color="black">
+            Don't have an account?
+            <Link to="/register">
+              <Button paddingLeft="5px" variant="unstyled" color="green.700">
+                Register
+              </Button>
+            </Link>
+          </Text>
+          <Text p="0" alignSelf="center" color="black">
+            Log in as
+            <Link to="/admin" >
+              <Button paddingLeft="5px" variant="unstyled" color="green.700">
+                Admin
+              </Button>
+            </Link>
+          </Text>
+        </Flex>
 			</FormCard>
 		</Base>
 	);
