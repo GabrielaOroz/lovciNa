@@ -831,7 +831,7 @@
 				
 				\noindent \textbf{Obrazac uporabe UC6 - Voditelj odabire svoje postaje i tragače}\\
 				
-				\noindent Voditelj šalje zahtjev za prikaz stranice za odabir postaje i tragača. Poslužitelj prima zahtjev i iz baze podataka dohvaća dostupne tragače te prikazuje traženu stranicu voditelju. Voditelj odabire željenu postaju i tragače koji će biti vezani za tu postaju te potvrđuje svoj odabir. Poslužitelj prima potvrdu i sprema podatke o voditelju, postaji i tragačima u bazu podataka. Baza vraća potvrdu, a poslužitelj voditelju prikazuje stranicu s informacijama o njegovoj postaji.
+				\noindent Voditelj šalje zahtjev za prikaz stranice za odabir postaje i tragača. Poslužitelj prima zahtjev te iz baze podataka dohvaća dostupne tragače i prikazuje traženu stranicu voditelju. Voditelj odabire željenu postaju i tragače koji će biti vezani za tu postaju te potvrđuje svoj odabir. Poslužitelj prima potvrdu i sprema podatke o voditelju, postaji i tragačima u bazu podataka. Baza vraća potvrdu, a poslužitelj voditelju prikazuje stranicu s informacijama o njegovoj postaji.
 				
 				\begin{figure}[H]
 					\includegraphics[scale=0.7]{slike/UC6_sekv.PNG} %veličina slike u odnosu na originalnu datoteku i pozicija slike
@@ -843,7 +843,7 @@
 				
 				\noindent \textbf{Obrazac uporabe UC7 - Voditelj definira metode pretraživanja igrača}\\
 				
-				\noindent Voditelj šalje zahtjev za prikaz stranice s popisom tragača i njihovih trenutnih metoda pretraživanja. Poslužitelj prima zahtjev te iz baze podataka dohvaća odabrane tragače i njihove metode pretraživanja i prikazuje voditelju stranicu za promjenu metoda pretraživanja. Ako tragač nema odabranu metodu, nedostupan je za akcije i voditelju je to naznačeno posebnom porukom te je potrebno odabrati neku metodu. Voditelj odabire metode pretraživanja svim željenim tragačima te šalje nove podatke poslužitelju. Postlužitelj te podatke šalje u bazu podataka koja vraća poruku potvrde, a poslužitelj voditelju prikazuje stranicu s informacijamao njegovoj postaji.
+				\noindent Voditelj šalje zahtjev za prikaz stranice s popisom tragača i njihovih trenutnih metoda pretraživanja. Poslužitelj prima zahtjev te iz baze podataka dohvaća odabrane tragače i njihove metode pretraživanja nakon čega prikazuje voditelju stranicu za promjenu metoda pretraživanja. Ako tragač nema odabranu metodu, nedostupan je za akcije i voditelju je to naznačeno posebnom porukom te je potrebno odabrati jednu od metoda. Voditelj odabire metode pretraživanja svim željenim tragačima te šalje nove podatke poslužitelju. Postlužitelj te podatke šalje u bazu podataka koja vraća poruku potvrde, a poslužitelj voditelju prikazuje stranicu s informacijama o njegovoj postaji.
 				
 				\begin{figure}[H]
 					\includegraphics[scale=0.7]{slike/UC7_sekv.PNG} %veličina slike u odnosu na originalnu datoteku i pozicija slike
@@ -855,7 +855,7 @@
 				
 				\noindent \textbf{Obrazac uporabe UC11 - Stvaranje zadataka}\\
 				
-				\noindent Istraživač šalje zahtjev za prikazom stranice za dodjelu zadataka. Poslužitelj dohvaća dostupne tragače iz baze podataka te ih prikazuje istraživaču. Istraživač dodjeljuje zadatke za svakog tragača posebno(prolazak određenom rutom, dolazak do određene lokacije, postavljanje kamere ili uređaja za praćenje) upisom u formu pojedinačnog tragača. Nakon dodjele zadataka istraživač šalje zahtjev za spremanjem podataka. Poslužitelj prima zahtjev i šalje podatke o tragačima i zadatcima u bazu podataka. Poslužitelj odgovara porukom da je sve uspjelo.
+				\noindent Istraživač šalje zahtjev za prikazom stranice za dodjelu zadataka. Poslužitelj dohvaća dostupne tragače iz baze podataka te ih prikazuje istraživaču. Istraživač dodjeljuje zadatke za svakog tragača posebno (prolazak određenom rutom, dolazak do određene lokacije, postavljanje kamere ili uređaja za praćenje) upisom u formu pojedinačnog tragača. Nakon dodjele zadataka istraživač šalje zahtjev za spremanjem podataka. Poslužitelj prima zahtjev i šalje podatke o tragačima i zadacima u bazu podataka. Poslužitelj odgovara porukom da je sve uspješno izvedeno.
 				
 				\begin{figure}[H]
 					\includegraphics[scale=0.7]{slike/UC11_sekv.PNG} %veličina slike u odnosu na originalnu datoteku i pozicija slike
@@ -867,7 +867,7 @@
 				
 				\noindent \textbf{Obrazac uporabe UC15 - Prikaz karte za tragača}\\
 				
-				\noindent Tragač šalje zahtjev za prikazom stranice za odabir karte. Poslužitelj prima zahtjev, iz baze podataka dohvaća podatke o dostupnim akcijama te tragaču prikazuje stranicu na kojoj može odabrati kartu za određenu akciju te način prikaza informacija na karti (Popis zadataka, trenutne pozicije ostalih tragača, trenutne pozicije životinja). Ako tragač odabere popis zadataka, prikazuju mu se njegovi zadatci te ih može pregledati i označiti odrađenim. Ako tragač odabere prikaz karte i trenutnih pozicija, poslužitelj prima zahtjev, dohvaća podatke o pozicijama iz baze podataka i tragaču šalje stranicu na kojoj se prikazuje karta sa svim traženim pozicijama.
+				\noindent Tragač šalje zahtjev za prikazom stranice za odabir karte. Poslužitelj prima zahtjev, iz baze podataka dohvaća podatke o dostupnim akcijama te tragaču prikazuje stranicu na kojoj može odabrati kartu za određenu akciju te način prikaza informacija na karti (popis zadataka, trenutne pozicije ostalih tragača, trenutne pozicije životinja). Ako tragač odabere popis zadataka, prikazuju mu se njegovi zadaci te ih može pregledati i označiti odrađenim. Ako tragač odabere prikaz karte i trenutnih pozicija, poslužitelj prima zahtjev, dohvaća podatke o pozicijama iz baze podataka i tragaču šalje stranicu na kojoj se prikazuje karta sa svim traženim pozicijama.
 				
 				\begin{figure}[H]
 					\includegraphics[scale=0.7]{slike/UC15_sekv.PNG} %veličina slike u odnosu na originalnu datoteku i pozicija slike
@@ -878,9 +878,6 @@
 	
 		\section{Ostali zahtjevi}
 		
-			\textbf{\textit{dio 1. revizije}}\\
-		 
-			 \textit{Nefunkcionalni zahtjevi i zahtjevi domene primjene dopunjuju funkcionalne zahtjeve. Oni opisuju \textbf{kako se sustav treba ponašati} i koja \textbf{ograničenja} treba poštivati (performanse, korisničko iskustvo, pouzdanost, standardi kvalitete, sigurnost...). Primjeri takvih zahtjeva u Vašem projektu mogu biti: podržani jezici korisničkog sučelja, vrijeme odziva, najveći mogući podržani broj korisnika, podržane web/mobilne platforme, razina zaštite (protokoli komunikacije, kriptiranje...)... Svaki takav zahtjev potrebno je navesti u jednoj ili dvije rečenice.}
 			 
 			 \begin{packed_item}
 			 	\item Vrijeme odziva poslužitelja mora biti maksimalno 10 sekundi.
