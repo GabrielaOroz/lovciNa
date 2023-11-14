@@ -4,7 +4,10 @@ import MainBase from "../MainBase";
 export default function Start() {
 	return (
 		<>
-			<Text p="20px" textAlign="center">
+            <Heading fontSize={{ base: "1xl", md: "2xl", lg: "3xl" }} p="30px" color="green.700" fontFamily="Nature">
+						WILD TRACK
+					</Heading>
+			<Text p="10px" textAlign="center" fontSize="30px">
 				In building... see you soon.
 			</Text>
 			{/*<MainBase>
@@ -18,7 +21,7 @@ export default function Start() {
                 color="teal">
                     Action
             </Text> *}
-            
+            s
             <Card w={{base: "300px", md: "450px", lg: "700px"}} alignSelf="center">
                 <CardHeader>
                 <Text fontSize="1.5rem">Action title</Text>
