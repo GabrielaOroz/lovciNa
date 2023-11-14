@@ -18,6 +18,9 @@ public class Station {
         this.description = description;
     }
 
+    public Station() {
+    }
+
     @Id
     @GeneratedValue
     private Long id;

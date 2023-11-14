@@ -7,6 +7,7 @@ import apl.token.ConfirmationToken;
 import apl.token.ConfirmationTokenService;
 import apl.service.UserService;
 import jakarta.transaction.Transactional;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.util.Assert;
+import org.springframework.validation.annotation.Validated;
 
 import java.io.IOException;
 import java.time.LocalDateTime;
@@ -48,27 +50,38 @@ public class UserServiceJpa implements UserService {
     @Autowired
     private EmailSender emailSender;
 
+
+    private void validatePassword(String password) {
+        if (!password.matches("^(?=.*[0-9])(?=.*[!@#$%^&*])[\\w!@#$%^&*]{8,16}$")) {
+            throw new IllegalStateException("Invalid password format");
+        }
+    }
+
     public UserServiceJpa(UserRepository userRepo, PasswordEncoder passwordEncoder) {
         this.userRepo = userRepo;
         this.passwordEncoder = passwordEncoder;
     }
-
-    public User saveManager(Manager manager) {
+    @Transactional
+    private Manager saveManager( Manager manager) {
+        validatePassword(manager.getPassword());
         manager.setPassword(this.passwordEncoder.encode(manager.getPassword()));
         return this.managerRepo.save(manager);
     }
-
-    public User saveResearcher(Researcher researcher) {
+    @Transactional
+    private Researcher saveResearcher( Researcher researcher) {
+        validatePassword(researcher.getPassword());
         researcher.setPassword(this.passwordEncoder.encode(researcher.getPassword()));
         return this.researcherRepo.save(researcher);
     }
-
-    public User saveTracker(Tracker tracker) {
+    @Transactional
+    private Tracker saveTracker( Tracker tracker) {
+        validatePassword(tracker.getPassword());
         tracker.setPassword(this.passwordEncoder.encode(tracker.getPassword()));
         return this.trackerRepo.save(tracker);
     }
-
-    public User saveUser(User user ) {
+    @Transactional
+    private User saveUser( User user ) {
+        validatePassword(user.getPassword());
         user.setPassword(this.passwordEncoder.encode(user.getPassword()));
         return this.userRepo.save(user);
     }
@@ -207,7 +220,6 @@ public class UserServiceJpa implements UserService {
         if(!(passwordEncoder.matches(loginuser.getPassword(),storedPassword))) {
             return -3;
         }
-
         return 0;
     }
 
@@ -226,24 +238,30 @@ public class UserServiceJpa implements UserService {
         if (userOptional.isPresent()) {
 
             User user = userOptional.get();
-            if(userD.getPhoto() != null){
+            if(userD.getPhoto() != null) {
                 user.setPhoto(userD.getPhoto());
-            } else{
-                user.setPhoto(user.getPhoto());
             }
-
             user.setName(userD.getName());
             user.setSurname(userD.getSurname());
             user.setEmail(userD.getEmail());
             user.setUsername(userD.getUsername());
-            user.setPassword(userD.getPassword());
 
+            if (!userD.getPassword().isEmpty()) {
+                user.setPassword(userD.getPassword());
+
+                try {
+                    saveUser(user);
+                    return 0;
+                } catch (Exception e) {
+                    return -1;
+                }
+            }
             try {
-                saveUser(user);
+                userRepo.save(user);
+                return 0;
             } catch (Exception e) {
                 return -1;
             }
-            return 0;
         }
         return -1;
     }
@@ -263,7 +281,7 @@ public class UserServiceJpa implements UserService {
                     }
                 }
             }
-            if (user.getRole().equals("researcher")) {
+            else if (user.getRole().equals("researcher")) {
                 Optional<Researcher> researcherOptional = researcherRepo.findById(user.getId());
                 if(researcherOptional.isPresent()){
                     Researcher researcher = researcherOptional.get();
@@ -282,26 +300,28 @@ public class UserServiceJpa implements UserService {
     public String confirmToken(String token) {
         ConfirmationToken confirmationToken = confirmationTokenService
                 .getToken(token)
-                .orElseThrow(() ->
-                        new IllegalStateException("token not found"));
+                .orElse(null);
+
+        if (confirmationToken == null) {
+            return "token_not_found";
+        }
 
         if (confirmationToken.getConfirmedAt() != null) {
-            throw new IllegalStateException("email already confirmed");
+            return "email_already_confirmed";
         }
 
         LocalDateTime expiredAt = confirmationToken.getExpiresAt();
 
         if (expiredAt.isBefore(LocalDateTime.now())) {
-            throw new IllegalStateException("token expired");
+            return "token_expired";
         }
 
         confirmationTokenService.setConfirmedAt(token);
-
-
         enableUser(confirmationToken.getUser().getEmail());
 
         return "confirmed";
     }
+
 
 
     private String buildEmail(String name, String link) {

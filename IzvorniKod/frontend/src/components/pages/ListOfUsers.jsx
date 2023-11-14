@@ -110,7 +110,7 @@ export default function ListOfUsers() {
 	};
 	const validatePass = () => {
 		const passRegex = /^(?=.*[0-9])(?=.*[!@#$%^&*])[\w!@#$%^&*]{8,16}$/;
-		if (passRegex.test(password) || password.length < 1) {
+		if (passRegex.test(password) || password.length<1) {
 			setRightPass(true);
 			return true;
 		} else {

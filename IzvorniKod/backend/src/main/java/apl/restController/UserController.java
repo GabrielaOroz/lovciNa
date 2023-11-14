@@ -20,6 +20,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 
 import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.List;
 
 //ovdje se definira reakcija app na http zahtjeve
@@ -97,14 +99,34 @@ public class UserController {
 
 
     @GetMapping(path = "/confirm")
-    public void confirm(@RequestParam("token") String token, HttpServletResponse response, RedirectAttributes redirectAttributes) {
+    public ResponseEntity<String> confirm(@RequestParam("token") String token,
+                                          RedirectAttributes redirectAttributes) {
 
         String result = userService.confirmToken(token);
 
         redirectAttributes.addFlashAttribute("confirmationMessage", result);
 
-        response.setStatus(HttpServletResponse.SC_FOUND);
-
-        response.setHeader("Location", "http://localhost:5173/login");
+        // Check the result and return an appropriate response
+        switch (result) {
+            case "confirmed":
+                try {
+                    // Redirect to the specified URL on success
+                    return ResponseEntity.status(HttpStatus.FOUND)
+                            .location(new URI("http://localhost:5173/login"))
+                            .build();
+                } catch (URISyntaxException e) {
+                    // Handle the exception if the URI is invalid
+                    return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
+                }
+            case "token_not_found":
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Token not found");
+            case "email_already_confirmed":
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Email already confirmed");
+            case "token_expired":
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Token expired");
+            default:
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Unknown error");
+        }
     }
+
 }

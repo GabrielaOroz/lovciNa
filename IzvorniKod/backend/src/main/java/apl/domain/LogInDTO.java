@@ -13,7 +13,6 @@ public class LogInDTO {
 
     private String username;
     private String password;
-    private String email;
 
     public void LogInDto() {
     }

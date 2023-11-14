@@ -1,7 +1,5 @@
 package apl.dao;
 
-import apl.domain.ChangeUserDTO;
-import apl.domain.RegisteredDTO;
 import apl.domain.User;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;

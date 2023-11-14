@@ -8,7 +8,5 @@ import lombok.ToString;
 @Setter
 @ToString
 public class ApprovedDTO {
-    private String role;
     private Long id;
-    private Boolean approved;
 }

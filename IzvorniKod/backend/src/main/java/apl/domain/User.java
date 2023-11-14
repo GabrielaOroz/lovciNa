@@ -2,6 +2,10 @@ package apl.domain;
 
 import com.sun.mail.iap.ByteArray;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,6 +20,12 @@ import org.jetbrains.annotations.NotNull;
 @Inheritance(strategy = InheritanceType.JOINED)
 @Table(name = "my_user")
 public class User {
+
+
+    private static final String EMAIL_REGEX = "^\\w+([.-]?\\w+)*@\\w+([.-]?\\w+)*(\\.\\w{2,3})+$";
+    private static final String NAME_REGEX = "^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$";
+    private static final String SURNAME_REGEX = "^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$";
+    private static final String USERNAME_REGEX = "^\\w+$";
 
     public User() {
     }
@@ -39,9 +49,7 @@ public class User {
     private String username;
 
     @NotNull
-    private String role;  //1-researcher, 2-manager, 3-tracker
-
-
+    private String role;
 
     @Column(name = "photo", columnDefinition = "bytea")
     private byte[] photo;
@@ -61,4 +69,36 @@ public class User {
 
     private boolean registered = false;   //je li potvrdio racun preko maila, prvotno false
 
+    @PrePersist
+    @PreUpdate
+    private void beforeSaveOrUpdate() {
+        validateEmail();
+        validateName();
+        validateSurname();
+        validateUsername();
+    }
+
+    private void validateEmail() {
+        if (!email.matches(EMAIL_REGEX)) {
+            throw new IllegalStateException("Invalid email format");
+        }
+    }
+
+    private void validateName() {
+        if (!name.matches(NAME_REGEX)) {
+            throw new IllegalStateException("Invalid name format");
+        }
+    }
+
+    private void validateSurname() {
+        if (!surname.matches(SURNAME_REGEX)) {
+            throw new IllegalStateException("Invalid surname format");
+        }
+    }
+
+    private void validateUsername() {
+        if (!username.matches(USERNAME_REGEX)) {
+            throw new IllegalStateException("Invalid username format");
+        }
+    }
 }
