@@ -50,6 +50,7 @@
 					\item ANIMAL
 					\item STATION
 					\item ACTION
+					\item ANIMAL\_ACTION
 					\item TASK
 					\item MEDIUM
 					\item QUALIFICATION
@@ -69,7 +70,7 @@
 		\subsection{Opis tablica}
 				
 				
-				\noindent \textbf{USER} \hspace{1em} Ovaj entitet sadržava sve važne informacije vezane za korisnika aplikacije. Sadrži atribute ID korisnika, korisničko ime korisnika u aplikaciji, fotografiju korisnika, šifru računa korisnika, pravo ime i prezime korisnika, e-mail adresu i atribut koji označava je li korisnik registriran tipa BOOL.  Ova klasa sadrži zajedničke atribute sva tri tipa korisnika aplikacije (voditelj, istraživač, tragač) te služi za lakše spremanje podataka koje svaki korisnik mora imati. Ovaj entitet je u vezi \textit{One-to-One} sa svakim tipom korisnika aplikacije. S klasom MAP\_COMMENT je u vezi \textit{One-to-Many} jer više korisnika (mora biti istraživač ili tragač) može ostaviti komentar na mapi.
+				\noindent \textbf{USER} \hspace{1em} Ovaj entitet sadržava sve važne informacije vezane za korisnika aplikacije. Sadrži atribute ID korisnika, korisničko ime korisnika u aplikaciji, fotografiju korisnika, šifru računa korisnika, pravo ime i prezime korisnika, e-mail adresu, tip korisnika (istraživač, tragač ili voditelj stanice) i atribut koji označava je li korisnik registriran tipa BOOLEAN.  Ova klasa sadrži zajedničke atribute sva tri tipa korisnika aplikacije (voditelj, istraživač, tragač) te služi za lakše spremanje podataka koje svaki korisnik mora imati. Ovaj entitet je u vezi \textit{One-to-One} sa svakim tipom korisnika aplikacije. S klasom MAP\_COMMENT je u vezi \textit{One-to-Many} jer više korisnika (mora biti istraživač ili tragač) može ostaviti komentar na mapi.
 				
 				
 				\begin{longtblr}[
@@ -83,16 +84,17 @@
 					\hline \SetCell[c=3]{c}{\textbf{USER}}	 \\ \hline[3pt]
 					\SetCell{LightGreen}id & INT	&  	jedinstveni identifikator (TRACKER.id ili MANAGER.id ili RESEARCHER.id)  	\\ \hline
 					username & VARCHAR &   korisničko ime 	\\ \hline 
-					photo & PHOTOTYPE & fotografija korisnika 	\\ \hline
+					photo & BYTEA & fotografija korisnika 	\\ \hline
 					password & VARCHAR	& šifra korisničkog računa \\ \hline
 					name & VARCHAR	& ime korisnika \\ \hline
 					surname & VARCHAR & prezime korisnika \\ \hline
 					email & VARCHAR & e-mail korisnika  \\ \hline 
-					registered & BOOL & oznaka koja definira je li korisnik registriran  \\ \hline
+					role & VARCHAR & tip korisnika  \\ \hline
+					registered & BOOLEAN & oznaka koja definira je li korisnik registriran  \\ \hline
 				\end{longtblr}
 				
 				
-				\noindent \textbf{RESEARCHER} \hspace{1em} Ovaj entitet sadrži dodatni atribut odobrenja koji je potreban korisniku koji se odlučio za ulogu istraživača u aplikaciji. Povezan je s klasom USER vezom \textit{One-to-One} preko ID ključa. Dodatni atribut nam govori je li korisnik odobren kao istraživač od strane administratora jer je to preduvjet za obavljanje te uloge. U vezi je \textit{One-to-Many} s klasom ACTION (svaki istraživač može organizirati više radnih akcija). S klasom MAP\_COMMENT je indirektno (pomoću USER.id) u vezi \textit{One-to-Many} jer više korisnika može ostaviti komentar na mapi.
+				\noindent \textbf{RESEARCHER} \hspace{1em} Ovaj entitet sadrži dodatni atribut odobrenja koji je potreban korisniku koji se odlučio za ulogu istraživača u aplikaciji. Povezan je s klasom USER vezom \textit{One-to-One} preko ID ključa. Dodatni atribut nam govori je li korisnik odobren kao istraživač od strane administratora jer je to preduvjet za obavljanje te uloge. U vezi je \textit{One-to-Many} s klasom ACTION (svaki istraživač može organizirati više radnih akcija). S klasom MAP\_COMMENT je indirektno (pomoću USER.id) u vezi \textit{One-to-Many} jer više istraživača može ostaviti komentar na mapi. Također je s klasom ANIMAL\_COMMENT indirektno preko USER.id u vezi \textit{One-to-Many} jer više istraživača može ostaviti komentar na nekoj životinji.
 				
 				\begin{longtblr}[
 					label=none,
@@ -104,7 +106,7 @@
 					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
 					\hline \SetCell[c=3]{c}{\textbf{RESEARCHER}}	 \\ \hline[3pt]
 					\SetCell{LightGreen}id & INT &	identifikator istraživača (USER.id)	\\ \hline
-					approved & BOOL & oznaka je li istraživač odobren od strane administratora\\ \hline
+					approved & BOOLEAN & oznaka je li istraživač odobren od strane administratora\\ \hline
 				\end{longtblr}				
 				
 				
@@ -121,12 +123,12 @@
 					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
 					\hline \SetCell[c=3]{c}{\textbf{MANAGER}}	 \\ \hline[3pt]
 					\SetCell{LightGreen}id & INT & jedinstveni identifikator (USER.id) \\ \hline
-					approved & BOOL & oznaka odobrenja \\ \hline
+					approved & BOOLEAN & oznaka odobrenja \\ \hline
 					\SetCell{LightBlue}idStation & INT & identifikator stanice (STATION.id) \\ \hline
 				\end{longtblr}
 				
 				
-				\noindent \textbf{TRACKER} \hspace{1em} Ovaj entitet označava korisnika koji obavlja ulogu tragača. Povezan je vezama \textit{One-to-One} s klasom USER i klasom TRACKER\_IN\_ACTION koja označava tragača koji trenutno obavlja zadatke neke akcije i vozilo kojim se koristi, te vezom \textit{Many-to-One} s klasom STATION i vezom \textit{One-to-Many} s klasom TASK jer jedan tragač može imati više zadataka te klasom TRACKER\_IN\_ACTION\_ARCHIVE koja čuva podatke o tragačima koji su sudjelovali u nekoj akciji. Tragač može obavljati zadatke koji su zadani od strane istraživača samo na jednoj stanici, dok stanica može imati više tragača na različitim zadatcima. S klasom ANIMAL\_COMMENT je u vezi \textit{One-to-Many} jer više tragača može ostaviti komentar na nekoj životinji te je također u vezi \textit{One-to-One} s klasom TRACKER\_LOCATION koja služi za čuvanje lokacija tragača.  Također je u vezi \textit{Many-to-Many} s klasom MEDIUM što se razrješava tablicom QUALIFICATION. S klasom MAP\_COMMENT je indirektno (pomoću USER.id) u vezi \textit{One-to-Many} jer više korisnika može ostaviti komentar na mapi.
+				\noindent \textbf{TRACKER} \hspace{1em} Ovaj entitet označava korisnika koji obavlja ulogu tragača. Povezan je vezama \textit{One-to-One} s klasom USER i klasom TRACKER\_IN\_ACTION koja označava tragača koji trenutno obavlja zadatke neke akcije i vozilo kojim se koristi, te vezom \textit{Many-to-One} s klasom STATION i vezom \textit{One-to-Many} s klasom TASK jer jedan tragač može imati više zadataka te klasom TRACKER\_IN\_ACTION\_ARCHIVE koja čuva podatke o tragačima koji su sudjelovali u nekoj akciji. Tragač može obavljati zadatke koji su zadani od strane istraživača samo na jednoj stanici, dok stanica može imati više tragača na različitim zadatcima. S klasom ANIMAL\_COMMENT je indirektno preko USER.id u vezi \textit{One-to-Many} jer više tragača može ostaviti komentar na nekoj životinji te je također u vezi \textit{One-to-One} s klasom TRACKER\_LOCATION koja služi za čuvanje lokacija tragača.  Također je u vezi \textit{Many-to-Many} s klasom MEDIUM što se razrješava tablicom QUALIFICATION. S klasom MAP\_COMMENT je indirektno (pomoću USER.id) u vezi \textit{One-to-Many} jer više tragača može ostaviti komentar na mapi.
 				
 				\begin{longtblr}[
 					label=none,
@@ -141,7 +143,7 @@
 					\SetCell{LightBlue} idStation & INT & jedinstveni identifikator stanice (STATION.id)\\ \hline
 				\end{longtblr}
 				
-				\noindent \textbf{ANIMAL} \hspace{1em} Ovaj entitet predstavlja klasu životinja i sadrži sve atribute koji opisuju neku životinju. Sadrži atribute ID životinje, vrstu životinje, fotografiju životinje, tekst koji opisuje životinju i oznaku koja govori je li postavljen GPS na životinju ili nije. U vezi je \textit{One-to-Many} s klasom  TASK jer na nekom zadatku se može pratiti jedna životinja dok više zadataka može pratiti istu životinju. S klasom ANIMAL\_COMMENT je u vezi \textit{One-to-Many} jer više komentara se može ostaviti za istu životinju. Također je u vezi \textit{One-to-One} s klasom ANIMAL\_LOCATION koja zapisuje trenutnu lokaciju životinje, ali je u vezi \textit{One-to-Many} s klasom ANIMAL\_HISTORY koja sprema podatke o kretanju životinje.
+				\noindent \textbf{ANIMAL} \hspace{1em} Ovaj entitet predstavlja klasu životinja i sadrži sve atribute koji opisuju neku životinju. Sadrži atribute ID životinje, vrstu životinje, fotografiju životinje, tekst koji opisuje životinju i oznaku koja govori je li postavljen GPS na životinju ili nije. U vezi je \textit{One-to-Many} s klasom  TASK jer na nekom zadatku se može pratiti jedna životinja dok više zadataka može pratiti istu životinju. S klasom ANIMAL\_COMMENT je u vezi \textit{One-to-Many} jer više komentara se može ostaviti za istu životinju. Također je u vezi \textit{One-to-One} s klasom ANIMAL\_LOCATION koja zapisuje trenutnu lokaciju životinje, ali je u vezi \textit{One-to-Many} s klasom ANIMAL\_HISTORY koja sprema podatke o kretanju životinje. Također je u \textit{One-to-Many} vezi s klasom ANIMAL\_ACTION gdje se može vidjeti u kojim akcijama je životinja praćena. Još je u \textit{Many-to-Many} vezi s klasom ACTION što se dodatno razrješava u tablici ANIMAL\_ACTION.
 				
 				
 				\begin{longtblr}[
@@ -155,9 +157,9 @@
 					\hline \SetCell[c=3]{c}{\textbf{ANIMAL}}	 \\ \hline[3pt]
 					\SetCell{LightGreen}id & INT & jedinstveni identifikator \\ \hline
 					species & VARCHAR & vrsta životinje \\ \hline
-					photo & PHOTOTYPE & fotografija životinje \\ \hline
+					photo & BYTEA & fotografija životinje \\ \hline
 					description & TEXT & opis životinje \\ \hline
-					hasGPS & BOOL & potvrda GPS uređaja na životinji \\ \hline
+					hasGPS & BOOLEAN & potvrda GPS uređaja na životinji \\ \hline
 				\end{longtblr}
 				
 				
@@ -179,7 +181,7 @@
 				\end{longtblr}
 				
 				
-				\noindent \textbf{ACTION} \hspace{1em} Ovaj entitet sadržava sve važne informacije vezane za akciju koju provodi određeni istraživač. Sadrži atribute ID, naslov, ID istraživača koji provodi akciju, vrijeme početka, vrijeme kraja te status koji je kodni broj za trenutno stanje akcije (čeka da postane aktivna, aktivna, riješena, prekinuta). Ovaj entitet u vezi je \textit{Many-to-One} s entitetom RESEARCHER preko ID-a istraživača te je u vezi \textit{One-to-Many} s entitetima TASK koji predstavlja zadatak, TRACKER\_IN\_ACTION koji predstavlja trenutno aktivne tragače u akcijama te njihov način prijevoza, TRACKER\_IN\_ACTION\_ARCHIVE koji predstavlja prošle zapise tragača aktivnih na akcijama te njihov način prijevoza, ANIMAL\_COMMENT koji predstavlja komentar tragača vezan za određenu životinju u nekoj akciji, MAP\_COMMENT koji predstavlja komentar vezan za određenu lokaciju u nekoj akciji te ga mogu napisati istraživač ili tragač.
+				\noindent \textbf{ACTION} \hspace{1em} Ovaj entitet sadržava sve važne informacije vezane za akciju koju provodi određeni istraživač. Sadrži atribute ID, naslov, ID istraživača koji provodi akciju, vrijeme početka, vrijeme kraja te status koji je kodni broj za trenutno stanje akcije (čeka da postane aktivna, aktivna, riješena, prekinuta). Ovaj entitet u vezi je \textit{Many-to-One} s entitetom RESEARCHER preko ID-a istraživača te je u vezi \textit{One-to-Many} s entitetima TASK koji predstavlja zadatak, TRACKER\_IN\_ACTION koji predstavlja trenutno aktivne tragače u akcijama te njihov način prijevoza, TRACKER\_IN\_ACTION\_ARCHIVE koji predstavlja prošle zapise tragača aktivnih na akcijama te njihov način prijevoza, ANIMAL\_COMMENT koji predstavlja komentar tragača vezan za određenu životinju u nekoj akciji, MAP\_COMMENT koji predstavlja komentar vezan za određenu lokaciju u nekoj akciji te ga mogu napisati istraživač ili tragač te ANIMAL\_ACTION gdje se može vidjeti koje životinje se prate u akciji. Još je u \textit{Many-to-Many} vezi s entitetom ANIMAL što se dodatno razrješava u tablici ANIMAL\_ACTION.
 				
 				\begin{longtblr}[
 					label=none,
@@ -196,6 +198,22 @@
 					start & TIMESTAMP & vrijeme početka \\ \hline
 					end & TIMESTAMP & vrijeme kraja \\ \hline
 					status & INT & kodni broj za trenutno stanje akcije \\ \hline
+				\end{longtblr}
+				
+				
+				\noindent \textbf{ANIMAL\_ACTION} \hspace{1em} Ovaj entitet sadržava sve važne informacije vezane za praćene životinje u nekoj akciji te razrješava \textit{Many-to-Many} vezu između entiteta ANIMAL i ACTION. Sadrži atribute ID životinje te ID akcije u kojoj je ta životinja praćena. Ovaj entitet u vezi je \textit{Many-to-One} s entitetima ANIMAL preko ID-a životinje i ACTION preko ID-a akcije.
+				
+					\begin{longtblr}[
+					label=none,
+					entry=none
+					]{
+						width = \textwidth,
+						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
+						rowhead = 1,
+					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
+					\hline \SetCell[c=3]{c}{\textbf{ANIMAL\_ACTION}}	 \\ \hline[3pt]
+					\SetCell{LightGreen}idAnimal & INT & ID životinje (ANIMAL.id), ujedno i prvi dio kompozitnog primarnog ključa \\ \hline
+					\SetCell{LightGreen}idAction & INT & ID akcije (ACTION.id), ujedno i drugi dio kompozitnog primarnog ključa \\ \hline
 				\end{longtblr}
 				
 				
@@ -219,7 +237,7 @@
 					latitude & DOUBLE & geografska širina \\ \hline
 					longitude & DOUBLE & geografska dužina \\ \hline
 					\SetCell{LightBlue}idRoute & INT & ID rute (ROUTE.id) \\ \hline
-					area & AREATYPE & površina \\ \hline
+					area & DOUBLE & površina \\ \hline
 					content & TEXT & opis (sadržaj) zadatka \\ \hline
 					start & TIMESTAMP & vrijeme početka \\ \hline
 					end & TIMESTAMP & vrijeme kraja \\ \hline
@@ -240,13 +258,13 @@
 					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
 					\hline \SetCell[c=3]{c}{\textbf{MEDIUM}}	 \\ \hline[3pt]
 					\SetCell{LightGreen}type & VARCHAR & tip sredstva prijevoza, ujedno i primarni ključ \\ \hline
-					airline & BOOL & oznaka računa li se pravocrtna ruta \\ \hline
+					airline & BOOLEAN & oznaka računa li se pravocrtna ruta \\ \hline
 					radius & DOUBLE & mogući radijus pretraživanja \\ \hline
 					detail & DOUBLE & vrijednost na skali koliko dobro se uočavaju detalji \\ \hline
 					speed & DOUBLE & vrijednost na skali kolika je brzina putovanja \\ \hline
 				\end{longtblr}
 				
-				\noindent \textbf{QUALIFICATION} \hspace{1em} Ovaj entitet sadržava sve važne informacije vezane za kvalifikacije tragača za tip sredstva prijevoza. Sadrži atribute ID tragača te tip sredstva prijevoza za koje je taj tragač kvalificiran. Ovaj entitet u vezi je \textit{Many-to-One} s entitetima TRACKER preko ID-a tragača, MEDIUM preko tipa sredstva prijevoza.
+				\noindent \textbf{QUALIFICATION} \hspace{1em} Ovaj entitet sadržava sve važne informacije vezane za kvalifikacije tragača za tip sredstva prijevoza te razrješava \textit{Many-to-Many} vezu između entiteta TRACKER i MEDIUM. Sadrži atribute ID tragača te tip sredstva prijevoza za koje je taj tragač kvalificiran. Ovaj entitet u vezi je \textit{Many-to-One} s entitetima TRACKER preko ID-a tragača i MEDIUM preko tipa sredstva prijevoza.
 				
 				\begin{longtblr}[
 					label=none,
@@ -414,7 +432,7 @@
 				\end{longtblr}
 				
 				
-				\noindent \textbf{ANIMAL\_COMMENT} \hspace{1em} Ovaj entitet sadržava sve važne informacije vezane za komentar nekog tragača o nekoj životinji u nekoj akciji. Sadrži atribute ID, naslov, ID životinje na koju se komentar odnosi, ID tragača koji je napisao komentar, ID akcije u kojoj je komentar napisan te sadržaj komentara. Ovaj entitet u vezi je \textit{Many-to-One} s entitetima ANIMAL preko ID-a životinje, TRACKER preko ID-a tragača te ACTION preko ID-a akcije.
+				\noindent \textbf{ANIMAL\_COMMENT} \hspace{1em} Ovaj entitet sadržava sve važne informacije vezane za komentar nekog tragača o nekoj životinji u nekoj akciji. Sadrži atribute ID, naslov, ID životinje na koju se komentar odnosi, ID tragača koji je napisao komentar, ID akcije u kojoj je komentar napisan te sadržaj komentara. Ovaj entitet u vezi je \textit{Many-to-One} s entitetima ANIMAL preko ID-a životinje, USER preko ID-a korisnika (može biti TRACKER ili RESEARCHER) te ACTION preko ID-a akcije.
 				
 				\begin{longtblr}[
 					label=none,
@@ -428,7 +446,7 @@
 					\SetCell{LightGreen}id & INT & jedinstveni identifikator \\ \hline
 					title & VARCHAR & naslov komentara \\ \hline
 					\SetCell{LightBlue}idAnimal & INT & ID životinje (ANIMAL.id) \\ \hline
-					\SetCell{LightBlue}idTracker & INT & ID tragača (TRACKER.id) \\ \hline
+					\SetCell{LightBlue}idUser & INT & ID korisnika (USER.id, indirektno povezano s TRACKER.id ili RESEARCHER.id) \\ \hline
 					\SetCell{LightBlue}idAction & INT & ID akcije (ACTION.id) \\ \hline
 					content & TEXT & sadržaj komentara \\ \hline
 				\end{longtblr}
@@ -482,7 +500,7 @@
 				
 				\begin{figure}[H] %ht
 					\centering
-					\includegraphics[width=\textwidth]{slike/grafBaza.PNG}
+					\includegraphics[width=\textwidth]{slike/baza.PNG}
 					\caption{E-R dijagram baze podataka}
 					\label{fig:ERdiagram}
 				\end{figure}																												
@@ -493,7 +511,7 @@
 			
 		\section{Dijagram razreda}
 		
-			\textit{Potrebno je priložiti dijagram razreda s pripadajućim opisom. Zbog preglednosti je moguće dijagram razlomiti na više njih, ali moraju biti grupirani prema sličnim razinama apstrakcije i srodnim funkcionalnostima.}\\
+		\iffalse	\textit{Potrebno je priložiti dijagram razreda s pripadajućim opisom. Zbog preglednosti je moguće dijagram razlomiti na više njih, ali moraju biti grupirani prema sličnim razinama apstrakcije i srodnim funkcionalnostima.}\\
 			
 			\textbf{\textit{dio 1. revizije}}\\
 			
@@ -502,10 +520,44 @@
 			\textbf{\textit{dio 2. revizije}}\\			
 			
 			\textit{Prilikom druge predaje projekta dijagram razreda i opisi moraju odgovarati stvarnom stanju implementacije}
-			
-			
+		\fi
+			Na slikama 4.4, 4.5 i 4.6 prikazani su razredi koji pripadaju backend dijelu MVC arhitekture. Razredi prikazani na slici 4.3 nasljeđuju Controller razred. Metode implementirane u tim razredima obrađuju zahtjeve aktora koji dolaze s frontend servera obavljajući potrebne manipulacije podacima i šaljući odgovarajuće odgovore. Metode u Controller razredima obično vraćaju podatke u JSON formatu, a HTTP status kodovi koriste se za signalizaciju statusa zahtjeva (npr., uspješan odgovor, greška, itd.). Radi lakše organizacije, razredi su logički podijeljeni prema pravu pristupa metodama određenih aktera kako bi se smanjila prenapučenost unutar dijagrama. Prikazane su samo ovisnosti između razreda koji pripadaju istom dijelu dijagrama. Iz naziva i tipova atributa u razredima može se zaključiti vrsta ovisnosti među različitim razredima.Također se ponekad koriste dodatne DTO (Data transfer object) klase za specifične potrebe prijenosa podataka. Kod korištenja objekata koji predstavljaju modele ili DTO objekata u implementaciji selektivno se postavljaju atributi koji su potrebni za određene operacije, a ostali atributi su automatski postavljeni na null. To omogućuje modularno korištenje funkcija i zbog toga modeli i DTO objekti mogu imati reference na druge modele.
 			
 			\eject
+		
+			\vspace{12pt}						
+			
+			\begin{figure}[H] %ht
+				\centering
+				\includegraphics[width=\textwidth]{slike/controllerdiagram.png}
+				\caption{Dijagram razreda - dio Controllers}
+				\label{fig:Controllerdiagram}
+			\end{figure}	
+		
+		\eject
+		
+		\begin{figure}[H] %ht
+			\centering
+			\includegraphics[width=\textwidth]{slike/dtodiagram.png}
+			\caption{Dijagram razreda - dio Data transfer objects}
+			\label{fig:DTOdiagram}
+		\end{figure}
+		
+		\eject
+		
+		
+		Model razredi preslikavaju strukturu baze podataka u aplikaciji. Svi entiteti realiziraju javne get i set metode za svoje privatne atribute. Modeli Researcher (istraživač), Tracker (tragač) i Manager (voditelj stanice) nasljeđuju model User (korisnik) te imaju svoje specifične atribute. Oni predstavljaju tri glavna tipa korisnika aplikacije od kojih svaki može upućivati specifične zahtjeve koji odražavaju mogućnosti tog tipa korisnika. Svaki korisnk se mora registrirati da bi koristio aplikaciju te korisnike tipa Researcher i Manager  administrator mora dodatno potvrditi. Istraživači organiziraju akcije s ciljem praćenja i prikupljanja podataka o životinjama, a na tim akcijama zadatke koje zadaje istraživač odrađuju tragači koji rade na toj akciji i pripadaju određenoj stanici koja ima svog voditelja koji odabire koji će tragači sudjelovati u nekoj akciji na temelju zahtjeva istraživača i kvalifikacija tragača. 
+		
+		\eject
+		
+		\begin{figure}[H] %ht
+			\centering
+			\includegraphics[width=\textwidth]{slike/modeldiagram.png}
+			\caption{Dijagram razreda - dio Models}
+			\label{fig:Modelrdiagram}
+		\end{figure}
+		
+		\eject
 		
 		\section{Dijagram stanja}
 			
