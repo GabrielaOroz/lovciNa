@@ -4,6 +4,7 @@ import apl.dao.*;
 import apl.domain.*;
 import apl.email.EmailSender;
 import apl.token.ConfirmationToken;
+import apl.token.ConfirmationTokenRepository;
 import apl.token.ConfirmationTokenService;
 import apl.service.UserService;
 import jakarta.transaction.Transactional;
@@ -40,6 +41,9 @@ public class UserServiceJpa implements UserService {
     private StationRepository stationRepo;
     @Autowired
     private TrackerRepository trackerRepo;
+
+    @Autowired
+    private ConfirmationTokenRepository confirmationTokenRepository;
 
 
     PasswordEncoder passwordEncoder;
@@ -141,6 +145,8 @@ public class UserServiceJpa implements UserService {
     @Override
     public int createUser(User user, Long stationId) {
 
+
+
         boolean success=false;
 
         Assert.notNull(user, "User object must be given");  //moramo dobit objekt, ne možemo u bazu stavit null
@@ -183,13 +189,11 @@ public class UserServiceJpa implements UserService {
         } else return -1;
 
 
-
-
         if (success == true) {
             String token = UUID.randomUUID().toString();
             ConfirmationToken confirmationToken = new ConfirmationToken(token,
                     LocalDateTime.now(),
-                    LocalDateTime.now().plusMinutes(20),
+                    LocalDateTime.now().plusMinutes(1),
                     user);
 
             confirmationTokenService.saveConfirmationToken(confirmationToken);
@@ -312,12 +316,18 @@ public class UserServiceJpa implements UserService {
 
         LocalDateTime expiredAt = confirmationToken.getExpiresAt();
 
+        confirmationTokenService.setConfirmedAt(token);
+
         if (expiredAt.isBefore(LocalDateTime.now())) {
+            confirmationTokenRepository.deleteById(confirmationToken.getUser().getId());
+            userRepo.deleteById(confirmationToken.getUser().getId());
             return "token_expired";
         }
 
-        confirmationTokenService.setConfirmedAt(token);
+
         enableUser(confirmationToken.getUser().getEmail());
+
+
 
         return "confirmed";
     }

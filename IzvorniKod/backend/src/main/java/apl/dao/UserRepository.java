@@ -2,6 +2,7 @@ package apl.dao;
 
 import apl.domain.User;
 import jakarta.transaction.Transactional;
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -36,6 +37,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Modifying
     @Query("UPDATE User u SET u.registered = true WHERE u.email = ?1")
     int enableUser(String emailParam);
+
+    @Transactional
+    void deleteById(@NotNull Long id);
 
 
 
