@@ -10,6 +10,7 @@ import Start from "./components/pages/Start";
 import Fonts from "./styles/Fonts";
 import theme from "./styles/theme";
 import MissingPage from "./components/pages/MissingPage";
+import Expired from "./components/pages/Expired";
 import "./styles/Base.css";
 
 export default function App() {
@@ -26,6 +27,7 @@ export default function App() {
 					<Route path="/admin-listOfUsers" element={<ListOfUsers />} />
 					<Route path="/start" element={<Start />} />
 					<Route path="*" element={<MissingPage />} />
+          <Route path="/expired" element={<Expired />} />
 				</Routes>
 			</BrowserRouter>
 		</ChakraProvider>
