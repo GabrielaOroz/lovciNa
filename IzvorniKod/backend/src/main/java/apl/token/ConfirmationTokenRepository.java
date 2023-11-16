@@ -25,4 +25,6 @@ public interface ConfirmationTokenRepository extends JpaRepository<ConfirmationT
 
     void deleteByExpiresAt(LocalDateTime date);
 
+    ConfirmationToken getById(Long id);
+
 }

@@ -193,7 +193,7 @@ public class UserServiceJpa implements UserService {
             String token = UUID.randomUUID().toString();
             ConfirmationToken confirmationToken = new ConfirmationToken(token,
                     LocalDateTime.now(),
-                    LocalDateTime.now().plusMinutes(1),
+                    LocalDateTime.now().plusMinutes(20),
                     user);
 
             confirmationTokenService.saveConfirmationToken(confirmationToken);

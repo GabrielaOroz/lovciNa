@@ -42,5 +42,5 @@ public interface UserRepository extends JpaRepository<User, Long> {
     void deleteById(@NotNull Long id);
 
 
-
+    List<User> findByRegisteredFalse();
 }
