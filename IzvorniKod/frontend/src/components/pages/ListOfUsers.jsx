@@ -138,7 +138,7 @@ export default function ListOfUsers() {
 
 	// ONCLICK
 	const handleUsers = () => {
-		fetch("http://localhost:8000/admin/registeredUsers", {
+		fetch("https://wildback.onrender.com/admin/registeredUsers", {
 			method: "GET",
 		})
 			.then((res) => res.json())
@@ -154,7 +154,7 @@ export default function ListOfUsers() {
 			role,
 			approved: true,
 		};
-		fetch("http://localhost:8000/admin/approved", {
+		fetch("https://wildback.onrender.com/admin/approved", {
 			method: "PUT",
 			headers: {
 				"Content-Type": "application/json",
@@ -177,7 +177,7 @@ export default function ListOfUsers() {
 		formData.append("username", username);
 		formData.append("password", password);
 
-		fetch("http://localhost:8000/admin/newInfo", {
+		fetch("https://wildback.onrender.com/admin/newInfo", {
 			method: "PUT",
 			body: formData,
 		}).then((res) => {

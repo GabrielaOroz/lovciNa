@@ -143,7 +143,7 @@ export default function Register() {
 				console.log(entry[0] + ":", entry[1]);
 			}
 
-			fetch("http://localhost:8000/auth/register", {
+			fetch("https://wildback.onrender.com/auth/register", {
 				method: "POST",
 				body: formData,
 			})

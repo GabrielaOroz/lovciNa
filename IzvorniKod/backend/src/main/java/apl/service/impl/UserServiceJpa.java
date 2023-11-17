@@ -197,7 +197,7 @@ public class UserServiceJpa implements UserService {
                     user);
 
             confirmationTokenService.saveConfirmationToken(confirmationToken);
-            String link = "http://localhost:8000/auth/confirm?token=" + token;
+            String link = "https://wildback.onrender.com/auth/confirm?token=" + token;
             emailSender.send(user.getEmail(), buildEmail(user.getName(), link));
 
             return 0;
