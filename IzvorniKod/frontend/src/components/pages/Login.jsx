@@ -25,7 +25,7 @@ export default function Login() {
 			setError("Please fill out all the required fields.");
 			return;
 		} else {
-			fetch("https://wildtrack.onrender.com/auth/login", {
+			fetch("https://wildback.onrender.com/auth/login", {
 				method: "POST",
 				headers: {
 					"Content-Type": "application/json",

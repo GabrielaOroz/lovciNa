@@ -12,7 +12,7 @@ export default function Admin() {
 			password,
 		};
 		console.log(data);
-		fetch("https://wildtrack.onrender.com/admin", {
+		fetch("https://wildback.onrender.com/admin", {
 			method: "POST",
 			headers: {
 				"Content-Type": "application/json",
