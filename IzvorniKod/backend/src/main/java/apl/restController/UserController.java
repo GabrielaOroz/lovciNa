@@ -26,7 +26,7 @@ import java.util.List;
 
 //ovdje se definira reakcija app na http zahtjeve
 
-@CrossOrigin(origins = "https://wildtrack.onrender.com")
+@CrossOrigin(origins = "http://localhost:5173")
 @RestController                 //kažemo da je to komponenta koju treba pospojit i to controller
 @RequestMapping("/auth")       //svi url koji ovako počinju će se tu ispitati
 public class UserController {
@@ -115,7 +115,7 @@ public class UserController {
             case "confirmed":
                 try {
                     return ResponseEntity.status(HttpStatus.FOUND)
-                            .location(new URI("https://wildtrack.onrender.com/login"))
+                            .location(new URI("http://localhost:5173/login"))
                             .build();
                 } catch (URISyntaxException e) {
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
@@ -128,7 +128,7 @@ public class UserController {
                 try {
                     // Redirect to the specified URL on success
                     return ResponseEntity.status(HttpStatus.FOUND)
-                            .location(new URI("https://wildtrack.onrender.com/expired"))
+                            .location(new URI("http://localhost:5173/expired"))
                             .build();
                 } catch (URISyntaxException e) {
                     // Handle the exception if the URI is invalid
