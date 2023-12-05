@@ -2,15 +2,15 @@ import { Text, Card, CardHeader, CardBody, CardFooter, Heading, Button, Flex } f
 import MainBase from "../MainBase";
 
 export default function Start() {
-	return (
-		<>
-            <Heading fontSize={{ base: "1xl", md: "2xl", lg: "3xl" }} p="30px" color="green.700" fontFamily="Nature">
-						WILD TRACK
-					</Heading>
-			<Text p="10px" textAlign="center" fontSize="30px">
-				In building... see you soon.
-			</Text>
-			{/*<MainBase>
+  return (
+    <>
+      <Heading fontSize={{ base: "1xl", md: "2xl", lg: "3xl" }} p="30px" color="green.700" fontFamily="Nature">
+        WILD TRACK
+      </Heading>
+      <Text p="10px" textAlign="center" fontSize="30px">
+        In building... see you soon.
+      </Text>
+      {/*<MainBase>
             <Text 
                 color="green.700" 
                 fontSize={{base: "2xl", md: "4xl", lg: "5xl"}} 
@@ -36,6 +36,6 @@ export default function Start() {
                 </CardFooter>
             </Card>
         </MainBase>*/}
-		</>
-	);
+    </>
+  );
 }

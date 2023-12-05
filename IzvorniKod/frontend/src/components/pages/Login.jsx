@@ -1,130 +1,115 @@
-import { Box, Button, Flex, Input, InputGroup, InputRightElement, Show, Text } from "@chakra-ui/react";
+import { Flex, Input, InputGroup, InputRightElement, Show, Text } from "@chakra-ui/react";
+
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 import Base from "../Base";
 import FormCard from "../FormCard";
-import { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import GreenButton from "../GreenButton";
+import ErrorMessage from "../ErrorMessage";
+
 import { GiDeerHead } from "react-icons/gi";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
 
 export default function Login() {
-	const [showPass, setShowPass] = useState(false);
-	const [username, setUsername] = useState("");
-	const [password, setPassword] = useState("");
-	const [error, setError] = useState("");
+  const navigate = useNavigate();
 
-	const navigate = useNavigate();
+  const [showPass, setShowPass] = useState(false);
+  const [error, setError] = useState("");
 
-	const handleSubmit = () => {
-		setError("");
-		const data = {
-			username,
-			password,
-		};
-		console.log(data);
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
 
-		if (!username || !password) {
-			setError("Please fill out all the required fields.");
-			return;
-		} else {
-			fetch("https://wildback.onrender.com/auth/login", {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-				},
-				body: JSON.stringify(data),
-			})
-				.then((res) => {
-					console.log(res);
-					if (res.ok) {
-						navigate("/start");
-					} else {
-						setError("Incorrect username or password.");
-					}
-				})
-				.then((data) => console.log(data))
-				.catch((err) => console.error(err));
-		}
-	};
+  const handleSubmit = () => {
+    const data = {
+      username,
+      password,
+    };
+    console.log(data);
 
-	return (
-		<Base>
-			<FormCard>
-				<Flex justifyContent="center" gap="10px" alignItems="center">
-					<Show above="md">
-						<GiDeerHead size="30px" color="green.700" />
-					</Show>
-					<Text fontSize="lg">
-						Start using Wild Track
-					</Text>
-					<Show above="md">
-						<GiDeerHead size="30px" color="green.700" />
-					</Show>
-				</Flex>
+    setError("");
+    if (!username || !password) {
+      setError("Please fill out all the required fields.");
+      return;
+    } else {
+      fetch("http://localhost:8000/auth/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data),
+      }).then((res) => {
+        if (res.ok) {
+          navigate("/start");
+        } else {
+          setError("Incorrect username or password.");
+        }
+      });
+    }
+  };
 
-				<Input
-					type="text"
-					placeholder="Username"
-					borderColor="green.700"
-					focusBorderColor="green.700"
-					value={username}
-					onChange={(e) => setUsername(e.target.value)}
-					id="username"
-				/>
-				<InputGroup size="md">
-					<Input
-						type={showPass ? "text" : "password"}
-						placeholder="Enter password"
-						borderColor="green.700"
-						focusBorderColor="green.700"
-						value={password}
-						onChange={(e) => setPassword(e.target.value)}
-						id="password"
-					/>
-					<InputRightElement width="4.5rem">
-						<Button
-							h="1.75rem"
-							size="sm"
-							bgColor="#F1EDD4"
-							_hover={{ bg: "#F1EFD4" }}
-							onClick={() => setShowPass(!showPass)}
-						>
-							{showPass ? "Hide" : "Show"}
-						</Button>
-					</InputRightElement>
-				</InputGroup>
+  return (
+    <Base>
+      <FormCard>
+        <Flex justifyContent="center" gap="16px" alignItems="center">
+          <Show above="md">
+            <GiDeerHead size="30px" />
+          </Show>
+          <Text fontSize="lg">Start using Wild Track</Text>
+          <Show above="md">
+            <GiDeerHead size="30px" />
+          </Show>
+        </Flex>
 
-				<Text color="#CC0000">{error}</Text>
+        <Input
+          id="username"
+          type="text"
+          placeholder="Username"
+          _hover={{ borderColor: "#97B3A1" }}
+          focusBorderColor="#306844"
+          borderColor="#306844"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
+        />
+        <InputGroup size="md">
+          <Input
+            id="password"
+            type={showPass ? "text" : "password"}
+            placeholder="Enter password"
+            _hover={{ borderColor: "#97B3A1" }}
+            focusBorderColor="#306844"
+            borderColor="#306844"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <InputRightElement>
+            {showPass ? (
+              <FaEye onClick={() => setShowPass(!showPass)} style={{ cursor: "pointer" }} />
+            ) : (
+              <FaEyeSlash onClick={() => setShowPass(!showPass)} style={{ cursor: "pointer" }} />
+            )}
+          </InputRightElement>
+        </InputGroup>
 
-				<Button
-					type="submit"
-					colorScheme="green"
-					color="#FFFBE0"
-					border="solid 1px"
-					w="100px"
-					alignSelf="center"
-					onClick={handleSubmit}
-				>
-					Log In
-				</Button>
+        {error && <ErrorMessage>{error}</ErrorMessage>}
 
-        <Flex direction="column">
-          <Text alignSelf="center" color="black">
+        <GreenButton onClick={handleSubmit}>Log In</GreenButton>
+
+        <Flex gap="5px" direction="column" align="center">
+          <Text display="flex" gap="8px">
             Don't have an account?
-            <Link to="/register">
-              <Button paddingLeft="5px" variant="unstyled" color="green.700">
-                Register
-              </Button>
-            </Link>
+            <a href="/register" style={{ color: "#306844" }}>
+              <b>Register</b>
+            </a>
           </Text>
-          <Text p="0" alignSelf="center" color="black">
+          <Text display="flex" gap="8px">
             Log in as
-            <Link to="/admin" >
-              <Button paddingLeft="5px" variant="unstyled" color="green.700">
-                Admin
-              </Button>
-            </Link>
+            <a href="/admin" style={{ color: "#306844" }}>
+              <b>Admin</b>
+            </a>
           </Text>
         </Flex>
-			</FormCard>
-		</Base>
-	);
+      </FormCard>
+    </Base>
+  );
 }

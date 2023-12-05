@@ -11,25 +11,24 @@ import Fonts from "./styles/Fonts";
 import theme from "./styles/theme";
 import MissingPage from "./components/pages/MissingPage";
 import Expired from "./components/pages/Expired";
-import "./styles/Base.css";
 
 export default function App() {
-	return (
-		<ChakraProvider theme={theme}>
-			<Fonts />
-			<BrowserRouter>
-				<Routes>
-					<Route path="/" element={<Home />} />
-					<Route path="/login" element={<Login />} />
-					<Route path="/register" element={<Register />} />
-					<Route path="/confirm" element={<Confirm />} />
-					<Route path="/admin" element={<Admin />} />
-					<Route path="/admin-listOfUsers" element={<ListOfUsers />} />
-					<Route path="/start" element={<Start />} />
-					<Route path="*" element={<MissingPage />} />
+  return (
+    <ChakraProvider theme={theme}>
+      <Fonts />
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/confirm" element={<Confirm />} />
+          <Route path="/admin" element={<Admin />} />
+          <Route path="/admin-listOfUsers" element={<ListOfUsers />} />
+          <Route path="/start" element={<Start />} />
+          <Route path="*" element={<MissingPage />} />
           <Route path="/expired" element={<Expired />} />
-				</Routes>
-			</BrowserRouter>
-		</ChakraProvider>
-	);
+        </Routes>
+      </BrowserRouter>
+    </ChakraProvider>
+  );
 }

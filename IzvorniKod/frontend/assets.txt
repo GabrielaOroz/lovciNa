@@ -1,6 +1,17 @@
-BAIGE
-#F1EDD4 - button color
-#FFFBE0 - button color on hover
-#FFFBE0 - text color
+padding - visekratnik 8px
 
-GREEN
+
+
+
+GREEN-BUTTON:
+bgColor = #306844
+bgColor:hover = #447756
+color = #F9F5E3
+
+YELLOW-BUTTON:
+bgColor = #EBE5C1
+bgColor:hover = F1EDD4
+color = "#13291B"
+
+CARD
+background #F9F5E3

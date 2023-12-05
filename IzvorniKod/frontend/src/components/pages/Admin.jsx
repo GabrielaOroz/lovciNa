@@ -1,76 +1,83 @@
-import { Box, Button, Card, Input, InputGroup, InputRightElement, Text } from "@chakra-ui/react";
+import { Flex, Input, InputGroup, InputRightElement, Show, Text } from "@chakra-ui/react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+import Base from "../Base";
+import FormCard from "../FormCard";
+import GreenButton from "../GreenButton";
+import ErrorMessage from "../ErrorMessage";
+
+import { GiHummingbird } from "react-icons/gi";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+
 export default function Admin() {
-	const [password, setPassword] = useState("");
-	const [showPass, setShowPass] = useState(false);
-	const navigate = useNavigate();
+  const navigate = useNavigate();
 
-	const handleSubmit = () => {
-		const data = {
-			password,
-		};
-		console.log(data);
-		fetch("https://wildback.onrender.com/admin", {
-			method: "POST",
-			headers: {
-				"Content-Type": "application/json",
-			},
-			body: JSON.stringify(data),
-		})
-			.then((res) => {
-				if (res.ok) {
-					navigate("/admin-listOfUsers");
-				}
-				console.log(res);
-			})
-			.then((data) => {
-				console.log(data);
-			})
-			.catch((err) => console.error(err));
-	};
+  const [password, setPassword] = useState("");
+  const [showPass, setShowPass] = useState(false);
+  const [error, setError] = useState("");
 
-	return (
-		<Box bgImage="url(/forest.jpg)" bgPosition="center" minH="100vh" display="flex" justifyContent="center">
-			<Card w={{ base: "300px", md: "600px", lg: "800px" }} background="#f9f7e8" alignSelf="center" padding="20px">
-				<Text fontSize={{ base: "20px", md: "30px", lg: "50px" }} paddingBottom="5px" alignSelf="center">
-					Welcome back ADMIN!
-				</Text>
-				<InputGroup size="md">
-					<Input
-						type={showPass ? "text" : "password"}
-						placeholder="Enter password"
-						_placeholder={{ color: "green.700" }}
-						value={password}
-						onChange={(e) => setPassword(e.target.value)}
-						id="password"
-					/>
-					<InputRightElement width="4.5rem">
-						<Button
-							h="1.75rem"
-							size="sm"
-							bgColor="#F1EDD4"
-							_hover={{ bg: "green.700" }}
-							onClick={() => setShowPass(!showPass)}
-						>
-							{showPass ? "Hide" : "Show"}
-						</Button>
-					</InputRightElement>
-				</InputGroup>
-				<Button
-					shadow="dark-lg"
-					marginTop="15px"
-					marginBottom="20px"
-					w={{ base: "80px", md: "150px", lg: "200px" }}
-					alignSelf="center"
-					colorScheme="green"
-					onClick={handleSubmit}
-					fontSize={{ base: "15px", md: "20px" }}
-				>
-					Log In
-				</Button>
-			</Card>
-		</Box>
-	);
+  const handleSubmit = () => {
+    setError("");
+
+    const data = {
+      password,
+    };
+
+    fetch("http://localhost:8000/admin", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(data),
+    }).then((res) => {
+      if (res.ok) {
+        navigate("/admin-listOfUsers");
+      } else {
+        setError("Password incorrect.");
+      }
+    });
+  };
+
+  return (
+    <Base>
+      <FormCard>
+        <Flex justifyContent="center" gap="16px" alignItems="center">
+          <Show above="md">
+            <GiHummingbird size="30px" />
+          </Show>
+          <Text fontSize="lg">Log in as administator</Text>
+          <Show above="md">
+            <GiHummingbird style={{ transform: "scaleX(-1)" }} size="30px" />
+          </Show>
+        </Flex>
+
+        <InputGroup size="md">
+          <Input
+            id="password"
+            type={showPass ? "text" : "password"}
+            placeholder="Enter password"
+            _hover={{ borderColor: "#97B3A1" }}
+            focusBorderColor="#306844"
+            borderColor="#306844"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          <InputRightElement>
+            {showPass ? (
+              <FaEye onClick={() => setShowPass(!showPass)} style={{ cursor: "pointer" }} />
+            ) : (
+              <FaEyeSlash onClick={() => setShowPass(!showPass)} style={{ cursor: "pointer" }} />
+            )}
+          </InputRightElement>
+        </InputGroup>
+
+        {error && <ErrorMessage>{error}</ErrorMessage>}
+
+        <GreenButton width="200px" alignSelf="center" onClick={handleSubmit}>
+          Log In
+        </GreenButton>
+      </FormCard>
+    </Base>
+  );
 }
