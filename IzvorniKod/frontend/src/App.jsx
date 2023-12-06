@@ -1,16 +1,16 @@
 import { ChakraProvider } from "@chakra-ui/react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./components/pages/Home";
-import Login from "./components/pages/Login";
-import Register from "./components/pages/Register";
-import Confirm from "./components/pages/Confirm";
-import Admin from "./components/pages/Admin";
-import ListOfUsers from "./components/pages/ListOfUsers";
-import Start from "./components/pages/Start";
+import Start from "./pages/Start";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Confirm from "./pages/Confirm";
+import Expired from "./pages/Expired";
+import Admin from "./pages/Admin";
+import ListOfUsers from "./pages/ListOfUsers";
+import Home from "./pages/Home";
+import MissingPage from "./pages/MissingPage";
 import Fonts from "./styles/Fonts";
 import theme from "./styles/theme";
-import MissingPage from "./components/pages/MissingPage";
-import Expired from "./components/pages/Expired";
 
 export default function App() {
   return (
@@ -18,15 +18,15 @@ export default function App() {
       <Fonts />
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/" element={<Start />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/confirm" element={<Confirm />} />
+          <Route path="/expired" element={<Expired />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/admin-listOfUsers" element={<ListOfUsers />} />
-          <Route path="/start" element={<Start />} />
+          <Route path="/home" element={<Home />} />
           <Route path="*" element={<MissingPage />} />
-          <Route path="/expired" element={<Expired />} />
         </Routes>
       </BrowserRouter>
     </ChakraProvider>

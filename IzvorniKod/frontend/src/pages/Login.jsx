@@ -1,15 +1,12 @@
 import { Flex, Input, InputGroup, InputRightElement, Show, Text } from "@chakra-ui/react";
-
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-import Base from "../Base";
-import FormCard from "../FormCard";
-import GreenButton from "../GreenButton";
-import ErrorMessage from "../ErrorMessage";
-
 import { GiDeerHead } from "react-icons/gi";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import Base from "../components/shared/Base";
+import FormCard from "../components/shared/FormCard";
+import GreenButton from "../components/shared/GreenButton";
+import ErrorMessage from "../components/shared/ErrorMessage";
 
 export default function Login() {
   const navigate = useNavigate();
@@ -25,7 +22,6 @@ export default function Login() {
       username,
       password,
     };
-    console.log(data);
 
     setError("");
     if (!username || !password) {

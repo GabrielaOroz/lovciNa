@@ -10,18 +10,15 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-
-import Base from "../Base";
-import FormCard from "../FormCard";
-import GreenButton from "../GreenButton";
-import YellowButton from "../YellowButton";
-import ErrorMessage from "../ErrorMessage";
-
 import { GiBearFace } from "react-icons/gi";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
+import Base from "../components/shared/Base";
+import FormCard from "../components/shared/FormCard";
+import GreenButton from "../components/shared/GreenButton";
+import YellowButton from "../components/shared/YellowButton";
+import ErrorMessage from "../components/shared/ErrorMessage";
 
 export default function Register() {
   const navigate = useNavigate();

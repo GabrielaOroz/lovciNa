@@ -1,11 +1,10 @@
 import { Flex } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
+import Base from "../components/shared/Base";
+import GreenButton from "../components/shared/GreenButton";
+import YellowButton from "../components/shared/YellowButton";
 
-import Base from "../Base";
-import GreenButton from "../GreenButton";
-import YellowButton from "../YellowButton";
-
-export default function Home() {
+export default function Start() {
   return (
     <Base>
       <Flex alignSelf="center" gap="64px" marginBottom="32px">

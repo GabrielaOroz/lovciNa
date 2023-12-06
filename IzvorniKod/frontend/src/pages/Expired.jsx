@@ -1,4 +1,4 @@
-import { Box, Button, Card, Heading, Text } from "@chakra-ui/react";
+import { Box, Button, Card, Text } from "@chakra-ui/react";
 import { Link } from "react-router-dom";
 
 export default function Expired() {
