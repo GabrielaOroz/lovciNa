@@ -8,6 +8,7 @@ import Expired from "./pages/Expired";
 import Admin from "./pages/Admin";
 import ListOfUsers from "./pages/ListOfUsers";
 import Home from "./pages/Home";
+import CreateAction from "./pages/CreateAction";
 import MissingPage from "./pages/MissingPage";
 import Fonts from "./styles/Fonts";
 import theme from "./styles/theme";
@@ -26,6 +27,7 @@ export default function App() {
           <Route path="/admin" element={<Admin />} />
           <Route path="/admin-listOfUsers" element={<ListOfUsers />} />
           <Route path="/home" element={<Home />} />
+          <Route path="/new-action" element={<CreateAction />} />
           <Route path="*" element={<MissingPage />} />
         </Routes>
       </BrowserRouter>

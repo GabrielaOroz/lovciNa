@@ -1,26 +1,10 @@
-import {
-  Text,
-  Card,
-  CardHeader,
-  CardBody,
-  CardFooter,
-  Button,
-  Box,
-  Flex,
-  Checkbox,
-  List,
-  Heading,
-  Img,
-  Avatar,
-  Divider,
-  Input,
-} from "@chakra-ui/react";
+import { Text, Button, Box, Flex, Checkbox, List, Avatar, Divider, Input } from "@chakra-ui/react";
 import { useRef, useState } from "react";
 import { LayerGroup, LayersControl, MapContainer, Marker, Popup, TileLayer, useMapEvents } from "react-leaflet";
-import L from "leaflet";
 import GreenButton from "../shared/GreenButton";
 import YellowButton from "../shared/YellowButton";
 import { FaLocationCrosshairs } from "react-icons/fa6";
+import { redIcon, greenIcon, blackIcon } from "../shared/mapIcons.jsx";
 
 export default function Tracker() {
   const [openTasks, setOpenTasks] = useState(false);
@@ -28,9 +12,7 @@ export default function Tracker() {
 
   const mapRef = useRef(null);
 
-  {
-    /* TODO - pracenje tragaca */
-  }
+  /* TODO - pracenje tragaca */
 
   /* TODO - izbrisat i dohvatit stvarne podatke */
   /* MOCK DATA */
@@ -46,6 +28,8 @@ export default function Tracker() {
       species: "Bear",
       image: "https://source.unsplash.com/featured/?bear",
       description: "A large, brown bear known to roam the area.",
+      hasGPS: true,
+
       history: [
         { coordinates: [45.9178, 15.9687], timestamp: "2023-12-01T10:00:00Z" },
         { coordinates: [45.9202, 15.9764], timestamp: "2023-12-02T12:30:00Z" },
@@ -58,6 +42,8 @@ export default function Tracker() {
       species: "Deer",
       image: "https://source.unsplash.com/featured/?deer",
       description: "Smeđi jelen",
+      hasGPS: true,
+
       history: [
         { coordinates: [45.9178, 15.9687], timestamp: "2023-12-01T10:00:00Z" },
         { coordinates: [45.9202, 15.9764], timestamp: "2023-12-02T12:30:00Z" },
@@ -70,6 +56,8 @@ export default function Tracker() {
       species: "Hedgehog",
       image: "https://source.unsplash.com/featured/?hedgehog",
       description: "Smeđi jež",
+      hasGPS: true,
+
       history: [
         { coordinates: [45.9178, 15.9687], timestamp: "2023-12-01T10:00:00Z" },
         { coordinates: [45.9202, 15.9764], timestamp: "2023-12-02T12:30:00Z" },
@@ -82,10 +70,35 @@ export default function Tracker() {
     {
       id: 1,
       description: "Find clues near the river",
+      content: "",
+      idTracker: 1,
+      idAction: 1,
+      idAnimal: 1,
+      idRoute: 1,
+      latitude: "",
+      longitude: "",
+      area: 2.5,
+      status: false,
+
       comments: ["Pazi da ne upadneš u rijeku", "Pazi da te ne udari riba dok iskače iz rijeke"],
-      completed: false,
     },
-    { id: 2, description: "Track animal footprints", comments: ["Pazi da te ne pojede medo"], completed: true },
+    {
+      id: 2,
+      description: "Track animal footprints",
+      content: "",
+      idTracker: 1,
+      idAction: 1,
+      idAnimal: 1,
+      idRoute: 1,
+      latitude: "",
+      longitude: "",
+      area: 2.5,
+      start: "",
+      end: "",
+      status: true,
+
+      comments: ["Pazi da te ne pojede medo"],
+    },
   ];
 
   /* TODO - prebacit u poseban file */
@@ -120,7 +133,7 @@ export default function Tracker() {
         Tracker
       </Text>
 
-      <Box h="500px" p="16px">
+      <Box h="600px" p="16px">
         {/* TODO - generiranje mape ovisno o sposobnosti (pješke, dron, avion...) */}
         <MapContainer
           ref={mapRef}
@@ -315,7 +328,7 @@ function CurrentLocation() {
     },
     locationfound(e) {
       setPosition(e.latlng);
-      map.flyTo(e.latlng, 12);
+      map.flyTo(e.latlng, 14);
     },
   });
 
