@@ -27,7 +27,7 @@ public class ResearcherController {
         Action action = new Action();
         action.setManagerId(actionDTO.getManagerId());
         action.setResearcherId(actionDTO.getResearcherId());
-        action.setTitle(action.getTitle());
+        action.setTitle(actionDTO.getTitle());
 
 
 
@@ -37,25 +37,21 @@ public class ResearcherController {
 
             TrackerRequirement requirement = new TrackerRequirement();
 
-            requirement.setId(5852L);
             requirement.setAmount(req.getAmount());
             requirement.setMediumType(req.getMediumType());
 
-            System.out.println("ovo je requ koji se sprema  " + requirement);
 
             newReq.add(requirement);
-            System.out.println("ovo je listaaaaaa " + action.getRequirements());
 
         }
 
         action.setRequirements(newReq);
-
         int created = researcherService.createAction(action);
 
         if(created == 1){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This researcher already has its action.");
         } else if(created == -1){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Data not valid");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Data nije dobar");
         }
 
         return ResponseEntity.ok("Action created successfully");

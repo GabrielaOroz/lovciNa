@@ -14,6 +14,7 @@ import java.util.List;
 public interface ActionRepository extends JpaRepository<Action, Long> {
     int countByResearcherId(Long id);
 
+
     @Transactional
     @Query("SELECT m FROM Manager m WHERE m.approved = true")
     List<Manager> listAllManagers();

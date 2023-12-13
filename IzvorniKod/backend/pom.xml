@@ -89,8 +89,16 @@
             <artifactId>spring-security-crypto</artifactId>
             <version>6.1.5</version>
         </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+        </dependency>
+		<dependency>
+			<groupId>org.projectlombok</groupId>
+			<artifactId>lombok</artifactId>
+		</dependency>
 
-    </dependencies>
+	</dependencies>
 	<repositories>
 		<repository>
 			<id>central</id>
