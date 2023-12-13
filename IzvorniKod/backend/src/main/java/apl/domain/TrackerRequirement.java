@@ -1,9 +1,6 @@
 package apl.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
@@ -19,6 +16,9 @@ public class TrackerRequirement {
     private Long id;
 
     private String mediumType;
+
+    //@OneToMany
+    private Long actionId;
 
     private  Long amount;
 }

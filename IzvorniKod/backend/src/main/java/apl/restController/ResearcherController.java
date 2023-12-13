@@ -30,7 +30,6 @@ public class ResearcherController {
         action.setTitle(actionDTO.getTitle());
 
 
-
         List<TrackerRequirement> newReq = new ArrayList<>();
 
         for (RequirementDTO req : actionDTO.getRequirements()){
@@ -39,14 +38,14 @@ public class ResearcherController {
 
             requirement.setAmount(req.getAmount());
             requirement.setMediumType(req.getMediumType());
-
+            requirement.setActionId(action.getId());
 
             newReq.add(requirement);
 
         }
 
-        action.setRequirements(newReq);
-        int created = researcherService.createAction(action);
+
+        int created = researcherService.createAction(action, newReq);
 
         if(created == 1){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This researcher already has its action.");

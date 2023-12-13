@@ -35,6 +35,4 @@ public class Action {
     @NotNull
     private Boolean status = false;
 
-    @ManyToMany
-    private List<TrackerRequirement> requirements;
 }
