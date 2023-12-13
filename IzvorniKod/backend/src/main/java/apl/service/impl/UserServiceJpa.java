@@ -145,8 +145,6 @@ public class UserServiceJpa implements UserService {
     @Override
     public int createUser(User user, Long stationId) {
 
-
-
         boolean success=false;
 
         Assert.notNull(user, "User object must be given");  //moramo dobit objekt, ne možemo u bazu stavit null
