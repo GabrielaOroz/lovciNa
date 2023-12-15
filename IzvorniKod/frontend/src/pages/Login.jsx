@@ -33,10 +33,11 @@ export default function Login() {
         headers: {
           "Content-Type": "application/json",
         },
+        credentials: 'include',
         body: JSON.stringify(data),
       }).then((res) => {
         if (res.ok) {
-          navigate("/start");
+          navigate("/home");
         } else {
           setError("Incorrect username or password.");
         }

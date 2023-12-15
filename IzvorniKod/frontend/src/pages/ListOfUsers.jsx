@@ -139,6 +139,7 @@ export default function ListOfUsers() {
   const handleUsers = () => {
     fetch("http://localhost:8000/admin/registeredUsers", {
       method: "GET",
+      credentials: 'include',
     })
       .then((res) => res.json())
       .then((data) => {
@@ -158,6 +159,7 @@ export default function ListOfUsers() {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: 'include',
       body: JSON.stringify(data),
     }).then((res) => {
       if (res.ok) {
@@ -179,6 +181,7 @@ export default function ListOfUsers() {
     fetch("http://localhost:8000/admin/newInfo", {
       method: "PUT",
       body: formData,
+      credentials: 'include',
     }).then((res) => {
       if (res.ok) {
         handleUsers();

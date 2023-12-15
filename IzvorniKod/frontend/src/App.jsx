@@ -25,7 +25,7 @@ export default function App() {
           <Route path="/confirm" element={<Confirm />} />
           <Route path="/expired" element={<Expired />} />
           <Route path="/admin" element={<Admin />} />
-          <Route path="/admin-listOfUsers" element={<ListOfUsers />} />
+          <Route path="/admin/list-of-users" element={<ListOfUsers />} />
           <Route path="/home" element={<Home />} />
           <Route path="/new-action" element={<CreateAction />} />
           <Route path="*" element={<MissingPage />} />

@@ -88,6 +88,7 @@ export default function Register() {
     fetch("http://localhost:8000/auth/register", {
       method: "POST",
       body: formData,
+      credentials: 'include',
     }).then((res) => {
       if (res.ok) {
         navigate("/confirm");

@@ -1,5 +1,5 @@
 import { Flex, Input, InputGroup, InputRightElement, Show, Text } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { GiHummingbird } from "react-icons/gi";
 import { FaEye, FaEyeSlash } from "react-icons/fa";
@@ -7,6 +7,7 @@ import Base from "../components/shared/Base";
 import FormCard from "../components/shared/FormCard";
 import GreenButton from "../components/shared/GreenButton";
 import ErrorMessage from "../components/shared/ErrorMessage";
+import Cookies from "js-cookie";
 
 export default function Admin() {
   const navigate = useNavigate();
@@ -14,6 +15,16 @@ export default function Admin() {
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState("");
+
+  const [session, setSession] = useState(null);
+
+  useEffect(() => {
+    /* TODO - pogledati u koji name back stavlja u cookie */
+    const session = Cookies.get("name");
+    if (session) {
+      setSession(JSON.parse(session));
+    }
+  }, []);
 
   const handleSubmit = () => {
     setError("");
@@ -27,10 +38,15 @@ export default function Admin() {
       headers: {
         "Content-Type": "application/json",
       },
+      credentials: 'include',
       body: JSON.stringify(data),
     }).then((res) => {
       if (res.ok) {
-        navigate("/admin-listOfUsers");
+        if (session && session.role == "admin"){
+          navigate("/admin/list-of-users");
+        } else {
+          navigate("/home");
+        }
       } else {
         setError("Password incorrect.");
       }
