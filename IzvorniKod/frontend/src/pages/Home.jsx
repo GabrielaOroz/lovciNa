@@ -10,18 +10,22 @@ import { Link } from "react-router-dom";
 
 export default function Home() {
   const [session, setSession] = useState(null);
-
+  
   useEffect(() => {
-    /* TODO - pogledati u koji name back stavlja cookie */
-    const session = Cookies.get("name");
-    if (session) {
-      setSession(JSON.parse(session));
-    }
+    fetch("http://localhost:8000/auth/current-user", {
+      method: "GET",
+      credentials: 'include',
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setSession(data);
+      });
   }, []);
 
   return (
     <>
-      {(!session || session.role == "") && (
+      {(!session.approved || !session) && (
         <Card bg="#F9F7ED" align="center" w="300px" p="16px" mt="calc(25% - 100px)" ml="calc(50% - 150px)">
           <Text as="b" color="#306844" align="center" fontSize="xl">
             You don't have access to this page.
@@ -33,9 +37,9 @@ export default function Home() {
       )}
       {session && (
         <MainBase>
-          {session.role == "researcher" && <Researcher />}
-          {session.role == "manager" && <Manager />}
-          {session.role == "tracker" && <Tracker />}
+          {session.role == "researcher" && session.approved && <Researcher />}
+          {session.role == "manager" && session.approved && <Manager />}
+          {session.role == "tracker" && session.approved && <Tracker />}
         </MainBase>
       )}
     </>

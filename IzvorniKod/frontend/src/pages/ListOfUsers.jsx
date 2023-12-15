@@ -16,9 +16,22 @@ import {
   Text,
   useDisclosure,
 } from "@chakra-ui/react";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function ListOfUsers() {
+  const [session, setSession] = useState(null);
+  useEffect(() => {
+    fetch("http://localhost:8000/auth/current-user", {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setSession(data);
+      });
+  }, []);
+
   // USER INFO
   const [id, setId] = useState();
   const [firstName, setFirstName] = useState("");
@@ -139,7 +152,7 @@ export default function ListOfUsers() {
   const handleUsers = () => {
     fetch("http://localhost:8000/admin/registeredUsers", {
       method: "GET",
-      credentials: 'include',
+      credentials: "include",
     })
       .then((res) => res.json())
       .then((data) => {
@@ -159,7 +172,7 @@ export default function ListOfUsers() {
       headers: {
         "Content-Type": "application/json",
       },
-      credentials: 'include',
+      credentials: "include",
       body: JSON.stringify(data),
     }).then((res) => {
       if (res.ok) {
@@ -181,7 +194,7 @@ export default function ListOfUsers() {
     fetch("http://localhost:8000/admin/newInfo", {
       method: "PUT",
       body: formData,
-      credentials: 'include',
+      credentials: "include",
     }).then((res) => {
       if (res.ok) {
         handleUsers();
@@ -190,203 +203,213 @@ export default function ListOfUsers() {
   };
 
   return (
-    <Box bgImage="url(/forest.jpg)" bgPosition="center" minH="100vh" display="flex" justifyContent="center">
-      <Card
-        w={{ base: "500px" }}
-        background="#f9f7e8"
-        alignSelf="center"
-        padding="20px"
-        display="flex"
-        flexDirection="column"
-        justify="center"
-        align="center"
-      >
-        <Text fontSize="2xl">REGISTERED USERS:</Text>
-        <Button marginTop="8px" marginBottom="8px" colorScheme="green" onClick={() => handleUsers()}>
-          Load all registered users.
-        </Button>
-        <Divider color="green" />
-        {registeredUsers && (
-          <>
-            {registeredUsers.map((user) => (
-              <div key={user.id}>
-                <Flex gap="5px" align="center">
-                  <Button
-                    variant="unstyled"
-                    _hover={{ color: "green" }}
-                    onClick={() => {
-                      onOpen();
-                      setId(user.id);
-                      setFirstName(user.name);
-                      setLastName(user.surname);
-                      setUsername(user.username);
-                      setEmail(user.email);
-                      convertByteArrayToUrl(user.photo);
-                    }}
-                    p="10px"
-                  >
-                    {user.name} {user.surname}
-                  </Button>
-                  {(user.role === "manager" || user.role === "researcher") && !user.approved && (
-                    <Button onClick={() => handleApproval(user.id, user.role)} colorScheme="green" m="10px">
-                      Approve role: {user.role}
-                    </Button>
-                  )}
-                </Flex>
-                <Modal
-                  scrollBehavior="inside"
-                  blockScrollOnMount={false}
-                  closeOnOverlayClick={false}
-                  isOpen={isOpen}
-                  onClose={() => {
-                    clearError();
-                    setPassword("");
-                    setSelectedFile("");
-                    onClose();
-                  }}
-                >
-                  <ModalOverlay />
-                  <ModalContent>
-                    <ModalHeader>USER INFO</ModalHeader>
-                    <ModalCloseButton />
-                    <ModalBody>
-                      <Input
-                        marginBottom="10px"
-                        defaultValue={firstName}
-                        onChange={changeFirstName}
-                        placeholder="First Name"
-                      />
-                      <Text
-                        marginBottom="10px"
-                        style={{ display: rightFirstName ? "none" : "block" }}
-                        fontSize="sm"
-                        fontWeight="bold"
-                        color="#CC0000"
+    <>
+      {session && session.admin && (
+        <Box bgImage="url(/forest.jpg)" bgPosition="center" minH="100vh" display="flex" justifyContent="center">
+          <Card
+            w={{ base: "500px" }}
+            background="#f9f7e8"
+            alignSelf="center"
+            padding="20px"
+            display="flex"
+            flexDirection="column"
+            justify="center"
+            align="center"
+          >
+            <Text fontSize="2xl">REGISTERED USERS:</Text>
+            <Button marginTop="8px" marginBottom="8px" colorScheme="green" onClick={() => handleUsers()}>
+              Load all registered users.
+            </Button>
+            <Divider color="green" />
+            {registeredUsers && (
+              <>
+                {registeredUsers.map((user) => (
+                  <div key={user.id}>
+                    <Flex gap="5px" align="center">
+                      <Button
+                        variant="unstyled"
+                        _hover={{ color: "green" }}
+                        onClick={() => {
+                          onOpen();
+                          setId(user.id);
+                          setFirstName(user.name);
+                          setLastName(user.surname);
+                          setUsername(user.username);
+                          setEmail(user.email);
+                          convertByteArrayToUrl(user.photo);
+                        }}
+                        p="10px"
                       >
-                        First name required.
-                      </Text>
-                      <Input
-                        marginBottom="10px"
-                        defaultValue={lastName}
-                        onChange={changeLastName}
-                        placeholder="Last Name"
-                      />
-                      <Text
-                        marginBottom="10px"
-                        style={{ display: rightLastName ? "none" : "block" }}
-                        fontSize="sm"
-                        fontWeight="bold"
-                        color="#CC0000"
-                      >
-                        Last name required.
-                      </Text>
-                      <Input
-                        marginBottom="10px"
-                        defaultValue={username}
-                        onChange={changeUsername}
-                        placeholder="Username"
-                      />
-                      <Text
-                        marginBottom="10px"
-                        style={{ display: rightUsername ? "none" : "block" }}
-                        fontSize="sm"
-                        fontWeight="bold"
-                        color="#CC0000"
-                      >
-                        Username required.
-                      </Text>
-                      <Input marginBottom="10px" defaultValue={email} onChange={changeEmail} placeholder="Email" />
-                      <Text
-                        marginBottom="10px"
-                        style={{ display: rightEmail ? "none" : "block" }}
-                        fontSize="sm"
-                        fontWeight="bold"
-                        color="#CC0000"
-                      >
-                        Invalid email format.
-                      </Text>
-                      <Input
-                        marginBottom="10px"
-                        defaultValue={password}
-                        onChange={changePassword}
-                        placeholder="Password"
-                      />
-                      <Text
-                        marginBottom="10px"
-                        style={{ display: rightPass ? "none" : "block" }}
-                        fontSize="sm"
-                        fontWeight="bold"
-                        color="#CC0000"
-                      >
-                        Password must be between 8 and 16 characters and include letters(A-Z), numbers(0-9) and special
-                        characters(!,@,#,$,%,^,&,*).
-                      </Text>
-
-                      <Input
-                        style={{ display: "none" }}
-                        type="file"
-                        ref={inputRef}
-                        onChange={handleFileChange}
-                        id="file"
-                      />
-                      <Button marginBottom="10px" onClick={handleFileUpload} bgColor="#F1EDD4" border="0">
-                        Upload new profile picture
+                        {user.name} {user.surname}
                       </Button>
-
-                      {!selectedFile && <Image maxHeight="300px" src={photoURL} />}
-
-                      {selectedFile && (
-                        <Image
-                          maxHeight="300px"
-                          src={selectedFile && URL.createObjectURL(selectedFile)}
-                          alt={selectedFile ? selectedFile.name : ""}
-                        />
+                      {(user.role === "manager" || user.role === "researcher") && !user.approved && (
+                        <Button onClick={() => handleApproval(user.id, user.role)} colorScheme="green" m="10px">
+                          Approve role: {user.role}
+                        </Button>
                       )}
-                    </ModalBody>
-                    <ModalFooter>
-                      <Button
-                        variant="ghost"
-                        onClick={() => {
-                          clearError();
-                          setPassword("");
-                          setSelectedFile("");
-                          onClose();
-                        }}
-                      >
-                        Cancel
-                      </Button>
-                      <Button
-                        colorScheme="green"
-                        onClick={() => {
-                          validateFirstName();
-                          validateLastName();
-                          validateEmail();
-                          validateUsername();
-                          validatePass();
-                          if (
-                            validateFirstName() &&
-                            validateLastName() &&
-                            validateEmail() &&
-                            validateUsername() &&
-                            validatePass()
-                          ) {
-                            setPassword("");
-                            setSelectedFile("");
-                            handleSubmit();
-                            onClose();
-                          }
-                        }}
-                      >
-                        Confirm
-                      </Button>
-                    </ModalFooter>
-                  </ModalContent>
-                </Modal>
-              </div>
-            ))}
-          </>
-        )}
-      </Card>
-    </Box>
+                    </Flex>
+                    <Modal
+                      scrollBehavior="inside"
+                      blockScrollOnMount={false}
+                      closeOnOverlayClick={false}
+                      isOpen={isOpen}
+                      onClose={() => {
+                        clearError();
+                        setPassword("");
+                        setSelectedFile("");
+                        onClose();
+                      }}
+                    >
+                      <ModalOverlay />
+                      <ModalContent>
+                        <ModalHeader>USER INFO</ModalHeader>
+                        <ModalCloseButton />
+                        <ModalBody>
+                          <Input
+                            marginBottom="10px"
+                            defaultValue={firstName}
+                            onChange={changeFirstName}
+                            placeholder="First Name"
+                          />
+                          <Text
+                            marginBottom="10px"
+                            style={{ display: rightFirstName ? "none" : "block" }}
+                            fontSize="sm"
+                            fontWeight="bold"
+                            color="#CC0000"
+                          >
+                            First name required.
+                          </Text>
+                          <Input
+                            marginBottom="10px"
+                            defaultValue={lastName}
+                            onChange={changeLastName}
+                            placeholder="Last Name"
+                          />
+                          <Text
+                            marginBottom="10px"
+                            style={{ display: rightLastName ? "none" : "block" }}
+                            fontSize="sm"
+                            fontWeight="bold"
+                            color="#CC0000"
+                          >
+                            Last name required.
+                          </Text>
+                          <Input
+                            marginBottom="10px"
+                            defaultValue={username}
+                            onChange={changeUsername}
+                            placeholder="Username"
+                          />
+                          <Text
+                            marginBottom="10px"
+                            style={{ display: rightUsername ? "none" : "block" }}
+                            fontSize="sm"
+                            fontWeight="bold"
+                            color="#CC0000"
+                          >
+                            Username required.
+                          </Text>
+                          <Input marginBottom="10px" defaultValue={email} onChange={changeEmail} placeholder="Email" />
+                          <Text
+                            marginBottom="10px"
+                            style={{ display: rightEmail ? "none" : "block" }}
+                            fontSize="sm"
+                            fontWeight="bold"
+                            color="#CC0000"
+                          >
+                            Invalid email format.
+                          </Text>
+                          <Input
+                            marginBottom="10px"
+                            defaultValue={password}
+                            onChange={changePassword}
+                            placeholder="Password"
+                          />
+                          <Text
+                            marginBottom="10px"
+                            style={{ display: rightPass ? "none" : "block" }}
+                            fontSize="sm"
+                            fontWeight="bold"
+                            color="#CC0000"
+                          >
+                            Password must be between 8 and 16 characters and include letters(A-Z), numbers(0-9) and
+                            special characters(!,@,#,$,%,^,&,*).
+                          </Text>
+
+                          <Input
+                            style={{ display: "none" }}
+                            type="file"
+                            ref={inputRef}
+                            onChange={handleFileChange}
+                            id="file"
+                          />
+                          <Button marginBottom="10px" onClick={handleFileUpload} bgColor="#F1EDD4" border="0">
+                            Upload new profile picture
+                          </Button>
+
+                          {!selectedFile && <Image maxHeight="300px" src={photoURL} />}
+
+                          {selectedFile && (
+                            <Image
+                              maxHeight="300px"
+                              src={selectedFile && URL.createObjectURL(selectedFile)}
+                              alt={selectedFile ? selectedFile.name : ""}
+                            />
+                          )}
+                        </ModalBody>
+                        <ModalFooter>
+                          <Button
+                            variant="ghost"
+                            onClick={() => {
+                              clearError();
+                              setPassword("");
+                              setSelectedFile("");
+                              onClose();
+                            }}
+                          >
+                            Cancel
+                          </Button>
+                          <Button
+                            colorScheme="green"
+                            onClick={() => {
+                              validateFirstName();
+                              validateLastName();
+                              validateEmail();
+                              validateUsername();
+                              validatePass();
+                              if (
+                                validateFirstName() &&
+                                validateLastName() &&
+                                validateEmail() &&
+                                validateUsername() &&
+                                validatePass()
+                              ) {
+                                setPassword("");
+                                setSelectedFile("");
+                                handleSubmit();
+                                onClose();
+                              }
+                            }}
+                          >
+                            Confirm
+                          </Button>
+                        </ModalFooter>
+                      </ModalContent>
+                    </Modal>
+                  </div>
+                ))}
+              </>
+            )}
+          </Card>
+        </Box>
+      )}
+      {!session ||
+        (!session.admin && (
+          <Box>
+            <Text>You don't have access to this page.</Text>
+          </Box>
+        ))}
+    </>
   );
 }

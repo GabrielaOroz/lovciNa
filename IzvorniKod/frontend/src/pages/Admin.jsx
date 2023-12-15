@@ -19,11 +19,15 @@ export default function Admin() {
   const [session, setSession] = useState(null);
 
   useEffect(() => {
-    /* TODO - pogledati u koji name back stavlja u cookie */
-    const session = Cookies.get("name");
-    if (session) {
-      setSession(JSON.parse(session));
-    }
+    fetch("http://localhost:8000/auth/current-user", {
+      method: "GET",
+      credentials: 'include',
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setSession(data);
+      });
   }, []);
 
   const handleSubmit = () => {
@@ -42,7 +46,7 @@ export default function Admin() {
       body: JSON.stringify(data),
     }).then((res) => {
       if (res.ok) {
-        if (session && session.role == "admin"){
+        if (session && session.admin){
           navigate("/admin/list-of-users");
         } else {
           navigate("/home");

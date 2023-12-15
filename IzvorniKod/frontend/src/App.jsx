@@ -12,6 +12,7 @@ import CreateAction from "./pages/CreateAction";
 import MissingPage from "./pages/MissingPage";
 import Fonts from "./styles/Fonts";
 import theme from "./styles/theme";
+import NewActions from "./pages/NewActions";
 
 export default function App() {
   return (
@@ -28,6 +29,7 @@ export default function App() {
           <Route path="/admin/list-of-users" element={<ListOfUsers />} />
           <Route path="/home" element={<Home />} />
           <Route path="/new-action" element={<CreateAction />} />
+          <Route path="/finish-new-actions" element={<NewActions />} />
           <Route path="*" element={<MissingPage />} />
         </Routes>
       </BrowserRouter>
