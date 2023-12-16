@@ -40,16 +40,16 @@ public class AdminController {
 
 
     private Long authorize(Object idObj, Object adminObj) {
-        System.out.println((Long) idObj);
+        /*System.out.println((Long) idObj);
         if (idObj instanceof Long) System.out.println("id");
-        if (adminObj instanceof Boolean) System.out.println("admin");
+        if (adminObj instanceof Boolean) System.out.println("admin");*/
         if (idObj instanceof Long && adminObj instanceof Boolean) {
             Long id = (Long) idObj;
             User user=userRepo.findById(id).orElse(null);
             if (user==null) return -1L;
             if (user.isRegistered()) return id;
         }
-        System.out.println("na kraju");
+        //System.out.println("na kraju");
         return -1L;
     }
 
@@ -67,7 +67,7 @@ public class AdminController {
         if (res == 0) {
             session.setAttribute("admin", true);
             if (authorize(session.getAttribute("id"),session.getAttribute("admin"))<0)  {
-                System.out.println("neuspjeli admin");
+                //System.out.println("neuspjeli admin");
                 return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
             }
             return ResponseEntity.ok("Admin page");

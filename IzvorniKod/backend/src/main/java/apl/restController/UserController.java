@@ -146,7 +146,7 @@ public class UserController {
         }
         User usr=userRepo.findByUsername(user.getUsername()).orElse(null);
         session.setAttribute("id", usr.getId());
-        System.out.println((Long) session.getAttribute("id"));
+        //System.out.println((Long) session.getAttribute("id"));
         return ResponseEntity.ok("Data received and processed");
     }
 
