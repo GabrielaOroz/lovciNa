@@ -1,7 +1,9 @@
 package apl.restController;
 
+import apl.dao.*;
 import apl.domain.*;
 import apl.service.UserService;
+import jakarta.servlet.http.HttpSession;
 import org.hibernate.mapping.Column;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -12,7 +14,12 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin(
+        origins = "http://localhost:5173/",
+        methods  = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE },
+        allowedHeaders = "*",
+        allowCredentials = "true"
+)
 @RestController
 public class AdminController {
 
@@ -20,15 +27,49 @@ public class AdminController {
     private UserService userService;
 
 
+    @Autowired
+    private UserRepository userRepo;
+    @Autowired
+    private ManagerRepository managerRepo;
+    @Autowired
+    private ResearcherRepository researcherRepo;
+    @Autowired
+    private StationRepository stationRepo;
+    @Autowired
+    private TrackerRepository trackerRepo;
+
+
+    private Long authorize(Object idObj, Object adminObj) {
+        System.out.println((Long) idObj);
+        if (idObj instanceof Long) System.out.println("id");
+        if (adminObj instanceof Boolean) System.out.println("admin");
+        if (idObj instanceof Long && adminObj instanceof Boolean) {
+            Long id = (Long) idObj;
+            User user=userRepo.findById(id).orElse(null);
+            if (user==null) return -1L;
+            if (user.isRegistered()) return id;
+        }
+        System.out.println("na kraju");
+        return -1L;
+    }
+
+
     @GetMapping("/admin/registeredUsers") //kad dođe GET zahtjev, on će se spojit ovdje i pozvati metodu deklariranu u userService
-    public ResponseEntity<List<RegisteredDTO>> listUsers() {
+    public ResponseEntity<List<RegisteredDTO>> listUsers(HttpSession session) {
+        Long usrId=authorize(session.getAttribute("id"),session.getAttribute("admin"));
+        if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         List<RegisteredDTO> listOfUsers = userService.listAllRegistered();
         return ResponseEntity.ok(listOfUsers);
     }
     @PostMapping("/admin")
-    public ResponseEntity<String> logInAdmin(@RequestBody AdminLogInDTO admin) {
+    public ResponseEntity<String> logInAdmin(@RequestBody AdminLogInDTO admin, HttpSession session) {
         int res = userService.logInAdmin(admin.getPassword());
         if (res == 0) {
+            session.setAttribute("admin", true);
+            if (authorize(session.getAttribute("id"),session.getAttribute("admin"))<0)  {
+                System.out.println("neuspjeli admin");
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+            }
             return ResponseEntity.ok("Admin page");
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Wrong admin password!");
@@ -41,9 +82,11 @@ public class AdminController {
                                                    @RequestPart(name ="selectedFile", required = false) MultipartFile selectedFile,
                                                    @RequestParam("email") String email,
                                                    @RequestParam("username") String username,
-                                                   @RequestParam(name ="password", required = false) String password
+                                                   @RequestParam(name ="password", required = false) String password,
+                                                   HttpSession session
     ) {
-
+        Long usrId=authorize(session.getAttribute("id"),session.getAttribute("admin"));
+        if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         User user = new User();
         user.setId(id);
         user.setName(firstName);
@@ -71,12 +114,13 @@ public class AdminController {
     }
 
     @PutMapping("/admin/approved")
-    public ResponseEntity<String> approveUser(@RequestBody ApprovedDTO approvedDTO) {
+    public ResponseEntity<String> approveUser(@RequestBody ApprovedDTO approvedDTO, HttpSession session) {
+        Long usrId=authorize(session.getAttribute("id"),session.getAttribute("admin"));
+        if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         int res = userService.approveUser(approvedDTO);
         if (res == 0) {
             return ResponseEntity.ok("Status changed");
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Cannot change status");
-
     }
 }
