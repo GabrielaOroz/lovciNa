@@ -39,25 +39,15 @@ public class AdminController {
     private TrackerRepository trackerRepo;
 
 
-    private Long authorize(Object idObj, Object adminObj) {
-        /*System.out.println((Long) idObj);
-        if (idObj instanceof Long) System.out.println("id");
-        if (adminObj instanceof Boolean) System.out.println("admin");*/
-        if (idObj instanceof Long && adminObj instanceof Boolean) {
-            Long id = (Long) idObj;
-            User user=userRepo.findById(id).orElse(null);
-            if (user==null) return -1L;
-            if (user.isRegistered()) return id;
-        }
-        //System.out.println("na kraju");
-        return -1L;
+    private boolean authorize(Object adminObj) {
+        //if (adminObj instanceof Boolean) System.out.println("admin");
+        return adminObj instanceof Boolean;
     }
 
 
     @GetMapping("/admin/registeredUsers") //kad dođe GET zahtjev, on će se spojit ovdje i pozvati metodu deklariranu u userService
     public ResponseEntity<List<RegisteredDTO>> listUsers(HttpSession session) {
-        Long usrId=authorize(session.getAttribute("id"),session.getAttribute("admin"));
-        if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        if (!authorize(session.getAttribute("admin"))) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         List<RegisteredDTO> listOfUsers = userService.listAllRegistered();
         return ResponseEntity.ok(listOfUsers);
     }
@@ -66,10 +56,6 @@ public class AdminController {
         int res = userService.logInAdmin(admin.getPassword());
         if (res == 0) {
             session.setAttribute("admin", true);
-            if (authorize(session.getAttribute("id"),session.getAttribute("admin"))<0)  {
-                //System.out.println("neuspjeli admin");
-                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-            }
             return ResponseEntity.ok("Admin page");
         }
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Wrong admin password!");
@@ -85,8 +71,7 @@ public class AdminController {
                                                    @RequestParam(name ="password", required = false) String password,
                                                    HttpSession session
     ) {
-        Long usrId=authorize(session.getAttribute("id"),session.getAttribute("admin"));
-        if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        if (!authorize(session.getAttribute("admin"))) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         User user = new User();
         user.setId(id);
         user.setName(firstName);
@@ -115,8 +100,7 @@ public class AdminController {
 
     @PutMapping("/admin/approved")
     public ResponseEntity<String> approveUser(@RequestBody ApprovedDTO approvedDTO, HttpSession session) {
-        Long usrId=authorize(session.getAttribute("id"),session.getAttribute("admin"));
-        if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        if (!authorize(session.getAttribute("admin"))) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         int res = userService.approveUser(approvedDTO);
         if (res == 0) {
             return ResponseEntity.ok("Status changed");

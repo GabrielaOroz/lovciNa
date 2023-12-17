@@ -205,11 +205,15 @@ public class UserController {
 
     @GetMapping("/current-user")
     public ResponseEntity<Map<String, Object>> getData(HttpSession session) {
-        Long usrId=authorize1(session.getAttribute("id"));
-        if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-        User user=userRepo.findById(usrId).orElse(null);
-        // Create a Map with different types of values
         Map<String, Object> data = new HashMap<>();
+
+        if (session.getAttribute("admin") instanceof Boolean) data.put("admin", true);
+        else data.put("admin", false);
+
+        Long usrId=authorize1(session.getAttribute("id"));
+        if (usrId<0) return ResponseEntity.ok(data);
+        User user=userRepo.findById(usrId).orElse(null);
+
         data.put("id", usrId);
         data.put("username", user.getUsername());
         if (user.getRole().equals("tracker")) {
@@ -229,9 +233,6 @@ public class UserController {
             data.put("approved",researcher.isApproved());
         }
         else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-
-        if (session.getAttribute("admin") instanceof Boolean) data.put("admin", true);
-        else data.put("admin", false);
 
         return ResponseEntity.ok(data);
     }
