@@ -20,6 +20,8 @@ export default function NewActions() {
       });
   }, []);
 
+  const hasAccess = session && session.role === "researcher" && session.approved === true;
+
   const [formData, setFormData] = useState(mockData.mockNewActions);
 
   /* GET DATA */
@@ -338,7 +340,7 @@ export default function NewActions() {
 
   return (
     <>
-      {session && session.role == "researcher" && session.approved && (
+      {session && hasAccess && (
         <Flex align="center" mt="64px" mb="64px" gap="32px" direction="column">
           {formData &&
             formData.map((action) => (
@@ -781,13 +783,12 @@ export default function NewActions() {
             ))}
         </Flex>
       )}
-      {!session ||
-        !session.role == "researcher" ||
-        !session.approved(
-          <Box>
-            <Text>You don't have access to this page.</Text>
-          </Box>
-        )}
+      {session && !hasAccess && (
+        <Text as="b" color="#306844" align="center" fontSize="xl">
+          You do not yet have access to this page.
+        </Text>
+      )}
+      {!session && <Text>You don't have access to this page.</Text>}
     </>
   );
 }

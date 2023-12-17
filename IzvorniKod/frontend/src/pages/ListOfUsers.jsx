@@ -17,6 +17,8 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useEffect, useRef, useState } from "react";
+import GreenButton from "../components/shared/GreenButton";
+import { useNavigate } from "react-router-dom";
 
 export default function ListOfUsers() {
   const [session, setSession] = useState(null);
@@ -31,6 +33,8 @@ export default function ListOfUsers() {
         setSession(data);
       });
   }, []);
+
+  const hasAccess = session && session.admin === true;
 
   // USER INFO
   const [id, setId] = useState();
@@ -202,9 +206,21 @@ export default function ListOfUsers() {
     });
   };
 
+  const navigate = useNavigate();
+  const logout = () => {
+    fetch("http://localhost:8000/auth/logout", {
+      method: "POST",
+      credentials: "include",
+    }).then((res) => {
+      if (res.ok) {
+       navigate("/login");
+      }
+    });
+  };
+
   return (
     <>
-      {session && session.admin && (
+      {session && hasAccess && (
         <Box bgImage="url(/forest.jpg)" bgPosition="center" minH="100vh" display="flex" justifyContent="center">
           <Card
             w={{ base: "500px" }}
@@ -216,6 +232,7 @@ export default function ListOfUsers() {
             justify="center"
             align="center"
           >
+            <GreenButton onClick={logout}>Logout</GreenButton>
             <Text fontSize="2xl">REGISTERED USERS:</Text>
             <Button marginTop="8px" marginBottom="8px" colorScheme="green" onClick={() => handleUsers()}>
               Load all registered users.
@@ -404,12 +421,11 @@ export default function ListOfUsers() {
           </Card>
         </Box>
       )}
-      {!session ||
-        (!session.admin && (
-          <Box>
-            <Text>You don't have access to this page.</Text>
-          </Box>
-        ))}
+      {(!session || !hasAccess) && (
+        <Box bgImage="url(/forest.jpg)" bgPosition="center" minH="100vh" display="flex" justifyContent="center">
+          <Text as="b" fontSize="3xl" p="32px">You don't have access to this page.</Text>
+        </Box>
+      )}
     </>
   );
 }

@@ -7,7 +7,6 @@ import Base from "../components/shared/Base";
 import FormCard from "../components/shared/FormCard";
 import GreenButton from "../components/shared/GreenButton";
 import ErrorMessage from "../components/shared/ErrorMessage";
-import Cookies from "js-cookie";
 
 export default function Admin() {
   const navigate = useNavigate();
@@ -15,20 +14,6 @@ export default function Admin() {
   const [password, setPassword] = useState("");
   const [showPass, setShowPass] = useState(false);
   const [error, setError] = useState("");
-
-  const [session, setSession] = useState(null);
-
-  useEffect(() => {
-    fetch("http://localhost:8000/auth/current-user", {
-      method: "GET",
-      credentials: 'include',
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log(data);
-        setSession(data);
-      });
-  }, []);
 
   const handleSubmit = () => {
     setError("");
@@ -46,11 +31,7 @@ export default function Admin() {
       body: JSON.stringify(data),
     }).then((res) => {
       if (res.ok) {
-        if (session && session.admin){
-          navigate("/admin/list-of-users");
-        } else {
-          navigate("/home");
-        }
+        navigate("/admin/list-of-users");
       } else {
         setError("Password incorrect.");
       }

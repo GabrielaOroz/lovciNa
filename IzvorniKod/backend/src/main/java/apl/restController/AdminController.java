@@ -15,7 +15,7 @@ import java.io.IOException;
 import java.util.List;
 
 @CrossOrigin(
-        origins = "http://localhost:5173/",
+        origins = "http://localhost:5173",
         methods  = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE },
         allowedHeaders = "*",
         allowCredentials = "true"

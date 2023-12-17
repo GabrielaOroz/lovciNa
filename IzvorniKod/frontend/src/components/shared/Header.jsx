@@ -1,8 +1,21 @@
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, Card, Flex, Heading } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import GreenButton from "./GreenButton";
 
 export default function Header() {
+  const navigate = useNavigate();
+
+  const logout = () => {
+    fetch("http://localhost:8000/auth/logout", {
+      method: "POST",
+      credentials: "include",
+    }).then((res) => {
+      if (res.ok) {
+       navigate("/login");
+      }
+    });
+  };
+
   return (
     <Card
       background="#F9F7ED"
@@ -32,9 +45,7 @@ export default function Header() {
           </BreadcrumbItem>
         </Breadcrumb>
       </Flex>
-      <GreenButton>
-        <Link to="/login">Logout</Link>
-      </GreenButton>
+      <GreenButton onClick={logout}>Logout</GreenButton>
     </Card>
   );
 }

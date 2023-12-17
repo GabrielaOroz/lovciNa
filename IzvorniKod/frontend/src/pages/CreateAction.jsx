@@ -20,6 +20,8 @@ export default function CreateAction() {
       });
   }, []);
 
+  const hasAccess = session && session.role === "researcher" && session.approved === true;
+
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -102,7 +104,7 @@ export default function CreateAction() {
 
   return (
     <>
-      {session && session.role == "researcher" && session.approved && (
+      {session && hasAccess && (
         <Flex justifyContent="center" alignItems="center" minHeight="100vh">
           <Card background="#F9F7ED" w="500px" padding="32px" align="center">
             <Input
@@ -206,13 +208,12 @@ export default function CreateAction() {
           </Card>
         </Flex>
       )}
-      {!session ||
-        !session.role == "researcher" ||
-        !session.approved(
-          <Box>
-            <Text>You don't have access to this page.</Text>
-          </Box>
-        )}
+      {session && !hasAccess && (
+        <Text as="b" color="#306844" align="center" fontSize="xl">
+          You do not yet have access to this page.
+        </Text>
+      )}
+      {!session && <Text>You don't have access to this page.</Text>}
     </>
   );
 }
