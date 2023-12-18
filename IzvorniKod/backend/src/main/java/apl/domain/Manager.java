@@ -25,7 +25,6 @@ public class Manager extends User {
     public Manager() {
     }
 
-
     private boolean approved = false;
 
     //@NotNull

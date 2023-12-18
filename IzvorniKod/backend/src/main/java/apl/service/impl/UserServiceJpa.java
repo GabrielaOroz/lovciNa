@@ -168,6 +168,7 @@ public class UserServiceJpa implements UserService {
                 success = true;
             } catch (Exception e) {return -1;}
 
+
         } else if (user.getRole().equals("manager")) {
             try {
                 user = saveManager(new Manager(user));
@@ -180,6 +181,7 @@ public class UserServiceJpa implements UserService {
             } catch (Exception e) {
                 return -1;
             }
+
         } else return -1;
 
 

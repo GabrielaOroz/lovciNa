@@ -104,8 +104,6 @@ public class UserController {
         user.setUsername(username);
         user.setPassword(password);
 
-
-
         if (selectedFile != null) {
             try {
                 user.setPhoto(selectedFile.getBytes());
