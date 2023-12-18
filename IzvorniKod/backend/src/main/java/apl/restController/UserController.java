@@ -93,8 +93,8 @@ public class UserController {
             @RequestPart("selectedFile") MultipartFile selectedFile,
             @RequestParam("email") String email,
             @RequestParam("username") String username,
-            @RequestParam("password") String password,
-            @RequestParam(name = "stationId", required = false) Long stationId
+            @RequestParam("password") String password
+            //@RequestParam(name = "stationId", required = false) Long stationId
             ) {
         User user = new User();
         user.setRole(role);
@@ -104,9 +104,7 @@ public class UserController {
         user.setUsername(username);
         user.setPassword(password);
 
-        if (user.getRole().equals("tracker") || user.getRole().equals("manager")) stationId=0L;
-        else if (user.getRole().equals("researcher")) stationId=null;
-        else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Non-existent role");
+
 
         if (selectedFile != null) {
             try {
@@ -118,7 +116,7 @@ public class UserController {
         }
         else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Photo not sent");
 
-        int status = userService.createUser(user,stationId);
+        int status = userService.createUser(user);
         if (status==-1) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Data not valid");
 
         if (status==1) return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("User with email " + user.getEmail() + " and username " + user.getUsername() + "already exists!");
@@ -219,12 +217,12 @@ public class UserController {
         if (user.getRole().equals("tracker")) {
             data.put("role", "tracker");
             Tracker tracker=trackerRepo.findById(usrId).orElse(null);
-            data.put("stationId",tracker.getStationId());
+            //data.put("stationId",tracker.getStationId());
         }
         else if (user.getRole().equals("manager")) {
             data.put("role", "manager");
             Manager manager=managerRepo.findById(usrId).orElse(null);
-            data.put("stationId",manager.getStationId());
+            //data.put("stationId",manager.getStationId());
             data.put("approved",manager.isApproved());
         }
         else if (user.getRole().equals("researcher")) {

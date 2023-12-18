@@ -16,7 +16,7 @@ public interface TrackerRepository extends JpaRepository<Tracker, Long> {
     List<Tracker> findBySurname(String surname);
     Optional<Tracker> findByEmail(String email);
     List<Tracker> findByRegistered(boolean registered);
-    List<Tracker> findByStationId(Long stationId);
+    //List<Tracker> findByStationId(Long stationId);
 
     int countByUsername(String username);
     int countByEmail(String email);

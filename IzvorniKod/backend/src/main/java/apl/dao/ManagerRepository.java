@@ -17,7 +17,7 @@ public interface ManagerRepository extends JpaRepository<Manager, Long> {
     List<Manager> findBySurname(String surname);
     Optional<Manager> findByEmail(String email);
     List<Manager> findByRegistered(boolean registered);
-    Optional<Manager> findByStationId(Long stationId);
+    //Optional<Manager> findByStationId(Long stationId);
 
     int countByUsername(String username);
     int countByEmail(String email);

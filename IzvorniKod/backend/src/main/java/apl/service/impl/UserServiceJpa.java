@@ -143,7 +143,7 @@ public class UserServiceJpa implements UserService {
     }
 
     @Override
-    public int createUser(User user, Long stationId) {
+    public int createUser(User user) {
 
         boolean success=false;
 
@@ -162,29 +162,27 @@ public class UserServiceJpa implements UserService {
         }
 
 
-        if(user.getRole().equals("researcher") && stationId == null){
+        if(user.getRole().equals("researcher")){
             try {
                 user = saveResearcher(new Researcher(user));
                 success = true;
             } catch (Exception e) {return -1;}
 
-        } else if (stationId != null) {
-            if (user.getRole().equals("manager")) {
-                try {
-                    user = saveManager(new Manager(user,stationId));
-                    success = true;
-                } catch (Exception e) {return -1;}
-
-            } else if (user.getRole().equals("tracker")) {
-                try {
-                    user = saveTracker(new Tracker(user, stationId));
-                    success = true;
-                } catch (Exception e) {
-                    return -1;
-                }
-            } else return -1;
-
+        } else if (user.getRole().equals("manager")) {
+            try {
+                user = saveManager(new Manager(user));
+                success = true;
+            } catch (Exception e) {return -1;}
+        } else if (user.getRole().equals("tracker")) {
+            try {
+                user = saveTracker(new Tracker(user));
+                success = true;
+            } catch (Exception e) {
+                return -1;
+            }
         } else return -1;
+
+
 
 
         if (success == true) {

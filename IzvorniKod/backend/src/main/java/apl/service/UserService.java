@@ -12,7 +12,7 @@ public interface UserService {
 
     List<User> listAll();
 
-    int createUser(User user, Long stationId);
+    int createUser(User user);
 
     int logInUser(LogInDTO user);
 
