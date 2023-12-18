@@ -104,7 +104,7 @@ public class UserController {
         user.setUsername(username);
         user.setPassword(password);
 
-        if (user.getRole().equals("tracker") || user.getRole().equals("manager")) stationId=0L;
+        if (user.getRole().equals("tracker") || user.getRole().equals("manager")) stationId=null;
         else if (user.getRole().equals("researcher")) stationId=null;
         else return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Non-existent role");
 

@@ -168,7 +168,7 @@ public class UserServiceJpa implements UserService {
                 success = true;
             } catch (Exception e) {return -1;}
 
-        } else if (stationId != null) {
+        } else if (stationId == null) {
             if (user.getRole().equals("manager")) {
                 try {
                     user = saveManager(new Manager(user,stationId));

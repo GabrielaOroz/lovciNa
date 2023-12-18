@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 @Setter
 @ToString
 public class Manager extends User {
-    public Manager(User user, @NotNull Long stationId) {
+    public Manager(User user, Long stationId) {
         this.setId(user.getId());
         this.setUsername(user.getUsername());
         this.setRole(user.getRole());
@@ -29,9 +29,8 @@ public class Manager extends User {
     public Manager() {
     }
 
-
     private boolean approved = false;
 
-    @NotNull
+    //@NotNull
     private Long stationId;
 }
