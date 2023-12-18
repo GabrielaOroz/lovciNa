@@ -2,6 +2,7 @@ package apl.dao;
 
 import apl.domain.Action;
 import apl.domain.Manager;
+import apl.domain.Researcher;
 import apl.domain.User;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,10 +13,10 @@ import java.util.List;
 
 @Repository
 public interface ActionRepository extends JpaRepository<Action, Long> {
-    int countByResearcherId(Long id);
-
 
     @Transactional
     @Query("SELECT m FROM Manager m WHERE m.approved = true")
     List<Manager> listAllManagers();
+
+    int countByResearcher(Researcher researcher);
 }

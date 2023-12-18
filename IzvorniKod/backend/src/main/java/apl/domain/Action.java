@@ -1,9 +1,6 @@
 package apl.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.*;
 import lombok.*;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,9 +19,11 @@ public class Action {
     @GeneratedValue
     private Long id;
 
-    private Long managerId;
+    @ManyToOne
+    private Manager manager;
 
-    private Long researcherId;
+    @ManyToOne
+    private Researcher researcher;
 
     private String title;
 

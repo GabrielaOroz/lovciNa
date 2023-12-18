@@ -28,7 +28,7 @@ public class ResearcherServiceJpa implements ResearcherService {
         Assert.isNull(action.getId(), "Action ID must be null, not " + action.getId());    //zato što ga mi settiramo autom s generated value
 
         System.out.println("ovo je akcija" + action);
-        if(actionRepo.countByResearcherId(action.getResearcherId()) > 0){
+        if(actionRepo.countByResearcher(action.getResearcher()) > 0){
             return 1;
         }
 

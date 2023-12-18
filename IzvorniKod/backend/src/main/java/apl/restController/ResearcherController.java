@@ -63,8 +63,8 @@ public class ResearcherController {
     public ResponseEntity<String> createAction(@RequestBody ActionDTO actionDTO, HttpSession session){
 
         Action action = new Action();
-        action.setManagerId(actionDTO.getManagerId());
-        action.setResearcherId(actionDTO.getResearcherId());
+        action.setManager(actionDTO.getManager());
+        action.setResearcher(actionDTO.getResearcher());
         action.setTitle(actionDTO.getTitle());
 
 

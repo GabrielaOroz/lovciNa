@@ -19,9 +19,9 @@ import java.util.List;
 @NoArgsConstructor
 public class ActionDTO {
 
-    private Long managerId;
+    private Manager manager;
 
-    private Long researcherId;
+    private Researcher researcher;
 
     private String title;
 
