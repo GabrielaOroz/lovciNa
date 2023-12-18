@@ -95,7 +95,7 @@ public class ResearcherController {
     }
 
     @GetMapping("/managers")
-    public ResponseEntity<List<Manager>> getManagers(HttpSession session){
+    public ResponseEntity<List<ManagerDTO>> getManagers(HttpSession session){
         if (researcherService.listAllManagers() != null) {
             return ResponseEntity.ok(researcherService.listAllManagers());
         } else {

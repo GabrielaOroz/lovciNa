@@ -2,7 +2,6 @@ package apl.service.impl;
 
 import apl.dao.ActionRepository;
 import apl.dao.RequirementRepository;
-import apl.dao.ResearcherRepository;
 import apl.domain.*;
 import apl.service.ResearcherService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,9 +47,17 @@ public class ResearcherServiceJpa implements ResearcherService {
     }
 
     @Override
-    public List<Manager> listAllManagers() {
+    public List<ManagerDTO> listAllManagers() {
+        List<ManagerDTO> list = new ArrayList<>();
         try {
-            return actionRepo.listAllManagers();
+            for (Manager manager : actionRepo.listAllManagers()) {
+                ManagerDTO managerDTO = new ManagerDTO(manager.getId(), manager.getName(),
+                        manager.getSurname(), manager.getStation());
+
+                list.add(managerDTO);
+            }
+
         } catch (Exception e) {return null;}
+        return list;
     }
 }

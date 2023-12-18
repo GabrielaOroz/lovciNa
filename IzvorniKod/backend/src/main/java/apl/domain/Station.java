@@ -28,6 +28,10 @@ public class Station {
     @NotNull
     private String name;
 
+    private Long longitude;
+
+    private Long latitude;
+
     private String description;
 }
 

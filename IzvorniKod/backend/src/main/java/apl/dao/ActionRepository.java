@@ -1,9 +1,6 @@
 package apl.dao;
 
-import apl.domain.Action;
-import apl.domain.Manager;
-import apl.domain.Researcher;
-import apl.domain.User;
+import apl.domain.*;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
