@@ -215,12 +215,12 @@ public class UserController {
         if (user.getRole().equals("tracker")) {
             data.put("role", "tracker");
             Tracker tracker=trackerRepo.findById(usrId).orElse(null);
-            //data.put("stationId",tracker.getStationId());
+            data.put("station",tracker.getStation());
         }
         else if (user.getRole().equals("manager")) {
             data.put("role", "manager");
             Manager manager=managerRepo.findById(usrId).orElse(null);
-            //data.put("stationId",manager.getStationId());
+            data.put("station",manager.getStation());
             data.put("approved",manager.isApproved());
         }
         else if (user.getRole().equals("researcher")) {

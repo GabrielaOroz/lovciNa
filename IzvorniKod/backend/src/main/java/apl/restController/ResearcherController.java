@@ -102,4 +102,13 @@ public class ResearcherController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(researcherService.listAllManagers());
         }
     }
+
+    @GetMapping("/actions")
+    public ResponseEntity<List<ResearcherMapDTO>> getActions(HttpSession session) {
+        if (researcherService.getAllActions() != null) {
+            return ResponseEntity.ok(researcherService.getAllActions());
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(researcherService.getAllActions());
+        }
+    }
 }

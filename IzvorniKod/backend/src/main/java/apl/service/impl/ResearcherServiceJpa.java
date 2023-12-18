@@ -60,4 +60,11 @@ public class ResearcherServiceJpa implements ResearcherService {
         } catch (Exception e) {return null;}
         return list;
     }
+
+    @Override
+    public List<ResearcherMapDTO> getAllActions() {
+        List<ResearcherMapDTO> researcherMapDTOS = new ArrayList<>();
+
+        return null;
+    }
 }

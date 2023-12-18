@@ -6,6 +6,8 @@ import lombok.Setter;
 import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
+
 @Entity
 @Getter
 @Setter
@@ -27,7 +29,16 @@ public class Tracker extends User {
     public Tracker() {
     }
 
+    private String medium;
+
+    private Long longitude;
+
+    private Long latitude;
+
     //@NotNull
     @ManyToOne
     private Station station;
+
+    @OneToMany
+    private List<Task> tasks;
 }
