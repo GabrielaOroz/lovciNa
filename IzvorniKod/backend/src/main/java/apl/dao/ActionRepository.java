@@ -16,4 +16,12 @@ public interface ActionRepository extends JpaRepository<Action, Long> {
     List<Manager> listAllManagers();
 
     int countByResearcher(Researcher researcher);
+
+    @Transactional
+    @Query("SELECT a FROM Action a")
+    List<Action> listAllActions();
+
+    @Transactional
+    @Query("SELECT a FROM TrackerInAction a")
+    List<TrackerInAction> listAllTrackersInActions();
 }

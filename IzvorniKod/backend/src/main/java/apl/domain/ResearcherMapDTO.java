@@ -1,17 +1,24 @@
 package apl.domain;
 
+import lombok.Getter;
+import lombok.Setter;
+
+import java.time.LocalDateTime;
 import java.util.List;
 
+@Getter
+@Setter
 public class ResearcherMapDTO {
     private Long id;
     private List<ActionComment> comments;
-    private Long startOfAction;
-    private Long endOfAction;
+    private LocalDateTime startOfAction;
+    private LocalDateTime endOfAction;
     private boolean status;
     private String title;
     private List<Animal> individuals;
     private ManagerDTO managerDTO;
     private List<Species> species;
-    private List<Tracker> trackers;
+    private List<TrackerDTO> trackers;
     private List<Habitat> habitats;
+
 }

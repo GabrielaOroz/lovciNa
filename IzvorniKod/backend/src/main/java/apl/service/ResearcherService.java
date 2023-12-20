@@ -10,5 +10,9 @@ public interface ResearcherService {
 
     List<ManagerDTO> listAllManagers();
 
-    List<ResearcherMapDTO> getAllActions();
+    List<ResearcherMapDTO> getAllActions(Long idResearcher);
+
+    List<ResearcherMapDTO> getAllFinishedActions(Long usrId);
+
+    List<ResearcherMapDTO> getAllUnfinishedActions(Long usrId);
 }
