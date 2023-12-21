@@ -34,4 +34,16 @@ public class Action {
     @NotNull
     private Boolean status = false;
 
+    @OneToMany
+    private List<ActionComment> comments;
+
+    @ManyToMany
+    private List<Animal> animals;
+
+    @OneToMany
+    private List<Tracker> trackers;
+
+    @OneToMany
+    private List<Habitat> habitats;
+
 }

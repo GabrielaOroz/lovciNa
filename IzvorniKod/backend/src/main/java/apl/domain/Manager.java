@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.hibernate.annotations.Cascade;
 import org.jetbrains.annotations.NotNull;
 
 @Entity
@@ -28,6 +29,6 @@ public class Manager extends User {
     private boolean approved = false;
 
     //@NotNull
-    @OneToOne
+    @OneToOne(cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REFRESH})
     private Station station;
 }

@@ -29,8 +29,6 @@ public class Tracker extends User {
     public Tracker() {
     }
 
-    private String medium;
-
     private Long longitude;
 
     private Long latitude;
@@ -41,4 +39,6 @@ public class Tracker extends User {
 
     @OneToMany
     private List<Task> tasks;
+
+
 }

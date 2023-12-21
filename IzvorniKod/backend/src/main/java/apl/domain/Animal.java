@@ -1,9 +1,6 @@
 package apl.domain;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,7 +19,8 @@ public class Animal {
     @GeneratedValue
     private Long id;
 
-    private String species;
+    @ManyToOne
+    private Species species;
 
     private byte[] photo;
 
