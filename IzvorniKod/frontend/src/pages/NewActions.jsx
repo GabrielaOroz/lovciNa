@@ -3,7 +3,11 @@ import mockData from "../mockData";
 import { Avatar, Box, Button, Divider, Flex, HStack, Input, Radio, RadioGroup, Text, Textarea } from "@chakra-ui/react";
 import GreenButton from "../components/shared/GreenButton";
 import YellowButton from "../components/shared/YellowButton";
-import { MapContainer, TileLayer, useMapEvents } from "react-leaflet";
+import { MapContainer, TileLayer, useMapEvents, useMap } from "react-leaflet";
+import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
+import "leaflet-routing-machine";
+import { createControlComponent } from "@react-leaflet/core";
+import L from "leaflet";
 
 export default function NewActions() {
   const [session, setSession] = useState(null);
@@ -251,8 +255,8 @@ export default function NewActions() {
         title: "",
         content: "",
         comments: [],
-        coordinatesStart: [0, 0],
-        coordinatesFinish: [0, 0],
+        coordinatesStart: [45, 15],
+        coordinatesFinish: [45.2, 15.2],
       };
       actionToUpdate.trackers.find((tracker) => tracker.id === trackerId).tasks = [
         ...actionToUpdate.trackers.find((tracker) => tracker.id === trackerId).tasks,
@@ -315,28 +319,45 @@ export default function NewActions() {
     }
   };
 
-  const [clickCount, setClickCount] = useState(0);
-  const [startCoords, setStartCoords] = useState([0, 0]);
-  const [finishCoords, setFinishCoords] = useState([0, 0]);
+  const createRoutingMachineLayer = (props) => {
+    const { actionId, trackerId, taskIndex, profile } = props;
 
-  function MapClickHandler({ actionIndex, trackerId, taskIndex }) {
-    const handleMapClick = (e) => {
-      if (clickCount === 0) {
-        setStartCoords([e.latlng.lat, e.latlng.lng]);
-        updateTaskCoordinates(actionIndex, trackerId, taskIndex, startCoords, finishCoords);
-        setClickCount(1);
-      } else if (clickCount === 1) {
-        setFinishCoords([e.latlng.lat, e.latlng.lng]);
-        updateTaskCoordinates(actionIndex, trackerId, taskIndex, startCoords, finishCoords);
-        setClickCount(0);
-      }
-    };
+    const medium = profile == "CAR" || "MOTORCYCLE" ? "car" : (profile == "BIKE" ? "bike" : "foot")
 
-    useMapEvents({
-      click: handleMapClick,
+    const instance = L.Routing.control({
+      waypoints: [
+        L.latLng(
+          [...formData].find((action) => action.id === actionId).trackers.find((tracker) => tracker.id === trackerId)
+            .tasks[taskIndex].coordinatesStart[0],
+            [...formData].find((action) => action.id === actionId).trackers.find((tracker) => tracker.id === trackerId)
+            .tasks[taskIndex].coordinatesStart[1]
+        ),
+        L.latLng(
+          [...formData].find((action) => action.id === actionId).trackers.find((tracker) => tracker.id === trackerId)
+            .tasks[taskIndex].coordinatesFinish[0],
+            [...formData].find((action) => action.id === actionId).trackers.find((tracker) => tracker.id === trackerId)
+            .tasks[taskIndex].coordinatesFinish[1]
+        ),
+      ],
+      router: new L.Routing.osrmv1({
+        serviceUrl: 'https://router.project-osrm.org/route/v1',
+        profile: medium,
+      }),
+      show: false,
     });
-    return null;
-  }
+
+    instance.on("waypointschanged", function (e) {
+      const waypoints = e.waypoints;
+      const start = [waypoints[0].latLng.lat, waypoints[0].latLng.lng];
+      const end = [waypoints[1].latLng.lat, waypoints[1].latLng.lng];
+
+      updateTaskCoordinates(actionId, trackerId, taskIndex, start, end)
+    });
+
+    return instance;
+  };
+
+  const RoutingMachine = createControlComponent(createRoutingMachineLayer);
 
   return (
     <>
@@ -710,9 +731,6 @@ export default function NewActions() {
                           focusBorderColor="#306844"
                           onChange={(e) => handleTaskChange(e, action.id, tracker.id, taskIndex, "content")}
                         />
-                        <Text fontSize="xl" mb="8px">
-                          Click on map to get starting position and finish
-                        </Text>
                         {task.coordinatesStart && (
                           <Text>
                             {"Starting position: " + task.coordinatesStart[0] + ", " + task.coordinatesStart[1]}
@@ -727,7 +745,7 @@ export default function NewActions() {
                               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                               url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                             />
-                            <MapClickHandler actionIndex={action.id} trackerId={tracker.id} taskIndex={taskIndex} />
+                            <RoutingMachine profile={tracker.medium} actionId={action.id} trackerId={tracker.id} taskIndex={taskIndex} />
                           </MapContainer>
                         </Box>
 
