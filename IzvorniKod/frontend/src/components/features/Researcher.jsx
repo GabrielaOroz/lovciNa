@@ -16,7 +16,7 @@ export default function Researcher() {
   /* GET DATA */
   console.log(formData);
   useEffect(() => {
-    fetch("http://localhost:8000/researcher/actions", {
+    fetch("http://localhost:5173/researcher/actions", {
       method: "GET",
       credentials: 'include',
     })
@@ -68,6 +68,7 @@ export default function Researcher() {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
           />
+
           <LayersControl position="topright">
             <LayersControl.Overlay checked name="Postaje">
               <LayerGroup>
@@ -82,7 +83,7 @@ export default function Researcher() {
                 ))}
               </LayerGroup>
             </LayersControl.Overlay>
-            <LayersControl.Overlay checked name="Pozicije tragača na akciji">
+           <LayersControl.Overlay checked name="Pozicije tragača na akciji">
               <LayerGroup>
                 {formData.map((action, index) =>
                   action.trackers.map((tracker, index) => (
@@ -105,12 +106,12 @@ export default function Researcher() {
                   ))
                 )}
               </LayerGroup>
-            </LayersControl.Overlay>
-          </LayersControl>
+           </LayersControl.Overlay> 
+          </LayersControl> 
         </MapContainer>
       </Box>
 
-      <Flex pl="16px" pr="16px" justify="space-between">
+    <Flex pl="16px" pr="16px" justify="space-between">
         <Flex gap="8px">
           <GreenButton
             onClick={() => {
@@ -412,7 +413,7 @@ export default function Researcher() {
             </Flex>
           ))}
         </Flex>
-      )}
+                          )} 
     </>
   );
 }

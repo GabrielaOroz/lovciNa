@@ -19,8 +19,10 @@ import {
   ModalFooter,
 } from '@chakra-ui/react';
 import { LayerGroup, LayersControl, MapContainer, Marker, Popup, TileLayer, useMapEvents } from "react-leaflet";
-import mockData from "../../mockData.jsx";
+import podaci from "../../pomoc.jsx";
 import { marker } from 'leaflet';
+import { Link } from "react-router-dom";
+import GreenButton from "../shared/GreenButton";
 
 
 
@@ -31,23 +33,45 @@ export default function Manager() {
   const [selectedTracker, setSelectedTracker] = useState(null); //trenutni selectan
   const [isAbilitiesModalOpen, setIsAbilitiesModalOpen] = useState(false);
   const [currentSelectedTracker, setCurrentSelectedTracker] = useState(null); // u prozoru
-
+  const [selectedAll, setSelectedAll] = useState(false);
 
   //selectana postaja 
   const [markerPosition, setMarkerPosition] = useState(null);
   const[markerName, setMarkerName] = useState('');
   const[isNamingModalOpen, setIsNamingModalOpen] = useState(false);
 
-
-
   //selectani trackeri
   const [selectedTrackers, setSelectedTrackers] = useState([])
-
   const [selectedAbilities, setSelectedAbilities] = useState({}); //rijecnik - tracker i abilities
 
-
   const mapRef = useRef(null);
-  const [formData, setFormData] = useState(mockData.mockActions);
+
+  const [incomingRequests, setIncomingRequests] = useState(podaci);
+  const [showRequests, setShowRequests] = useState(false)
+
+
+  const fetchExistingStationData = () => {
+    // Make a request to check if the station already exists
+    fetch("http://localhost:8000/stations", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        // If the station exists, set its data
+        if (data && data.length > 0) {
+          const existingStation = data[0]; 
+          setSelectedStation(true)
+          setMarkerName(existingStation.name);
+          setMarkerPosition([existingStation.lat, existingStation.lng]);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching existing station data:", error);
+      });
+  };
 
 
 
@@ -75,30 +99,35 @@ export default function Manager() {
   useEffect(() => {
     /*
     fetchTrackers();
-    fetchAbilities();
+    fetchAbilities(); //pitnanje hoce li trebat
+    fetchExistingStationData();
     */
   }, [])
 
   const handleMapClick = (e) => {
-    //if(!selectedStation) {
+    if(!selectedStation) {
       const { lat, lng } = e.latlng;
       setMarkerPosition({ lat, lng });
       setIsNamingModalOpen(true);
       setMarkerName("")
       console.log(`Latitude: ${lat}, Longitude: ${lng}`);
   
-      //sve na novo
+      //sve na novo - NEPOTREBNO AKO SAMO JEDNOM SMIJE BIRAT LOKACIJU
+      /*
       setSelectedTracker(null);
       setSelectedAbilities([]);
       setSelectedTrackers([]);
+      */
 
-   // }
+    }
   };
+
 
   const handleConfirmName = () => {
     //poziva se kad confirmam ime postaje
     setSelectedStation(true); //odabrano
     setIsNamingModalOpen(false);
+    setSelectedAll(false);
     
 
     // šaljemo na back naziv postaje, lat i lon
@@ -133,6 +162,20 @@ export default function Manager() {
     });
    // return null;
   };
+
+  const handleToggleRequests = () => {
+    if (!selectedStation || selectedTrackers.length === 0 || 
+      Object.values(selectedAbilities).some((abilities) => abilities.length === 0)) {
+      alert("Please select a station, trackers, and abilities.");
+    } else {
+      if (!showRequests) {
+        setShowRequests(true);
+      } else {
+        setShowRequests(false);
+      }
+      
+    }
+  };
   
 
   const handleCheckboxChangeTracker = (tracker) => {
@@ -163,10 +206,8 @@ export default function Manager() {
   };
 
   const handleAbilitiesCheckboxChange = (ability) => {
-    //console.log(selectedAbilities[selectedTracker]?.includes('foot'));
 
     setSelectedAbilities((prevAbilities) => {
-      //if(!isTrackerSelected) return;
       const currentAbilities = prevAbilities[selectedTracker] || [];
       
       if (currentAbilities.includes(ability)) {
@@ -178,7 +219,7 @@ export default function Manager() {
         };
       } else {
        
-        // Inače, dodajte sposobnost
+        // Inače, dodaj sposobnost
         return {
           ...prevAbilities,
           [selectedTracker]: [...currentAbilities, ability],
@@ -201,7 +242,7 @@ export default function Manager() {
   
     // slanje na back
 
-    fetch("http://localhost:8000/saveAbilities", {
+   {/* fetch("http://localhost:8000/saveAbilities", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -215,19 +256,27 @@ export default function Manager() {
       })
       .catch((error) => {
         console.error("Error saving abilities:", error);
-      });
+      }); */}
 
 
     console.log('Selected Abilities:', selectedAbilities);
     setIsAbilitiesModalOpen(false);
+    setSelectedAll(true);
   };
-  
+
+
 
   return (
     <>
      <Text color="#306844" fontSize={{ base: "2xl", md: "4xl", lg: "5xl" }} alignSelf="center">
         Mananger
       </Text>
+      {!selectedStation && (
+        <Text color="#f9f7e8" fontSize={{ base: "2xl"}} style={{padding: "20px", margin: "16px", backgroundColor: "#306844"}}>
+         Click on the map and select the location of your station.
+        </Text>
+      )}
+
 
       <Box h="600px" p="16px" id="mapSection">
         <MapContainer ref={mapRef} style={{ height: "100%", width: "100%" }} 
@@ -262,9 +311,9 @@ export default function Manager() {
             />
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="green" mr={3} onClick={handleConfirmName}>
+            <GreenButton mr={3} onClick={handleConfirmName}>
               Confirm
-            </Button>
+            </GreenButton>
             <Button variant="ghost" onClick={() => setIsNamingModalOpen(false)}>
               Cancel
             </Button>
@@ -272,10 +321,10 @@ export default function Manager() {
         </ModalContent>
       </Modal>
       </Box>
+ 
 
-
-      <Card w={{ base: '300px', md: '600px', lg: '800px' }} background="#f9f7e8" alignSelf="center" padding="20px">
-        {selectedStation && (
+      <Card w={{ base: '300px', md: '600px', lg: '800px' }} background="#f9f7e8" alignSelf="center" padding="20px" alignItems="center">
+        {selectedStation && !selectedAll && (
           <Stack spacing={4} direction="column" padding="14px">
           {/*
           {trackerOptions.map((tracker) => (
@@ -304,10 +353,10 @@ export default function Manager() {
           </Stack>
         )}
 
-        {selectedStation && selectedTrackers.length > 0 && (
-          <Button colorScheme="green" margin="14px" onClick= {() => {setIsAbilitiesModalOpen(true) 
+        {selectedStation && selectedTrackers.length > 0 && !selectedAll && (
+          <GreenButton  margin="14px" onClick= {() => {setIsAbilitiesModalOpen(true) 
                                                               setCurrentSelectedTracker(null)}}>
-            Edit Trackers Abilities</Button>
+            Edit Trackers Abilities</GreenButton>
         )}
 
         <Modal isOpen={isAbilitiesModalOpen} onClose={() => setIsAbilitiesModalOpen(false)}>
@@ -358,18 +407,33 @@ export default function Manager() {
                             setCurrentSelectedTracker(null) }}>
                 Close
               </Button>
-              <Button colorScheme="green" onClick={handleSaveAbilities}>
+              <GreenButton onClick={handleSaveAbilities}>
                 Confirm
-              </Button>
+              </GreenButton>
             </ModalFooter>
           </ModalContent>
         </Modal>
-      </Card>
-  </>
+        {selectedAll && (
+          <Link to="/requirments">
+            <GreenButton margin="14px" onClick={handleToggleRequests}>
+              Requirments
+            </GreenButton> 
+          </Link>
 
-  
+        )}
+             
+          <Link to="/requirments">
+            <GreenButton margin="14px">
+              Requirments
+            </GreenButton> 
+          </Link>
 
     
+      </Card>
+     
+
+  </>
+
     
   );
 }
