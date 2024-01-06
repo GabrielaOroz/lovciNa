@@ -1,6 +1,6 @@
 package apl.dao;
 
-import apl.domain.User;
+import apl.domain.*;
 import jakarta.transaction.Transactional;
 import org.jetbrains.annotations.NotNull;
 import org.springframework.data.jpa.repository.JpaRepository;

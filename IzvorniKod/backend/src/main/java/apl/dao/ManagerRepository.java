@@ -1,11 +1,11 @@
 package apl.dao;
 
-import apl.domain.Manager;
-import apl.domain.Tracker;
-import apl.domain.User;
+import apl.domain.*;
+import apl.enums.ActionStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,4 +21,7 @@ public interface ManagerRepository extends JpaRepository<Manager, Long> {
 
     int countByUsername(String username);
     int countByEmail(String email);
+
+    List<Manager> findByActionsStatus(ActionStatus actionStatus);
+
 }

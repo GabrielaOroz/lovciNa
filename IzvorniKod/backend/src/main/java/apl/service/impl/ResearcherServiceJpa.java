@@ -1,16 +1,6 @@
 package apl.service.impl;
 
-import apl.dao.ActionRepository;
-import apl.dao.RequirementRepository;
-import apl.domain.*;
-import apl.service.ResearcherService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.util.Assert;
-
-import java.util.ArrayList;
-import java.util.List;
-
+/*
 @Service
 public class ResearcherServiceJpa implements ResearcherService {
 
@@ -161,3 +151,4 @@ public class ResearcherServiceJpa implements ResearcherService {
     }
 
 }
+*/

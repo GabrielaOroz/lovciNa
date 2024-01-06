@@ -2,6 +2,8 @@ package apl.service.impl;
 
 import apl.dao.*;
 import apl.domain.*;
+import apl.dto.DtoRequest;
+import apl.dto.DtoUser;
 import apl.email.EmailSender;
 import apl.token.ConfirmationToken;
 import apl.token.ConfirmationTokenRepository;
@@ -328,6 +330,15 @@ public class UserServiceJpa implements UserService {
 
 
         return "confirmed";
+    }
+
+
+    @Transactional
+    public List<DtoRequest> getRequests(Long usrId) {
+        User user = userRepo.findById(usrId).orElse(null);
+        List<DtoRequest> requests = user.retrieveRequestsDTO();
+        for (DtoRequest r:requests) r.setUser(null);
+        return requests;
     }
 
 

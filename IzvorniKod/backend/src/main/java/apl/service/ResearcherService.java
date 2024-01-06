@@ -4,9 +4,9 @@ import apl.domain.*;
 
 import java.util.List;
 
-public interface ResearcherService {
+/*public interface ResearcherService {
 
-    int createAction(Action action, List<TrackerRequirement> list);
+   // int createAction(Action action, List<TrackerRequirement> list);
 
     List<ManagerDTO> listAllManagers();
 
@@ -16,3 +16,4 @@ public interface ResearcherService {
 
     List<ResearcherMapDTO> getAllUnfinishedActions(Long usrId);
 }
+*/

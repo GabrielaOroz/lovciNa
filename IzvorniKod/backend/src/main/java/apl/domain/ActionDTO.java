@@ -25,6 +25,5 @@ public class ActionDTO {
 
     private String title;
 
-    @ManyToMany
     private List<RequirementDTO> requirements;
 }

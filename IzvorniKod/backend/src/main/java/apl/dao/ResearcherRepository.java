@@ -1,7 +1,6 @@
 package apl.dao;
 
-import apl.domain.Researcher;
-import apl.domain.User;
+import apl.domain.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

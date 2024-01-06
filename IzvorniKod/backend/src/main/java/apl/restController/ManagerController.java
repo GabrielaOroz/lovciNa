@@ -1,6 +1,9 @@
 package apl.restController;
 
 import apl.dao.ManagerRepository;
+import apl.dao.ResearcherRepository;
+import apl.dao.TrackerRepository;
+import apl.dao.UserRepository;
 import apl.domain.Manager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,11 +19,16 @@ import org.springframework.web.bind.annotation.*;
 public class ManagerController {
 
     @Autowired
+    private UserRepository userRepo;
+    @Autowired
     private ManagerRepository managerRepo;
+    @Autowired
+    private ResearcherRepository researcherRepo;
+    @Autowired
+    private TrackerRepository trackerRepo;
 
     private Long authorize1(Object idObj) {
-        if (idObj instanceof Long) {
-            Long id = (Long) idObj;
+        if (idObj instanceof Long id) {
             Manager manager=managerRepo.findById(id).orElse(null);
             if (manager==null) return -1L;
             if (manager.isRegistered()) return id;
@@ -34,8 +42,7 @@ public class ManagerController {
     */
 
     private Long authorize2(Object idObj) {
-        if (idObj instanceof Long) {
-            Long id = (Long) idObj;
+        if (idObj instanceof Long id) {
             Manager manager=managerRepo.findById(id).orElse(null);
             if (manager==null) return -1L;
             if (manager.isRegistered() && manager.isApproved()) return id;
