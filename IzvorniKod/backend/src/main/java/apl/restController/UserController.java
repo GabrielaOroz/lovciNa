@@ -2,6 +2,7 @@ package apl.restController;
 
 import apl.dao.*;
 import apl.domain.*;
+import apl.dto.DtoRequest;
 import apl.service.UserService;
 
 import jakarta.servlet.http.HttpServletResponse;
@@ -49,16 +50,16 @@ public class UserController {
     @Autowired
     private ResearcherRepository researcherRepo;
     @Autowired
-    private StationRepository stationRepo;
-    @Autowired
     private TrackerRepository trackerRepo;
+    @Autowired
+    private StationRepository stationRepo;
+
 
     public UserController() {
     }
 
     private Long authorize1(Object idObj) {
-        if (idObj instanceof Long) {
-            Long id = (Long) idObj;
+        if (idObj instanceof Long id) {
             User user=userRepo.findById(id).orElse(null);
             if (user==null) return -1L;
             if (user.isRegistered()) return id;
@@ -66,9 +67,14 @@ public class UserController {
         return -1L;
     }
 
+
+    /*
+    Long usrId=authorize1(session.getAttribute("id"));
+    if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+    */
+
     private Long authorize2(Object idObj) {
-        if (idObj instanceof Long) {
-            Long id = (Long) idObj;
+        if (idObj instanceof Long id) {
             User user=userRepo.findById(id).orElse(null);
             if (user==null) return -1L;
             if (!user.isRegistered()) return -1L;
@@ -84,6 +90,11 @@ public class UserController {
         }
         return -1L;
     }
+
+    /*
+    Long usrId=authorize2(session.getAttribute("id"));
+    if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+    */
 
     @PostMapping("/register")    //kad dođe POST zahtjev, napravi sljedeće, zapravo REGISTRIRAJ
     public ResponseEntity<String> createUser(
@@ -231,5 +242,18 @@ public class UserController {
         else return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
 
         return ResponseEntity.ok(data);
+    }
+
+
+    @GetMapping("/requests")
+    public ResponseEntity<List<DtoRequest>> getRequests(HttpSession session) {
+        Long usrId=authorize2(session.getAttribute("id"));
+        if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+
+        try {
+            return ResponseEntity.ok(userService.getRequests(usrId));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
     }
 }

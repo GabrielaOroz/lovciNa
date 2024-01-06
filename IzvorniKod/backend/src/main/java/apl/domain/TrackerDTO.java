@@ -20,9 +20,9 @@ public class TrackerDTO {
 
     private String surname;
 
-    private Long latitude;
+    private Double latitude;
 
-    private Long longitude;
+    private Double longitude;
 
     private byte[] photo;
 

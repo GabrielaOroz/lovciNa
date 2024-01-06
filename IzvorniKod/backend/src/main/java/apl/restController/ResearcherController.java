@@ -1,9 +1,15 @@
 package apl.restController;
 
-import apl.dao.ResearcherRepository;
+import apl.dao.*;
 import apl.domain.*;
-import apl.service.ResearcherService;
+//import apl.service.ResearcherService;
+import apl.dto.DtoManager;
+import apl.dto.DtoRequest;
+import apl.dto.DtoUser;
+import apl.enums.HandleRequest;
+import apl.service.impl.TestResearcherService;
 import jakarta.servlet.http.HttpSession;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,16 +29,27 @@ import java.util.List;
 @RestController
 @RequestMapping("/researcher")
 public class ResearcherController {
+    /*@Autowired
+    ResearcherService researcherService;*/
 
     @Autowired
-    ResearcherService researcherService;
+    TestResearcherService testresearcherService;
+
+    @Autowired
+    private UserRepository userRepo;
+    @Autowired
+    private ManagerRepository managerRepo;
     @Autowired
     private ResearcherRepository researcherRepo;
+    @Autowired
+    private TrackerRepository trackerRepo;
+
+    @Autowired
+    private ActionRepository actionRepo;
 
     private Long authorize1(Object idObj) {
 
-        if (idObj instanceof Long) {
-            Long id = (Long) idObj;
+        if (idObj instanceof Long id) {
             Researcher researcher=researcherRepo.findById(id).orElse(null);
             if (researcher==null) return -1L;
             if (researcher.isRegistered()) return id;
@@ -47,8 +64,7 @@ public class ResearcherController {
 
     private Long authorize2(Object idObj) {
 
-        if (idObj instanceof Long) {
-            Long id = (Long) idObj;
+        if (idObj instanceof Long id) {
             Researcher researcher=researcherRepo.findById(id).orElse(null);
             if (researcher==null) return -1L;
             if (researcher.isRegistered() && researcher.isApproved()) return id;
@@ -61,41 +77,22 @@ public class ResearcherController {
     if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
     */
 
-    @PostMapping("/create-requests")
-    public ResponseEntity<String> createAction(@RequestBody ActionDTO actionDTO, HttpSession session){
+    @PostMapping("/create-requests")                                                            // testing purposes currently
+    public ResponseEntity<DtoUser> createAction(@RequestBody Action action, HttpSession session){
+        Long usrId=authorize2(session.getAttribute("id"));
+        if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
-        Action action = new Action();
-        action.setManager(actionDTO.getManager());
-        action.setResearcher(actionDTO.getResearcher());
-        action.setTitle(actionDTO.getTitle());
-
-
-        List<TrackerRequirement> newReq = new ArrayList<>();
-
-        for (RequirementDTO req : actionDTO.getRequirements()){
-
-            TrackerRequirement requirement = new TrackerRequirement();
-
-            requirement.setAmount(req.getAmount());
-            requirement.setMediumType(req.getMediumType());
-            requirement.setActionId(action.getId());
-
-            newReq.add(requirement);
-
+        DtoUser user1 = testresearcherService.createAction(action, usrId);
+        if (user1!=null) {
+            System.out.println("c not null");
+            return ResponseEntity.ok(user1);
         }
+        System.out.println("c br");
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 
-        int created = researcherService.createAction(action, newReq);
-
-        if(created == 1){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("This researcher already has its action.");
-        } else if(created == -1){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Data nije dobar");
-        }
-
-        return ResponseEntity.ok("Action created successfully");
     }
 
-    @GetMapping("/managers")
+   /* @GetMapping("/managers")
     public ResponseEntity<List<ManagerDTO>> getManagers(HttpSession session){
         Long usrId = authorize2(session.getAttribute("id"));
 
@@ -145,5 +142,5 @@ public class ResearcherController {
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(researcherService.getAllActions(usrId));
         }
-    }
+    }       */
 }

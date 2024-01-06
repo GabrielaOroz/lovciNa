@@ -1,6 +1,9 @@
 package apl.restController;
 
+import apl.dao.ManagerRepository;
+import apl.dao.ResearcherRepository;
 import apl.dao.TrackerRepository;
+import apl.dao.UserRepository;
 import apl.domain.Tracker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,11 +19,16 @@ import org.springframework.web.bind.annotation.*;
 public class TrackerController {
 
     @Autowired
+    private UserRepository userRepo;
+    @Autowired
+    private ManagerRepository managerRepo;
+    @Autowired
+    private ResearcherRepository researcherRepo;
+    @Autowired
     private TrackerRepository trackerRepo;
 
     private Long authorize(Object idObj) {
-        if (idObj instanceof Long) {
-            Long id = (Long) idObj;
+        if (idObj instanceof Long id) {
             Tracker tracker=trackerRepo.findById(id).orElse(null);
             if (tracker==null) return -1L;
             if (tracker.isRegistered()) return id;

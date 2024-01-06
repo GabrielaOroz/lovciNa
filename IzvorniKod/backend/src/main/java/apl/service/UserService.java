@@ -1,6 +1,8 @@
 package apl.service;
 
 import apl.domain.*;
+import apl.dto.DtoRequest;
+import org.springframework.http.ResponseEntity;
 
 import java.util.List;
 
@@ -22,4 +24,6 @@ public interface UserService {
 
     int approveUser(ApprovedDTO user);
     String confirmToken(String token);
+
+    List<DtoRequest> getRequests(Long usrId);
 }

@@ -34,15 +34,17 @@ public class AdminController {
     @Autowired
     private ResearcherRepository researcherRepo;
     @Autowired
-    private StationRepository stationRepo;
-    @Autowired
     private TrackerRepository trackerRepo;
+    @Autowired
+    private StationRepository stationRepo;
 
 
     private boolean authorize(Object adminObj) {
         //if (adminObj instanceof Boolean) System.out.println("admin");
         return adminObj instanceof Boolean;
     }
+
+    // if (!authorize(session.getAttribute("admin"))) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
 
     @GetMapping("/admin/registeredUsers") //kad dođe GET zahtjev, on će se spojit ovdje i pozvati metodu deklariranu u userService
