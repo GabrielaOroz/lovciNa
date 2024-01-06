@@ -19,33 +19,59 @@ import {
   ModalFooter,
 } from '@chakra-ui/react';
 import { LayerGroup, LayersControl, MapContainer, Marker, Popup, TileLayer, useMapEvents } from "react-leaflet";
-import mockData from "../../mockData.jsx";
+import podaci from "../../pomoc.jsx";
 import { marker } from 'leaflet';
+import { Link } from "react-router-dom";
+import GreenButton from "../shared/GreenButton";
 
 
 
 
 
 export default function Manager() {
-  const [selectedStation, setSelectedStation] = useState(null);
-  const [selectedTracker, setSelectedTracker] = useState(null);
+  const [selectedStation, setSelectedStation] = useState(null); //je li ili nije selectana -- nema mijenjanja
+  const [selectedTracker, setSelectedTracker] = useState(null); //trenutni selectan
   const [isAbilitiesModalOpen, setIsAbilitiesModalOpen] = useState(false);
-  const [selectedAbilities, setSelectedAbilities] = useState([]);
+  const [currentSelectedTracker, setCurrentSelectedTracker] = useState(null); // u prozoru
+  const [selectedAll, setSelectedAll] = useState(false);
 
-  const [selectedTrackers, setSelectedTrackers] = useState([])
-
-  //podaci pri ucitavanju stranice
-  const [stationOptions, setStationOptions] = useState([]);  
-  const [trackerOptions, setTrackerOptions] = useState([]);  
-  const [abilityOptions, setAbilityOptions] = useState([]);  
-
-  const mapRef = useRef(null);
-  const [formData, setFormData] = useState(mockData.mockActions);
-
-  //lista markera kad manager odabere 
+  //selectana postaja 
   const [markerPosition, setMarkerPosition] = useState(null);
   const[markerName, setMarkerName] = useState('');
   const[isNamingModalOpen, setIsNamingModalOpen] = useState(false);
+
+  //selectani trackeri
+  const [selectedTrackers, setSelectedTrackers] = useState([])
+  const [selectedAbilities, setSelectedAbilities] = useState({}); //rijecnik - tracker i abilities
+
+  const mapRef = useRef(null);
+
+  const [incomingRequests, setIncomingRequests] = useState(podaci);
+  const [showRequests, setShowRequests] = useState(false)
+
+
+  const fetchExistingStationData = () => {
+    // Make a request to check if the station already exists
+    fetch("http://localhost:8000/stations", {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        // If the station exists, set its data
+        if (data && data.length > 0) {
+          const existingStation = data[0]; 
+          setSelectedStation(true)
+          setMarkerName(existingStation.name);
+          setMarkerPosition([existingStation.lat, existingStation.lng]);
+        }
+      })
+      .catch((error) => {
+        console.error("Error fetching existing station data:", error);
+      });
+  };
 
 
 
@@ -73,24 +99,38 @@ export default function Manager() {
   useEffect(() => {
     /*
     fetchTrackers();
-    fetchAbilities();
+    fetchAbilities(); //pitnanje hoce li trebat
+    fetchExistingStationData();
     */
   }, [])
 
   const handleMapClick = (e) => {
-    const { lat, lng } = e.latlng;
-    setMarkerPosition({ lat, lng });
-    setMarkerName('');
-    //otvaram, ali prije tog brisem staro ime
-    setIsNamingModalOpen(true);
-    console.log({markerName})
-    console.log(`Latitude: ${lat}, Longitude: ${lng}`);
+    if(!selectedStation) {
+      const { lat, lng } = e.latlng;
+      setMarkerPosition({ lat, lng });
+      setIsNamingModalOpen(true);
+      setMarkerName("")
+      console.log(`Latitude: ${lat}, Longitude: ${lng}`);
+  
+      //sve na novo - NEPOTREBNO AKO SAMO JEDNOM SMIJE BIRAT LOKACIJU
+      /*
+      setSelectedTracker(null);
+      setSelectedAbilities([]);
+      setSelectedTrackers([]);
+      */
+
+    }
   };
+
 
   const handleConfirmName = () => {
     //poziva se kad confirmam ime postaje
-    setIsNamingModalOpen(false);
     setSelectedStation(true); //odabrano
+    setIsNamingModalOpen(false);
+    setSelectedAll(false);
+    
+
+    // šaljemo na back naziv postaje, lat i lon
 
     /*
     fetch("http://localhost:8000/stations", {
@@ -122,50 +162,121 @@ export default function Manager() {
     });
    // return null;
   };
+
+  const handleToggleRequests = () => {
+    if (!selectedStation || selectedTrackers.length === 0 || 
+      Object.values(selectedAbilities).some((abilities) => abilities.length === 0)) {
+      alert("Please select a station, trackers, and abilities.");
+    } else {
+      if (!showRequests) {
+        setShowRequests(true);
+      } else {
+        setShowRequests(false);
+      }
+      
+    }
+  };
   
-  const handleSelectedStation = () => {
-    fetch("http://localhost:8000/stations", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        station: selectedStation,
-      }),
-    })
-      .then((res) => res.json())
-      .then((data => {
-        console.log("Poslani podaci:", data);
-      }));
-  }
 
   const handleCheckboxChangeTracker = (tracker) => {
     const isTrackerSelected = selectedTrackers.includes(tracker);
 
     if (isTrackerSelected) {
-      //zadržava samo one koji nisu jednaki trenutnom - jer smo odznačili
-      setSelectedTrackers(selectedTrackers.filter((selected) => selected !== tracker));
+      // odznaci trackera 
+      setSelectedTrackers(selectedTrackers.filter((selected) => selected !== tracker)); // zadrzavamo one koji nisu jedaki trackeru
+      // provjeri je li tragac prisutan u rječniku i ukloni ga ako postoji
+      if (selectedAbilities[tracker]) {
+        setSelectedAbilities((prevAbilities) => {
+          const { [tracker]: removed, ...newAbilities } = prevAbilities;
+          return newAbilities;
+        });
+    }
     } else {
+      //inace dodaj selectanog trackera
       setSelectedTrackers([...selectedTrackers, tracker]);
     }
+
+    // dodaj sposobnosti (ništa) za novog odabranog tragača
+    setSelectedAbilities((prevAbilities) => {
+      return {
+        ...prevAbilities,
+        [tracker]: [],
+      };
+    });
   };
 
-  const handleEditAbilitiesClick = () => {
-    setIsAbilitiesModalOpen(true);
+  const handleAbilitiesCheckboxChange = (ability) => {
+
+    setSelectedAbilities((prevAbilities) => {
+      const currentAbilities = prevAbilities[selectedTracker] || [];
+      
+      if (currentAbilities.includes(ability)) {
+        // Ako je sposobnost već odabrana, uklonite je
+        return {
+          ...prevAbilities, //kopira sve prije
+          //ureduje selectanog i njegove abilitiese taji da mice taj ability
+          [selectedTracker]: currentAbilities.filter((a) => a !== ability),
+        };
+      } else {
+       
+        // Inače, dodaj sposobnost
+        return {
+          ...prevAbilities,
+          [selectedTracker]: [...currentAbilities, ability],
+        }
+      }
+    });
+
   };
 
 
   const handleSaveAbilities = () => {
-    console.log(`Spremljene promjene za ${selectedTracker}: ${selectedAbilities}`);
+    const trackersWithoutAbilities = selectedTrackers.filter(
+      (tracker) => !selectedAbilities[tracker] || selectedAbilities[tracker].length === 0
+    );
+  
+    if (trackersWithoutAbilities.length > 0) {
+      alert(`Please select abilities for tracker(s): ${trackersWithoutAbilities.join(', ')}`);
+      return;
+    }
+  
+    // slanje na back
+
+   {/* fetch("http://localhost:8000/saveAbilities", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(selectedAbilities),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Response from server:", data);
+        setIsAbilitiesModalOpen(false);
+      })
+      .catch((error) => {
+        console.error("Error saving abilities:", error);
+      }); */}
+
+
+    console.log('Selected Abilities:', selectedAbilities);
     setIsAbilitiesModalOpen(false);
+    setSelectedAll(true);
   };
+
 
 
   return (
     <>
      <Text color="#306844" fontSize={{ base: "2xl", md: "4xl", lg: "5xl" }} alignSelf="center">
-        Manager
+        Mananger
       </Text>
+      {!selectedStation && (
+        <Text color="#f9f7e8" fontSize={{ base: "2xl"}} style={{padding: "20px", margin: "16px", backgroundColor: "#306844"}}>
+         Click on the map and select the location of your station.
+        </Text>
+      )}
+
 
       <Box h="600px" p="16px" id="mapSection">
         <MapContainer ref={mapRef} style={{ height: "100%", width: "100%" }} 
@@ -196,13 +307,13 @@ export default function Manager() {
             <Input
               placeholder="Station Name"
               value={markerName}
-              onChange={(e) => setMarkerName(e.target.value)}
+              onChange={(e) => setMarkerName(e.target.value)} //postavimo ime postaje
             />
           </ModalBody>
           <ModalFooter>
-            <Button colorScheme="green" mr={3} onClick={handleConfirmName}>
+            <GreenButton mr={3} onClick={handleConfirmName}>
               Confirm
-            </Button>
+            </GreenButton>
             <Button variant="ghost" onClick={() => setIsNamingModalOpen(false)}>
               Cancel
             </Button>
@@ -210,16 +321,16 @@ export default function Manager() {
         </ModalContent>
       </Modal>
       </Box>
+ 
 
-
-      <Card w={{ base: '300px', md: '600px', lg: '800px' }} background="#f9f7e8" alignSelf="center" padding="20px">
-        {selectedStation && (
+      <Card w={{ base: '300px', md: '600px', lg: '800px' }} background="#f9f7e8" alignSelf="center" padding="20px" alignItems="center">
+        {selectedStation && !selectedAll && (
           <Stack spacing={4} direction="column" padding="14px">
           {/*
           {trackerOptions.map((tracker) => (
             <Checkbox key={tracker.id} value={tracker.name}
             colorScheme="green" isChecked={selectedTrackers.includes(tracker.name)}
-                onChange={() => handleCheckboxChange(tracker.name)}
+                onChange={() => handleCheckboxChangeTracker(tracker.name)}
             >
               {tracker.name} 
               {tracker.surname}
@@ -242,8 +353,10 @@ export default function Manager() {
           </Stack>
         )}
 
-        {selectedStation && selectedTrackers.length > 0 && (
-          <Button colorScheme="green" margin="14px" onClick={handleEditAbilitiesClick}>Edit Trackers Abilities</Button>
+        {selectedStation && selectedTrackers.length > 0 && !selectedAll && (
+          <GreenButton  margin="14px" onClick= {() => {setIsAbilitiesModalOpen(true) 
+                                                              setCurrentSelectedTracker(null)}}>
+            Edit Trackers Abilities</GreenButton>
         )}
 
         <Modal isOpen={isAbilitiesModalOpen} onClose={() => setIsAbilitiesModalOpen(false)}>
@@ -255,7 +368,8 @@ export default function Manager() {
               <Select
                 padding="6px"
                 placeholder="Select Tracker"
-                onChange={(e) => setSelectedTracker(e.target.value)}
+                onChange={(e) => {setSelectedTracker(e.target.value);
+                                setCurrentSelectedTracker(e.target.value);}} 
               >
               {selectedTrackers.map((tracker) => (
                 <option key={tracker} value={tracker}>
@@ -263,35 +377,63 @@ export default function Manager() {
                 </option>
               ))}
               </Select>
+              
 
-              {selectedTracker && (
+              {selectedTracker && currentSelectedTracker === selectedTracker && (
                 <Stack margin="8px" spacing={4} direction="column">
                 {/*
                 {abilityOptions.map((ability) => (
-                  <Checkbox colorScheme="green" key={ability.name} onChange={() => handleCheckboxChange({ability})}>
+                  <Checkbox colorScheme="green" key={ability.name} 
+                  isChecked={selectedAbilities[selectedTracker]?.includes(???)
+                  onChange={() => handleAbilitiesCheckboxChange({ability})}>
                     {ability.name}
                   </Checkbox>
                 ))} */}
-                  <Checkbox colorScheme="green" onChange={() => handleAbilitiesCheckboxChange('foot')}>By foot</Checkbox>
-                  <Checkbox colorScheme="green" onChange={() => handleAbilitiesCheckboxChange('car')}>Car</Checkbox>
-                  <Checkbox colorScheme="green" onChange={() => handleAbilitiesCheckboxChange('airplane')}>Airplane</Checkbox>
+                  <Checkbox colorScheme="green" isChecked=
+                  {selectedTracker && selectedAbilities[selectedTracker]?.includes('foot')}
+                  onChange={() => handleAbilitiesCheckboxChange('foot')}>By foot</Checkbox>
+                  <Checkbox colorScheme="green" isChecked=
+                  {selectedTracker && selectedAbilities[selectedTracker]?.includes('car')}
+                  onChange={() => handleAbilitiesCheckboxChange('car')}>Car</Checkbox>
+                  <Checkbox colorScheme="green" isChecked=
+                  {selectedTracker && selectedAbilities[selectedTracker]?.includes('airplane')} 
+                  onChange={() => handleAbilitiesCheckboxChange('airplane')}>Airplane</Checkbox>
                 </Stack>
               )}
             </ModalBody>
             <ModalFooter>
-              <Button mr={3} onClick={() => setIsAbilitiesModalOpen(false)}>
+              {/* UREDI - NE SMIJE SE ZATVARAT AKO NIJE ZA SVAKOG ODABRAO*/}
+              <Button mr={3} onClick={() => {setIsAbilitiesModalOpen(false)
+                            setCurrentSelectedTracker(null) }}>
                 Close
               </Button>
-              <Button colorScheme="green" onClick={handleSaveAbilities}>
+              <GreenButton onClick={handleSaveAbilities}>
                 Confirm
-              </Button>
+              </GreenButton>
             </ModalFooter>
           </ModalContent>
         </Modal>
-      </Card>
-  </>
+        {selectedAll && (
+          <Link to="/requirments">
+            <GreenButton margin="14px" onClick={handleToggleRequests}>
+              Requirments
+            </GreenButton> 
+          </Link>
+
+        )}
+             
+          <Link to="/requirments">
+            <GreenButton margin="14px">
+              Requirments
+            </GreenButton> 
+          </Link>
 
     
+      </Card>
+     
+
+  </>
+
     
   );
 }
