@@ -8,11 +8,11 @@ import Expired from "./pages/Expired";
 import Admin from "./pages/Admin";
 import ListOfUsers from "./pages/ListOfUsers";
 import Home from "./pages/Home";
-import CreateAction from "./pages/CreateAction";
+import CreateRequirements from "./pages/CreateRequirements";
 import MissingPage from "./pages/MissingPage";
 import Fonts from "./styles/Fonts";
 import theme from "./styles/theme";
-import NewActions from "./pages/NewActions";
+import CreateActions from "./pages/CreateActions";
 import Requirments from "./pages/Requirments";
 
 export default function App() {
@@ -29,8 +29,8 @@ export default function App() {
           <Route path="/admin" element={<Admin />} />
           <Route path="/admin/list-of-users" element={<ListOfUsers />} />
           <Route path="/home" element={<Home />} />
-          <Route path="/new-action" element={<CreateAction />} />
-          <Route path="/finish-new-actions" element={<NewActions />} />
+          <Route path="/new-requirements" element={<CreateRequirements />} />
+          <Route path="/new-actions" element={<CreateActions />} />
           <Route path="/requirments" element={<Requirments />} />
           <Route path="*" element={<MissingPage />} />
         </Routes>
