@@ -23,9 +23,6 @@ import { Link } from "react-router-dom";
 import GreenButton from "../shared/GreenButton";
 import YellowButton from '../shared/YellowButton.jsx';
 
-
-
-
 export default function Manager() {
   const [selectedStation, setSelectedStation] = useState(null); //je li ili nije selectana -- nema mijenjanja
   const [selectedTracker, setSelectedTracker] = useState(null); //trenutni selectan

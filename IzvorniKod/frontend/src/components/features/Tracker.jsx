@@ -12,8 +12,6 @@ export default function Tracker() {
 
   const mapRef = useRef(null);
 
-  /* TODO - pracenje tragaca */
-
   /* TODO - izbrisat i dohvatit stvarne podatke */
   /* MOCK DATA */
   const sljemePuntijarkaCoordinates = [45.9166667, 15.9666667];

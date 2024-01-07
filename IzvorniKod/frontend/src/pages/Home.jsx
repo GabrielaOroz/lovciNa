@@ -4,8 +4,6 @@ import Researcher from "../components/features/Researcher";
 import Manager from "../components/features/Manager";
 import { useEffect, useState } from "react";
 import { Card, Text } from "@chakra-ui/react";
-import GreenButton from "../components/shared/GreenButton";
-import { Link } from "react-router-dom";
 
 export default function Home() {
   const [session, setSession] = useState();

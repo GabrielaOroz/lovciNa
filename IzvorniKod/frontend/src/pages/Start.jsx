@@ -20,5 +20,6 @@ export default function Start() {
         </Link>
       </Flex>
     </Base>
+    
   );
 }

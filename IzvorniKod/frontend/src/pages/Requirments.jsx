@@ -10,8 +10,6 @@ import GreenButton from "../components/shared/GreenButton";
 import YellowButton from "../components/shared/YellowButton";
 import podaci from "../pomoc.jsx";
 import trackersData from "../trackersData.jsx";
-
-
 import { useNavigate } from "react-router-dom";
 
 export default function CreateAction() {

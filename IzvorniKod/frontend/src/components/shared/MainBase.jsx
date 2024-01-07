@@ -22,5 +22,6 @@ export default function MainBase({ children }) {
         {children}
       </Card>
     </Box>
+    
   );
 }

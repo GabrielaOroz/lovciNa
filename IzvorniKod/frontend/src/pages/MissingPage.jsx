@@ -18,5 +18,6 @@ export default function MissingPage() {
         <Text>You got lost in the woods</Text>
       </Card>
     </Box>
+    
   );
 }

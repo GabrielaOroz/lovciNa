@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Box, Button, Card, Flex, Input, Select, Text } from "@chakra-ui/react";
 import GreenButton from "../components/shared/GreenButton";
-import YellowButton from "../components/shared/YellowButton";
 import mockData from "../mockData";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/shared/Header";

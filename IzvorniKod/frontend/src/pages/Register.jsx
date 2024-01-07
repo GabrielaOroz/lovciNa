@@ -20,6 +20,7 @@ import GreenButton from "../components/shared/GreenButton";
 import YellowButton from "../components/shared/YellowButton";
 import ErrorMessage from "../components/shared/ErrorMessage";
 
+
 export default function Register() {
   const navigate = useNavigate();
   const inputRef = useRef(null);

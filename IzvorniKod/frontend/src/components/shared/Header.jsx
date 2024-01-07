@@ -47,5 +47,6 @@ export default function Header() {
       </Flex>
       <GreenButton onClick={logout}>Logout</GreenButton>
     </Card>
+    
   );
 }

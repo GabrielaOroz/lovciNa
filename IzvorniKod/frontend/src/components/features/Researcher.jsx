@@ -29,7 +29,7 @@ export default function Researcher() {
   const [coords, setCoords] = useState(mockData.mockCoords);
 
   /* GET DATA */
-  //console.log(formData);
+  console.log(formData);
   useEffect(() => {
     fetch("http://localhost:5173/researcher/actions", {
       method: "GET",

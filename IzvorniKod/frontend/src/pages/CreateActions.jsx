@@ -18,10 +18,10 @@ import {
 import GreenButton from "../components/shared/GreenButton";
 import YellowButton from "../components/shared/YellowButton";
 import { MapContainer, TileLayer, useMapEvents, useMap } from "react-leaflet";
-import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
-import "leaflet-routing-machine";
 import { createControlComponent } from "@react-leaflet/core";
 import L from "leaflet";
+import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
+import "leaflet-routing-machine";
 import Multiselect from "multiselect-react-dropdown";
 import Header from "../components/shared/Header";
 

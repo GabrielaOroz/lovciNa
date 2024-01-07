@@ -21,5 +21,6 @@ export default function Base({ children }) {
       </Flex>
       {children}
     </Box>
+
   );
 }

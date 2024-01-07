@@ -13,5 +13,6 @@ const podaci = [{"id":"1","title":"Istraživanje 1","researcher":"Vite Bethune",
 {"id":"16","title":"Istraživanje 6","researcher":"Lela Tilney","numberOfTrackers":10,"ability":"Car"},
 {"id":"17","title":"Istraživanje 7","researcher":"Morgun Freire","numberOfTrackers":5,"ability":"By foot"}]
 
+
 export default podaci;
 

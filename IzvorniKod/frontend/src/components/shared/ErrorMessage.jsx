@@ -5,5 +5,6 @@ export default function ErrorMessage({ children }) {
     <Text alignSelf="center" fontSize="sm" fontWeight="bold" color="#CC0000">
       {children}
     </Text>
+    
   );
 }
