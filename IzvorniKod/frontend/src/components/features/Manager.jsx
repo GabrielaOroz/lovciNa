@@ -4,8 +4,6 @@ import {
   Button,
   Card,
   Input,
-  InputGroup,
-  InputRightElement,
   Text,
   Select,
   Stack,
@@ -23,7 +21,7 @@ import podaci from "../../pomoc.jsx";
 import { marker } from 'leaflet';
 import { Link } from "react-router-dom";
 import GreenButton from "../shared/GreenButton";
-
+import YellowButton from '../shared/YellowButton.jsx';
 
 
 
@@ -354,9 +352,9 @@ export default function Manager() {
         )}
 
         {selectedStation && selectedTrackers.length > 0 && !selectedAll && (
-          <GreenButton  margin="14px" onClick= {() => {setIsAbilitiesModalOpen(true) 
+          <YellowButton  margin="14px" onClick= {() => {setIsAbilitiesModalOpen(true) 
                                                               setCurrentSelectedTracker(null)}}>
-            Edit Trackers Abilities</GreenButton>
+            Edit Trackers Abilities</YellowButton>
         )}
 
         <Modal isOpen={isAbilitiesModalOpen} onClose={() => setIsAbilitiesModalOpen(false)}>
@@ -421,20 +419,15 @@ export default function Manager() {
           </Link>
 
         )}
-             
-          <Link to="/requirments">
-            <GreenButton margin="14px">
+             <Link to="/requirments">
+            <GreenButton margin="14px" onClick={handleToggleRequests}>
               Requirments
             </GreenButton> 
           </Link>
-
-    
+   
       </Card>
-     
-
   </>
 
-    
   );
 }
 
