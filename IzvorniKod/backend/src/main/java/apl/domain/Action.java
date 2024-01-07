@@ -26,6 +26,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 
 import static apl.utilities.TimeChecker.isWithinTimeRange;
 
+
 @Entity
 @Getter
 @Setter

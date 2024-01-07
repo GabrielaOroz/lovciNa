@@ -2,6 +2,7 @@ package apl.entityWrapper;
 
 import java.util.Objects;
 
+
 public class EntityWrapper {
 
     private final Class<?> clazz;

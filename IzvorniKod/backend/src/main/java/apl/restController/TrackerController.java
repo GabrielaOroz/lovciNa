@@ -8,6 +8,7 @@ import apl.domain.Tracker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+
 @CrossOrigin(
         origins = "http://localhost:5173",
         methods  = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE },

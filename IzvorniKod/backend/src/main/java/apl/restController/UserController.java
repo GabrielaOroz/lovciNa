@@ -30,6 +30,7 @@ import java.util.Map;
 
 //ovdje se definira reakcija app na http zahtjeve
 
+
 @CrossOrigin(
         origins = "http://localhost:5173",
         methods  = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE },

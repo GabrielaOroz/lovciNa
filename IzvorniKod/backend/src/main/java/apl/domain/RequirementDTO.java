@@ -2,6 +2,7 @@ package apl.domain;
 
 import lombok.*;
 
+
 @Getter
 @Setter
 @AllArgsConstructor

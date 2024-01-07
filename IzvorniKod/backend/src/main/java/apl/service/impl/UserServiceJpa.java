@@ -30,6 +30,7 @@ import java.util.UUID;
 //ovdje se pišu sve funkcije koje nam trebaju
 
 
+
 @Service
 public class UserServiceJpa implements UserService {
 

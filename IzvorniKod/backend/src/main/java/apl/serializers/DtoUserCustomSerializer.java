@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.ser.std.StdSerializer;
 
 import java.io.IOException;
 
+
 public class DtoUserCustomSerializer extends StdSerializer<DtoUser> {
 
     public DtoUserCustomSerializer() {
