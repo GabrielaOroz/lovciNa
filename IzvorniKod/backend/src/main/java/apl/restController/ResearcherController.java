@@ -3,10 +3,12 @@ package apl.restController;
 import apl.dao.*;
 import apl.domain.*;
 //import apl.service.ResearcherService;
+import apl.dto.DtoAction;
 import apl.dto.DtoManager;
 import apl.dto.DtoRequest;
 import apl.dto.DtoUser;
 import apl.enums.HandleRequest;
+import apl.service.ResearcherService;
 import apl.service.impl.TestResearcherService;
 import jakarta.servlet.http.HttpSession;
 import jakarta.transaction.Transactional;
@@ -30,8 +32,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/researcher")
 public class ResearcherController {
-    /*@Autowired
-    ResearcherService researcherService;*/
+    @Autowired
+    private ResearcherService researcherService;
 
     @Autowired
     TestResearcherService testresearcherService;
@@ -78,36 +80,36 @@ public class ResearcherController {
     if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
     */
 
-    @PostMapping("/create-requests")                                                            // testing purposes currently
+    @PostMapping("/create-requests")
     public ResponseEntity<DtoUser> createAction(@RequestBody Action action, HttpSession session){
         Long usrId=authorize2(session.getAttribute("id"));
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
-        DtoUser user1 = testresearcherService.createAction(action, usrId);
+        DtoUser user1 = researcherService.createAction(action, usrId);
         if (user1!=null) {
-            System.out.println("c not null");
+            System.out.println("not null");
             return ResponseEntity.ok(user1);
         }
-        System.out.println("c br");
+        System.out.println("null");
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
 
     }
 
-   /* @GetMapping("/managers")
-    public ResponseEntity<List<ManagerDTO>> getManagers(HttpSession session){
+    @GetMapping("/managers")
+    public ResponseEntity<List<DtoManager>> getManagers(HttpSession session){
         Long usrId = authorize2(session.getAttribute("id"));
 
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
-        if (researcherService.listAllManagers() != null) {
-            return ResponseEntity.ok(researcherService.listAllManagers());
+        if (researcherService.listAllManagersDto() != null) {
+            return ResponseEntity.ok(researcherService.listAllManagersDto());
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(researcherService.listAllManagers());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 
     @GetMapping("/actions")
-    public ResponseEntity<List<ResearcherMapDTO>> getActions(HttpSession session) {
+    public ResponseEntity<List<DtoAction>> getActions(HttpSession session) {
         Long usrId = authorize2(session.getAttribute("id"));
 
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
@@ -115,12 +117,12 @@ public class ResearcherController {
         if (researcherService.getAllActions(usrId) != null) {
             return ResponseEntity.ok(researcherService.getAllActions(usrId));
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(researcherService.getAllActions(usrId));
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 
     @GetMapping("/finished-actions")
-    public ResponseEntity<List<ResearcherMapDTO>> getFinishedActions(HttpSession session) {
+    public ResponseEntity<List<DtoAction>> getFinishedActions(HttpSession session) {
         Long usrId = authorize2(session.getAttribute("id"));
 
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
@@ -133,7 +135,7 @@ public class ResearcherController {
     }
 
     @GetMapping("/unfinished-actions")
-    public ResponseEntity<List<ResearcherMapDTO>> getUnfinishedActions(HttpSession session) {
+    public ResponseEntity<List<DtoAction>> getUnfinishedActions(HttpSession session) {
         Long usrId = authorize2(session.getAttribute("id"));
 
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
@@ -143,5 +145,5 @@ public class ResearcherController {
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(researcherService.getAllActions(usrId));
         }
-    }       */
+    }
 }

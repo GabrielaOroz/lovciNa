@@ -42,7 +42,7 @@ public class TestResearcherService {
     private RequestRepository requestRepo;
 
     @Transactional
-    public DtoUser createAction(Action action, Long usrId) {
+    public DtoUser createAction1(Action action, Long usrId) {
         try {
 
             //Action action1 = new Action();
@@ -61,9 +61,9 @@ public class TestResearcherService {
 
             User user = userRepo.findById(manager.getId()).orElse(null);
 
-            Action action1 = new Action(manager, researcher, action.getTitle(), action.getRequirements());
+            //Action action1 = new Action(manager, researcher, action.getTitle(), action.getRequirements());
 
-            Request r1 = new Request(HandleRequest.MANAGER_CHOOOSE_TRACKERS_FOR_ACTION, action1,user);
+            //Request r1 = new Request(HandleRequest.MANAGER_CHOOOSE_TRACKERS_FOR_ACTION, action1,user);
             System.out.println(manager.getUsername());
             action.assignResearcher(researcher);
             action.assignManager(manager);

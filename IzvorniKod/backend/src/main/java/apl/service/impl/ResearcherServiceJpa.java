@@ -1,155 +1,108 @@
 package apl.service.impl;
 
+import apl.dao.ManagerRepository;
+import apl.dao.RequestRepository;
+import apl.dao.ResearcherRepository;
+import apl.dao.UserRepository;
+import apl.domain.*;
+import apl.dto.DtoAction;
+import apl.dto.DtoManager;
+import apl.dto.DtoUser;
+import apl.enums.ActionStatus;
+import apl.enums.HandleRequest;
+import apl.service.ResearcherService;
+import jakarta.transaction.Transactional;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
+import org.springframework.stereotype.Service;
 
-/*
+import java.util.LinkedList;
+import java.util.List;
+
 @Service
 public class ResearcherServiceJpa implements ResearcherService {
 
     @Autowired
-    ActionRepository actionRepo;
+    ResearcherRepository researcherRepo;
+    @Autowired
+    ManagerRepository managerRepo;
 
     @Autowired
-    RequirementRepository requirementRepo;
+    UserRepository userRepo;
 
-    @Override
-    public int createAction(Action action, List<TrackerRequirement> list) {
+    @Autowired
+    RequestRepository requestRepo;
 
-        Assert.notNull(action, "Action object must be given");  //moramo dobit objekt, ne možemo u bazu stavit null
-        Assert.isNull(action.getId(), "Action ID must be null, not " + action.getId());    //zato što ga mi settiramo autom s generated value
-
-        //System.out.println("ovo je akcija" + action);
-        //if(actionRepo.countByResearcher(action.getResearcher()) > 0){
-        //    return 1;
-        //}
-
+    @Transactional
+    public DtoUser createAction(Action action, Long usrId) {
         try {
-            actionRepo.save(action);
-        } catch (Exception e) {return -1;}
+            Researcher researcher = researcherRepo.findById(usrId).orElse(null);
 
-        try {
+            Manager manager = managerRepo.findById(action.getManager().getId()).orElse(null);
 
-            for(TrackerRequirement req : list){
-                req.setActionId(action.getId());
-                requirementRepo.save(req);
-            }
-        } catch (Exception e) {return -1;}
+            User user = userRepo.findById(manager.getId()).orElse(null);
 
-        return 0;
-    }
 
-    @Override
-    public List<ManagerDTO> listAllManagers() {
-        List<ManagerDTO> list = new ArrayList<>();
-        try {
-            for (Manager manager : actionRepo.listAllManagers()) {
-                ManagerDTO managerDTO = new ManagerDTO(manager.getId(), manager.getName(),
-                        manager.getSurname(), manager.getStation());
+            Action action1 = new Action(manager, researcher, action.getTitle(), action.getRequirements());
 
-                list.add(managerDTO);
-            }
+            Request request = new Request(HandleRequest.MANAGER_CHOOOSE_TRACKERS_FOR_ACTION, action1, user);
 
-        } catch (Exception e) {return null;}
-        return list;
-    }
-
-    @Override
-    public List<ResearcherMapDTO> getAllActions(Long idResearcher) {
-        List<ResearcherMapDTO> researcherMapDTOS = new ArrayList<>();
-
-        try{
-
-            for(Action action : actionRepo.listAllActions()){
-                if (action.getResearcher().getId().equals(idResearcher)) {
-                    ResearcherMapDTO researcherMapDTO = new ResearcherMapDTO();
-
-                    ManagerDTO managerDTO = new ManagerDTO(action.getManager().getId(),
-                                                            action.getManager().getName(),
-                                                            action.getManager().getSurname(),
-                                                            action.getManager().getStation());
-                    researcherMapDTO.setManagerDTO(managerDTO);
-
-                    researcherMapDTO.setId(action.getId());
-                    researcherMapDTO.setStartOfAction(action.getStartOfAction());
-                    researcherMapDTO.setEndOfAction(action.getEndOfAction());
-                    researcherMapDTO.setStatus(action.getStatus());
-                    researcherMapDTO.setTitle(action.getTitle());
-                    researcherMapDTO.setComments(action.getComments());
-
-                    List<Animal> individuals = new ArrayList<>();
-                    List<Species> species = new ArrayList<>();
-                    for(Animal animal : action.getAnimals()){
-                        individuals.add(animal);
-
-                        if(!species.contains(animal.getSpecies())) {
-                            species.add(animal.getSpecies());
-                        }
-                    }
-                    researcherMapDTO.setIndividuals(individuals);
-                    researcherMapDTO.setSpecies(species);
-
-                    //for(TrackerInAction tracker : )
-                    List<TrackerDTO> trackerDTOS = new ArrayList<>();
-                    for(Tracker tracker : action.getTrackers()) {
-                        TrackerDTO trackerDTO = new TrackerDTO();
-
-                        trackerDTO.setId(tracker.getId());
-                        trackerDTO.setName(tracker.getName());
-                        trackerDTO.setLatitude(tracker.getLatitude());
-                        trackerDTO.setPhoto(tracker.getPhoto());
-                        trackerDTO.setSurname(tracker.getSurname());
-                        trackerDTO.setLongitude(tracker.getLongitude());
-                        trackerDTO.setTasks(tracker.getTasks());
-
-                        for(TrackerInAction trackerInAction : actionRepo.listAllTrackersInActions()) {
-                            if(trackerInAction.getIdAction().equals(action.getId())) {
-                                if(trackerInAction.getIdTracker().equals(tracker.getId())) {
-                                    trackerDTO.setMedium(trackerInAction.getMedium());
-                                }
-                            }
-                        }
-
-                        trackerDTOS.add(trackerDTO);
-                    }
-
-                    researcherMapDTO.setTrackers(trackerDTOS);
-                    researcherMapDTO.setHabitats(action.getHabitats());
-
-                    researcherMapDTOS.add(researcherMapDTO);
-                }
-
-            }
-
-        } catch(Exception e){
+            requestRepo.save(request);
+            DtoUser dtoUser = user.toDTO();
+            return dtoUser;
+        } catch (Exception e) {
             return null;
         }
+    }
+    @Transactional
+    public List<DtoManager> listAllManagersDto() {
+        List<DtoManager> dtoManagers = new LinkedList<>();
+        List<Manager> managers = managerRepo.listAllManagers();
+        if (managers != null) {
+            for (Manager manager : managers) {
+                DtoManager dtoManager = manager.toManagerDTO();
+                dtoManagers.add(dtoManager);
+            }
+        }
+        return dtoManagers;
+    }
 
-        return researcherMapDTOS;
+
+    @Transactional
+    public List<DtoAction> getAllActions(Long idResearcher) {
+        List<DtoAction> dtoActions = new LinkedList<>();
+        Researcher researcher = researcherRepo.findById(idResearcher).orElse(null);
+        List<Action> actions = researcher.getActions();
+        if (actions != null) {
+            for (Action action : actions) {
+                DtoAction dtoAction = action.toDTO();
+                dtoActions.add(dtoAction);
+            }
+        }
+        return dtoActions;
     }
 
     @Override
-    public List<ResearcherMapDTO> getAllFinishedActions(Long usrId) {
-        List<ResearcherMapDTO> researcherMapDTOs = getAllActions(usrId);
-        List<ResearcherMapDTO> finishedActions = new ArrayList<>();
-
-        for (ResearcherMapDTO researcherMapDTO : researcherMapDTOs) {
-            if (researcherMapDTO.getStartOfAction() != null && researcherMapDTO.getEndOfAction() != null) {
-                finishedActions.add(researcherMapDTO);
+    public List<DtoAction> getAllFinishedActions(Long usrId) {
+        List<DtoAction> dtoActions = getAllActions(usrId);
+        List<DtoAction> dtoFinishedActions = new LinkedList<>();
+        for (DtoAction dtoAction : dtoActions) {
+            if (ActionStatus.FINISHED.equals(dtoAction.getStatus())) {
+                dtoFinishedActions.add(dtoAction);
             }
         }
-        return finishedActions;
+        return dtoFinishedActions;
     }
+
     @Override
-    public List<ResearcherMapDTO> getAllUnfinishedActions(Long usrId) {
-        List<ResearcherMapDTO> researcherMapDTOs = getAllActions(usrId);
-        List<ResearcherMapDTO> unfinishedActions = new ArrayList<>();
-
-        for (ResearcherMapDTO researcherMapDTO : researcherMapDTOs) {
-            if (researcherMapDTO.getStartOfAction() != null && researcherMapDTO.getEndOfAction() == null) {
-                unfinishedActions.add(researcherMapDTO);
+    public List<DtoAction> getAllUnfinishedActions(Long usrId) {
+        List<DtoAction> dtoActions = getAllActions(usrId);
+        List<DtoAction> dtoUnfinishedActions = new LinkedList<>();
+        for (DtoAction dtoAction : dtoActions) {
+            if (ActionStatus.ACTIVE.equals(dtoAction.getStatus())) {
+                dtoUnfinishedActions.add(dtoAction);
             }
         }
-        return unfinishedActions;
+        return dtoUnfinishedActions;
     }
-
 }
-*/

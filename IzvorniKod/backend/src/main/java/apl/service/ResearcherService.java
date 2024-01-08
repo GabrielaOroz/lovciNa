@@ -2,19 +2,22 @@ package apl.service;
 
 
 import apl.domain.*;
+import apl.dto.DtoAction;
+import apl.dto.DtoManager;
+import apl.dto.DtoUser;
 
 import java.util.List;
 
-/*public interface ResearcherService {
+public interface ResearcherService {
 
-   // int createAction(Action action, List<TrackerRequirement> list);
+    DtoUser createAction(Action action, Long usrId);
 
-    List<ManagerDTO> listAllManagers();
+    List<DtoManager> listAllManagersDto();
 
-    List<ResearcherMapDTO> getAllActions(Long idResearcher);
 
-    List<ResearcherMapDTO> getAllFinishedActions(Long usrId);
+    List<DtoAction> getAllActions(Long idResearcher);
 
-    List<ResearcherMapDTO> getAllUnfinishedActions(Long usrId);
+    List<DtoAction> getAllFinishedActions(Long usrId);
+
+    List<DtoAction> getAllUnfinishedActions(Long usrId);
 }
-*/
