@@ -49,6 +49,8 @@ public class TestResearcherService {
 
             Researcher researcher = researcherRepo.findById(usrId).orElse(null);
 
+
+
             //System.out.println(action.getManager());
 
             //Object obj=action.getManager();
@@ -57,6 +59,11 @@ public class TestResearcherService {
             Manager manager = managerRepo.findById(action.getManager().getId()).orElse(null);
             //manager.getRequests();
 
+            User user = userRepo.findById(manager.getId()).orElse(null);
+
+            Action action1 = new Action(manager, researcher, action.getTitle(), action.getRequirements());
+
+            Request r1 = new Request(HandleRequest.MANAGER_CHOOOSE_TRACKERS_FOR_ACTION, action1,user);
             System.out.println(manager.getUsername());
             action.assignResearcher(researcher);
             action.assignManager(manager);
@@ -69,7 +76,7 @@ public class TestResearcherService {
 
 
 
-            User user = userRepo.findById(manager.getId()).orElse(null);
+
 
             Request request=new Request();
             request.setType(HandleRequest.MANAGER_CHOOOSE_TRACKERS_FOR_ACTION);
@@ -94,8 +101,9 @@ public class TestResearcherService {
             //request = requestRepo.save(request);
             //action1.getRequests().add(request);
             //System.out.println("prvotni u req size = " + user.getRequests().size());
-
-
+            Station s = new Station("S2", "very good", 2., 3.);
+            s.assignManager(manager);
+            //manager.setStation(new Station("S1", "very good", 2., 3.));
             //manager.assignStation(new Station("S1", "very good", 2., 3.));
             //entityManager.refresh(user);
 
@@ -121,7 +129,7 @@ public class TestResearcherService {
             System.out.println("========================================================");
             //return manager.toManagerDTO();
             //return new DtoManager();
-            //Hibernate.initialize(manager.getActions());
+            Hibernate.initialize(manager.getActions());
 
             //manager.addAction(action1);
 
