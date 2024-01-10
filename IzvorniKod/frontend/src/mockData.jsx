@@ -14,7 +14,6 @@ const mockData = {
     },
   ],
 
-  
   mockActions: [
     {
       id: 1,
@@ -193,72 +192,76 @@ const mockData = {
 
   mockNewActions: [
     {
-      id: 1,
-      title: "Study on Lion Movement",
-      manager: {
+      action: {
         id: 1,
-        name: "John",
-        surname: "Doe",
-        station: { name: "Puntijarka", latitude: 45.8659, longitude: 15.9722 },
-      },
-      comment: "",
-      species: [],
-      existingSpecies: [],
-      individuals: [],
-      existingIndividuals: [],
-      habitats: [],
-      existingHabitats: [],
-      trackers: [
-        {
+        title: "Study on Lion Movement",
+        manager: {
           id: 1,
-          name: "Alice",
-          surname: "Smith",
-          photo: "url_to_photo",
-          medium: "by foot",
-          latitude: 45.8685,
-          longitude: 15.9725,
-          tasks: [],
+          name: "John",
+          surname: "Doe",
+          station: { name: "Puntijarka", latitude: 45.8659, longitude: 15.9722 },
         },
-      ],
+        comment: "",
+        species: [],
+        individuals: [],
+        habitats: [],
+        trackers: [
+          {
+            id: 1,
+            name: "Alice",
+            surname: "Smith",
+            photo: "url_to_photo",
+            medium: "by foot",
+            latitude: 45.8685,
+            longitude: 15.9725,
+            tasks: [],
+          },
+        ],
+      },
+      existingSpecies: [],
+      existingIndividuals: [],
+      existingHabitats: [],
     },
     {
-      id: 2,
-      title: "Avian Migration Study",
-      manager: {
+      action: {
         id: 2,
-        name: "Emily",
-        surname: "Johnson",
-        station: { name: "Sljeme", latitude: 45.8634, longitude: 15.9772 },
-      },
-      comment: "",
-      species: [],
-      existingSpecies: [],
-      individuals: [],
-      existingIndividuals: [],
-      habitats: [],
-      existingHabitats: [],
-      trackers: [
-        {
+        title: "Avian Migration Study",
+        manager: {
           id: 2,
-          name: "David",
-          surname: "Brown",
-          photo: "url_to_photo",
-          medium: "dron",
-          latitude: 45.8641,
-          longitude: 15.9743,
-          tasks: [],
-        },
-        {
-          id: 3,
           name: "Emily",
           surname: "Johnson",
-          photo: "url_to_photo",
-          medium: "car",
-          latitude: 45.8637,
-          longitude: 15.9769,
-          tasks: [],
+          station: { name: "Sljeme", latitude: 45.8634, longitude: 15.9772 },
         },
-      ],
+        comment: "",
+        species: [],
+        individuals: [],
+        habitats: [],
+        trackers: [
+          {
+            id: 2,
+            name: "David",
+            surname: "Brown",
+            photo: "url_to_photo",
+            medium: "dron",
+            latitude: 45.8641,
+            longitude: 15.9743,
+            tasks: [],
+          },
+          {
+            id: 3,
+            name: "Emily",
+            surname: "Johnson",
+            photo: "url_to_photo",
+            medium: "car",
+            latitude: 45.8637,
+            longitude: 15.9769,
+            tasks: [],
+          },
+        ],
+      },
+      existingSpecies: [],
+      existingIndividuals: [],
+      existingHabitats: [],
     },
   ],
   mockSpecies: [
@@ -439,7 +442,6 @@ const mockData = {
       },
     ],
   },
-
 };
 
 export default mockData;

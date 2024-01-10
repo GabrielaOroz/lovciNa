@@ -40,24 +40,20 @@ export default function NewActions() {
   const hasAccess = session && session.role === "researcher" && session.approved === true;
 
   /* SUBMIT */
-  const handleSubmit = (actionId) => {
-    setFormData((prevFormData) => {
-      return prevFormData.map((action) => {
-        if (action.id === actionId) {
-          return {
-            ...action,
-            existingSpecies: selectedSpeciesMap[actionId],
-            existingIndividuals: selectedIndividualsMap[actionId],
-            existingHabitats: selectedHabitatsMap[actionId],
-          };
+  const handleSubmit = async (actionId) => {
+    let postData;
+    formData.map((ac) => {
+      if (ac.action.id == actionId) {
+        postData = {
+          action: ac.action,
+          existingSpecies: selectedSpeciesMap[actionId],
+          existingIndividuals: selectedIndividualsMap[actionId],
+          existingHabitats: selectedHabitatsMap[actionId],
         }
-        return action;
-      });
-    });
+      }
+    })
 
-    const action = [...formData];
-    const actionToSubmit = action.find((action) => action.id === actionId);
-    //console.log(actionToSubmit);
+    console.log(postData);
 
     fetch("http://localhost:8000/researcher/finished-action", {
       method: "PUT",
@@ -65,7 +61,7 @@ export default function NewActions() {
         "Content-Type": "application/json",
       },
       credentials: "include",
-      body: JSON.stringify(actionToSubmit),
+      body: JSON.stringify(postData),
     }).then((res) => {
       if (res.ok) {
         window.location.reload();
@@ -155,14 +151,17 @@ export default function NewActions() {
   /* CHANGING FORM DATA */
   const handleFormChange = (actionId, field, value) => {
     setFormData((prevFormData) => {
-      return prevFormData.map((action) => {
-        if (action.id === actionId) {
+      return prevFormData.map((ac) => {
+        if (ac.action.id == actionId) {
           return {
-            ...action,
-            [field]: value,
+            ...ac,
+            action: {
+              ...ac.action,
+              [field]: value,
+            },
           };
         }
-        return action;
+        return ac;
       });
     });
   };
@@ -170,7 +169,7 @@ export default function NewActions() {
   /* CHOOSING SPECIES/INDIVIDUALS/HABITATS AND THEIR DATA*/
   const [itemType, setItemType] = useState(() =>
     formData.reduce((obj, action) => {
-      obj[action.id] = "species"; //every action gets species as a default
+      obj[action.action.id] = "species"; //every action gets species as a default
       return obj;
     }, {})
   );
@@ -185,17 +184,17 @@ export default function NewActions() {
   const handleChange = (event, actionId, itemIndex, field, itemType) => {
     const { value } = event.target;
     const updatedFormData = [...formData];
-    const actionToUpdate = updatedFormData.find((action) => action.id === actionId); //returns reference
+    const actionToUpdate = updatedFormData.find((action) => action.action.id === actionId); //returns reference
 
     if (actionToUpdate) {
       let targetItem;
 
       if (itemType === "species") {
-        targetItem = actionToUpdate.species[itemIndex];
+        targetItem = actionToUpdate.action.species[itemIndex];
       } else if (itemType === "habitats") {
-        targetItem = actionToUpdate.habitats[itemIndex];
+        targetItem = actionToUpdate.action.habitats[itemIndex];
       } else if (itemType === "individuals") {
-        targetItem = actionToUpdate.individuals[itemIndex];
+        targetItem = actionToUpdate.action.individuals[itemIndex];
       }
 
       if (targetItem) {
@@ -207,23 +206,23 @@ export default function NewActions() {
 
   const add = (actionId, itemType) => {
     const updatedFormData = [...formData];
-    const actionToUpdate = updatedFormData.find((action) => action.id === actionId);
+    const actionToUpdate = updatedFormData.find((action) => action.action.id === actionId);
 
     if (actionToUpdate) {
       if (itemType === "species") {
-        actionToUpdate.species.push({
+        actionToUpdate.action.species.push({
           name: "",
           description: "",
           photo: "",
         });
       } else if (itemType === "habitats") {
-        actionToUpdate.habitats.push({
+        actionToUpdate.action.habitats.push({
           name: "",
           description: "",
           photo: "",
         });
       } else if (itemType === "individuals") {
-        actionToUpdate.individuals.push({
+        actionToUpdate.action.individuals.push({
           name: "",
           species: "",
           description: "",
@@ -238,15 +237,15 @@ export default function NewActions() {
 
   const remove = (actionId, itemIndex, itemType) => {
     const updatedFormData = [...formData];
-    const actionToUpdate = updatedFormData.find((action) => action.id === actionId);
+    const actionToUpdate = updatedFormData.find((action) => action.action.id === actionId);
 
     if (actionToUpdate) {
-      if (itemType === "species" && actionToUpdate.species.length >= itemIndex) {
-        actionToUpdate.species.splice(itemIndex, 1);
-      } else if (itemType === "habitats" && actionToUpdate.habitats.length >= itemIndex) {
-        actionToUpdate.habitats.splice(itemIndex, 1);
-      } else if (itemType === "individuals" && actionToUpdate.individuals.length >= itemIndex) {
-        actionToUpdate.individuals.splice(itemIndex, 1);
+      if (itemType === "species" && actionToUpdate.action.species.length >= itemIndex) {
+        actionToUpdate.action.species.splice(itemIndex, 1);
+      } else if (itemType === "habitats" && actionToUpdate.action.habitats.length >= itemIndex) {
+        actionToUpdate.action.habitats.splice(itemIndex, 1);
+      } else if (itemType === "individuals" && actionToUpdate.action.individuals.length >= itemIndex) {
+        actionToUpdate.action.individuals.splice(itemIndex, 1);
       }
 
       setFormData(updatedFormData);
@@ -257,30 +256,30 @@ export default function NewActions() {
   const handleCommentChange = (event, actionId, itemIndex, commentIndex) => {
     const { value } = event.target;
     const updatedFormData = [...formData];
-    const actionToUpdate = updatedFormData.find((action) => action.id === actionId);
+    const actionToUpdate = updatedFormData.find((action) => action.action.id === actionId);
 
-    if (actionToUpdate && actionToUpdate.individuals[itemIndex]) {
-      actionToUpdate.individuals[itemIndex].comments[commentIndex] = value;
+    if (actionToUpdate && actionToUpdate.action.individuals[itemIndex]) {
+      actionToUpdate.action.individuals[itemIndex].comments[commentIndex] = value;
       setFormData(updatedFormData);
     }
   };
 
   const removeComment = (actionId, itemIndex, commentIndex) => {
     const updatedFormData = [...formData];
-    const actionToUpdate = updatedFormData.find((action) => action.id === actionId);
+    const actionToUpdate = updatedFormData.find((action) => action.action.id === actionId);
 
-    if (actionToUpdate && actionToUpdate.individuals[itemIndex]) {
-      actionToUpdate.individuals[itemIndex].comments.splice(commentIndex, 1);
+    if (actionToUpdate && actionToUpdate.action.individuals[itemIndex]) {
+      actionToUpdate.action.individuals[itemIndex].comments.splice(commentIndex, 1);
       setFormData(updatedFormData);
     }
   };
 
   const addComment = (actionId, itemIndex) => {
     const updatedFormData = [...formData];
-    const actionToUpdate = updatedFormData.find((action) => action.id === actionId);
+    const actionToUpdate = updatedFormData.find((action) => action.action.id === actionId);
 
-    if (actionToUpdate && actionToUpdate.individuals[itemIndex]) {
-      actionToUpdate.individuals[itemIndex].comments.push("");
+    if (actionToUpdate && actionToUpdate.action.individuals[itemIndex]) {
+      actionToUpdate.action.individuals[itemIndex].comments.push("");
       setFormData(updatedFormData);
     }
   };
@@ -299,22 +298,25 @@ export default function NewActions() {
     reader.onloadend = () => {
       const base64data = reader.result;
 
-      const updatedFormData = formData.map((action) => {
-        if (action.id === actionId) {
+      const updatedFormData = formData.map((ac) => {
+        if (ac.action.id === actionId) {
           return {
-            ...action,
-            [itemType]: action[itemType].map((item, index) => {
-              if (index === itemIndex) {
-                return {
-                  ...item,
-                  photo: base64data,
-                };
-              }
-              return item;
-            }),
+            ...ac,
+            action: {
+              ...ac.action,
+              [itemType]: ac.action[itemType].map((item, index) => {
+                if (index === itemIndex) {
+                  return {
+                    ...item,
+                    photo: base64data,
+                  };
+                }
+                return item;
+              }),
+            },
           };
         }
-        return action;
+        return ac;
       });
 
       setFormData(updatedFormData);
@@ -325,29 +327,29 @@ export default function NewActions() {
   const handleTaskChange = (event, actionId, trackerId, taskIndex, property) => {
     const { value } = event.target;
     const updatedFormData = [...formData];
-    const actionToUpdate = updatedFormData.find((action) => action.id === actionId);
+    const actionToUpdate = updatedFormData.find((action) => action.action.id === actionId);
 
-    if (actionToUpdate && actionToUpdate.trackers.find((tracker) => tracker.id === trackerId)) {
-      actionToUpdate.trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex][property] = value;
+    if (actionToUpdate && actionToUpdate.action.trackers.find((tracker) => tracker.id === trackerId)) {
+      actionToUpdate.action.trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex][property] = value;
       setFormData(updatedFormData);
     }
   };
 
   const removeTask = (actionId, trackerId, taskIndex) => {
     const updatedFormData = [...formData];
-    const actionToUpdate = updatedFormData.find((action) => action.id === actionId);
+    const actionToUpdate = updatedFormData.find((action) => action.action.id === actionId);
 
-    if (actionToUpdate && actionToUpdate.trackers.find((tracker) => tracker.id === trackerId)) {
-      actionToUpdate.trackers.find((tracker) => tracker.id === trackerId).tasks.splice(taskIndex, 1);
+    if (actionToUpdate && actionToUpdate.action.trackers.find((tracker) => tracker.id === trackerId)) {
+      actionToUpdate.action.trackers.find((tracker) => tracker.id === trackerId).tasks.splice(taskIndex, 1);
       setFormData(updatedFormData);
     }
   };
 
   const addTask = (actionId, trackerId) => {
     const updatedFormData = [...formData];
-    const actionToUpdate = updatedFormData.find((action) => action.id === actionId);
+    const actionToUpdate = updatedFormData.find((action) => action.action.id === actionId);
 
-    if (actionToUpdate && actionToUpdate.trackers.find((tracker) => tracker.id === trackerId)) {
+    if (actionToUpdate && actionToUpdate.action.trackers.find((tracker) => tracker.id === trackerId)) {
       const newTask = {
         title: "",
         content: "Set up a camera",
@@ -355,8 +357,8 @@ export default function NewActions() {
         coordinatesStart: [45, 15],
         coordinatesFinish: [45.2, 15.2],
       };
-      actionToUpdate.trackers.find((tracker) => tracker.id === trackerId).tasks = [
-        ...actionToUpdate.trackers.find((tracker) => tracker.id === trackerId).tasks,
+      actionToUpdate.action.trackers.find((tracker) => tracker.id === trackerId).tasks = [
+        ...actionToUpdate.action.trackers.find((tracker) => tracker.id === trackerId).tasks,
         newTask,
       ];
       setFormData(updatedFormData);
@@ -367,23 +369,24 @@ export default function NewActions() {
   const handleTaskCommentChange = (e, actionId, trackerId, taskIndex, commentIndex) => {
     const { value } = e.target;
     const updatedFormData = [...formData];
-    const actionToUpdate = updatedFormData.find((action) => action.id === actionId);
-    const trackerToUpdate = actionToUpdate.trackers.find((tracker) => tracker.id === trackerId);
+    const actionToUpdate = updatedFormData.find((action) => action.action.id === actionId);
+    const trackerToUpdate = actionToUpdate.action.trackers.find((tracker) => tracker.id === trackerId);
 
     if (trackerToUpdate && trackerToUpdate.tasks[taskIndex]) {
-      actionToUpdate.trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].comments[commentIndex] =
-        value;
+      actionToUpdate.action.trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].comments[
+        commentIndex
+      ] = value;
       setFormData(updatedFormData);
     }
   };
 
   const removeTaskComment = (actionId, taskIndex, trackerId, commentIndex) => {
     const updatedFormData = [...formData];
-    const actionToUpdate = updatedFormData.find((action) => action.id === actionId);
-    const trackerToUpdate = actionToUpdate.trackers.find((tracker) => tracker.id === trackerId);
+    const actionToUpdate = updatedFormData.find((action) => action.action.id === actionId);
+    const trackerToUpdate = actionToUpdate.action.trackers.find((tracker) => tracker.id === trackerId);
 
     if (trackerToUpdate && trackerToUpdate.tasks[taskIndex]) {
-      actionToUpdate.trackers
+      actionToUpdate.action.trackers
         .find((tracker) => tracker.id === trackerId)
         .tasks[taskIndex].comments.splice(commentIndex, 1);
       setFormData(updatedFormData);
@@ -392,11 +395,11 @@ export default function NewActions() {
 
   const addTaskComment = (actionId, trackerId, taskIndex) => {
     const updatedFormData = [...formData];
-    const actionToUpdate = updatedFormData.find((action) => action.id === actionId);
-    const trackerToUpdate = actionToUpdate.trackers.find((tracker) => tracker.id === trackerId);
+    const actionToUpdate = updatedFormData.find((action) => action.action.id === actionId);
+    const trackerToUpdate = actionToUpdate.action.trackers.find((tracker) => tracker.id === trackerId);
 
     if (trackerToUpdate && trackerToUpdate.tasks[taskIndex]) {
-      actionToUpdate.trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].comments.push("");
+      actionToUpdate.action.trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].comments.push("");
       setFormData(updatedFormData);
     }
   };
@@ -404,14 +407,14 @@ export default function NewActions() {
   /* MAPS FOR TASKS */
   const updateTaskCoordinates = (actionId, trackerId, taskIndex, startCoords, finishCoords) => {
     const updatedActions = [...formData];
-    const actionToUpdate = updatedActions.find((action) => action.id === actionId);
-    if (actionToUpdate && actionToUpdate.trackers.find((tracker) => tracker.id === trackerId)) {
+    const actionToUpdate = updatedActions.find((action) => action.action.id === actionId);
+    if (actionToUpdate && actionToUpdate.action.trackers.find((tracker) => tracker.id === trackerId)) {
       updatedActions
-        .find((action) => action.id === actionId)
-        .trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].coordinatesStart = startCoords;
+        .find((action) => action.action.id === actionId)
+        .action.trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].coordinatesStart = startCoords;
       updatedActions
-        .find((action) => action.id === actionId)
-        .trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].coordinatesFinish = finishCoords;
+        .find((action) => action.action.id === actionId)
+        .action.trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].coordinatesFinish = finishCoords;
       setFormData(updatedActions);
     }
   };
@@ -424,16 +427,20 @@ export default function NewActions() {
     const instance = L.Routing.control({
       waypoints: [
         L.latLng(
-          [...formData].find((action) => action.id === actionId).trackers.find((tracker) => tracker.id === trackerId)
-            .tasks[taskIndex].coordinatesStart[0],
-          [...formData].find((action) => action.id === actionId).trackers.find((tracker) => tracker.id === trackerId)
-            .tasks[taskIndex].coordinatesStart[1]
+          [...formData]
+            .find((action) => action.action.id === actionId)
+            .action.trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].coordinatesStart[0],
+          [...formData]
+            .find((action) => action.action.id === actionId)
+            .action.trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].coordinatesStart[1]
         ),
         L.latLng(
-          [...formData].find((action) => action.id === actionId).trackers.find((tracker) => tracker.id === trackerId)
-            .tasks[taskIndex].coordinatesFinish[0],
-          [...formData].find((action) => action.id === actionId).trackers.find((tracker) => tracker.id === trackerId)
-            .tasks[taskIndex].coordinatesFinish[1]
+          [...formData]
+            .find((action) => action.action.id === actionId)
+            .action.trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].coordinatesFinish[0],
+          [...formData]
+            .find((action) => action.action.id === actionId)
+            .action.trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].coordinatesFinish[1]
         ),
       ],
       router: new L.Routing.osrmv1({
@@ -473,31 +480,31 @@ export default function NewActions() {
                   borderRadius="8px"
                   p="32px"
                   direction="column"
-                  key={action.id}
+                  key={action.action.id}
                 >
                   <Text fontSize="lg" color="#306844" as="b" mt="16px">
                     TITLE
                   </Text>
                   <Input
                     id="title"
-                    value={action.title}
-                    onChange={(e) => handleFormChange(action.id, e.target.id, e.target.value)}
+                    value={action.action.title}
+                    onChange={(e) => handleFormChange(action.action.id, e.target.id, e.target.value)}
                   />
                   <Text fontSize="lg" color="#306844" as="b" mt="16px">
                     {"MANAGER - " +
-                      action.manager.name +
+                      action.action.manager.name +
                       " " +
-                      action.manager.surname +
+                      action.action.manager.surname +
                       ", " +
-                      action.manager.station.name}
+                      action.action.manager.station.name}
                   </Text>
                   <Text fontSize="lg" color="#306844" as="b" mt="16px">
                     COMMENT
                   </Text>
                   <Input
                     id="comment"
-                    value={action.comment}
-                    onChange={(e) => handleFormChange(action.id, e.target.id, e.target.value)}
+                    value={action.action.comment}
+                    onChange={(e) => handleFormChange(action.action.id, e.target.id, e.target.value)}
                   />
 
                   <Flex align="center" mt="16px">
@@ -505,8 +512,8 @@ export default function NewActions() {
                       Add
                     </Text>
                     <RadioGroup
-                      value={itemType[action.id] || "species"}
-                      onChange={(value) => handleItemTypeChange(action.id, value)}
+                      value={itemType[action.action.id] || "species"}
+                      onChange={(value) => handleItemTypeChange(action.action.id, value)}
                       ml="8px"
                     >
                       <HStack spacing="16px">
@@ -523,12 +530,12 @@ export default function NewActions() {
                     </RadioGroup>
                   </Flex>
 
-                  {itemType[action.id] === "species" && (
+                  {itemType[action.action.id] === "species" && (
                     <>
                       <Text fontSize="lg" color="#306844" as="b" mt="16px">
                         SPECIES
                       </Text>
-                      {action.species.map((spec, index) => (
+                      {action.action.species.map((spec, index) => (
                         <Box
                           key={index}
                           position="relative"
@@ -542,7 +549,7 @@ export default function NewActions() {
                             top="0px"
                             right="0px"
                             variant="unstyled"
-                            onClick={() => remove(action.id, index, "species")}
+                            onClick={() => remove(action.action.id, index, "species")}
                           >
                             ✖
                           </Button>
@@ -556,7 +563,7 @@ export default function NewActions() {
                             _hover={{ borderColor: "#97B3A1" }}
                             focusBorderColor="#306844"
                             borderColor="#306844"
-                            onChange={(e) => handleChange(e, action.id, index, "name", "species")}
+                            onChange={(e) => handleChange(e, action.action.id, index, "name", "species")}
                           />
 
                           <Text fontSize="lg" mt="16px" textAlign="center">
@@ -568,7 +575,7 @@ export default function NewActions() {
                             _hover={{ borderColor: "#97B3A1" }}
                             focusBorderColor="#306844"
                             borderColor="#306844"
-                            onChange={(e) => handleChange(e, action.id, index, "description", "species")}
+                            onChange={(e) => handleChange(e, action.action.id, index, "description", "species")}
                           />
 
                           <Flex direction="column" align="center">
@@ -576,17 +583,17 @@ export default function NewActions() {
                               Photo
                             </Text>
                             <Flex mt="8px" direction="column" align="center">
-                              <label htmlFor={`file-upload-${action.id}-${index}`}>
+                              <label htmlFor={`file-upload-${action.action.id}-${index}`}>
                                 <GreenButton size="sm" as="span" mb="8px" variant="outline">
                                   Upload photo
                                 </GreenButton>
                               </label>
                               {spec.photo && <img style={{ width: "264px" }} src={spec.photo} alt={spec.name} />}
                               <Input
-                                id={`file-upload-${action.id}-${index}`}
+                                id={`file-upload-${action.action.id}-${index}`}
                                 display="none"
                                 type="file"
-                                onChange={(e) => handlePhotoChange(e, action.id, index, "species")}
+                                onChange={(e) => handlePhotoChange(e, action.action.id, index, "species")}
                               />
                             </Flex>
                           </Flex>
@@ -598,24 +605,24 @@ export default function NewActions() {
                       <Multiselect
                         options={existingSpecies}
                         displayValue="name"
-                        selectedValues={selectedSpeciesMap[action.id]}
-                        onSelect={(selectedOptions) => handleSpecies(action.id, selectedOptions)}
-                        onRemove={(selectedOptions) => handleSpecies(action.id, selectedOptions)}
+                        selectedValues={selectedSpeciesMap[action.action.id]}
+                        onSelect={(selectedOptions) => handleSpecies(action.action.id, selectedOptions)}
+                        onRemove={(selectedOptions) => handleSpecies(action.action.id, selectedOptions)}
                       />
                       <Flex justify="center">
-                        <YellowButton w="200px" mt="16px" onClick={() => add(action.id, "species")}>
+                        <YellowButton w="200px" mt="16px" onClick={() => add(action.action.id, "species")}>
                           Create new species
                         </YellowButton>
                       </Flex>
                     </>
                   )}
 
-                  {itemType[action.id] === "individuals" && (
+                  {itemType[action.action.id] === "individuals" && (
                     <>
                       <Text fontSize="lg" color="#306844" as="b" mt="16px">
                         INDIVIDUALS
                       </Text>
-                      {action.individuals.map((indi, index) => (
+                      {action.action.individuals.map((indi, index) => (
                         <Box
                           key={index}
                           position="relative"
@@ -629,7 +636,7 @@ export default function NewActions() {
                             top="0px"
                             right="0px"
                             variant="unstyled"
-                            onClick={() => remove(action.id, index, "individuals")}
+                            onClick={() => remove(action.action.id, index, "individuals")}
                           >
                             ✖
                           </Button>
@@ -643,7 +650,7 @@ export default function NewActions() {
                             _hover={{ borderColor: "#97B3A1" }}
                             focusBorderColor="#306844"
                             borderColor="#306844"
-                            onChange={(e) => handleChange(e, action.id, index, "name", "individuals")}
+                            onChange={(e) => handleChange(e, action.action.id, index, "name", "individuals")}
                           />
                           <Text fontSize="lg" mt="16px" textAlign="center">
                             Species
@@ -654,7 +661,7 @@ export default function NewActions() {
                             _hover={{ borderColor: "#97B3A1" }}
                             focusBorderColor="#306844"
                             borderColor="#306844"
-                            onChange={(e) => handleChange(e, action.id, index, "species", "individuals")}
+                            onChange={(e) => handleChange(e, action.action.id, index, "species", "individuals")}
                           />
                           <Text fontSize="lg" mt="16px" textAlign="center">
                             Description
@@ -665,7 +672,7 @@ export default function NewActions() {
                             _hover={{ borderColor: "#97B3A1" }}
                             focusBorderColor="#306844"
                             borderColor="#306844"
-                            onChange={(e) => handleChange(e, action.id, index, "description", "individuals")}
+                            onChange={(e) => handleChange(e, action.action.id, index, "description", "individuals")}
                           />
 
                           <Flex direction="column" align="center">
@@ -679,11 +686,11 @@ export default function NewActions() {
                                   focusBorderColor="#306844"
                                   borderColor="#306844"
                                   value={comment}
-                                  onChange={(e) => handleCommentChange(e, action.id, index, commentIndex)}
+                                  onChange={(e) => handleCommentChange(e, action.action.id, index, commentIndex)}
                                 />
                                 <YellowButton
                                   size="sm"
-                                  onClick={() => removeComment(action.id, index, commentIndex)}
+                                  onClick={() => removeComment(action.action.id, index, commentIndex)}
                                   mt="8px"
                                   mb="16px"
                                 >
@@ -691,7 +698,12 @@ export default function NewActions() {
                                 </YellowButton>
                               </Flex>
                             ))}
-                            <GreenButton size="sm" w="200px" mt="16px" onClick={() => addComment(action.id, index)}>
+                            <GreenButton
+                              size="sm"
+                              w="200px"
+                              mt="16px"
+                              onClick={() => addComment(action.action.id, index)}
+                            >
                               Add Comment
                             </GreenButton>
                           </Flex>
@@ -701,17 +713,17 @@ export default function NewActions() {
                               Photo
                             </Text>
                             <Flex mt="8px" direction="column" align="center">
-                              <label htmlFor={`file-upload-individual-${action.id}-${index}`}>
+                              <label htmlFor={`file-upload-individual-${action.action.id}-${index}`}>
                                 <GreenButton size="sm" as="span" mb="8px" variant="outline">
                                   Upload photo
                                 </GreenButton>
                               </label>
                               {indi.photo && <img style={{ width: "264px" }} src={indi.photo} alt={indi.name} />}
                               <Input
-                                id={`file-upload-individual-${action.id}-${index}`}
+                                id={`file-upload-individual-${action.action.id}-${index}`}
                                 display="none"
                                 type="file"
-                                onChange={(e) => handlePhotoChange(e, action.id, index, "individuals")}
+                                onChange={(e) => handlePhotoChange(e, action.action.id, index, "individuals")}
                               />
                             </Flex>
                           </Flex>
@@ -723,24 +735,24 @@ export default function NewActions() {
                       <Multiselect
                         options={existingIndividuals}
                         displayValue="name"
-                        selectedValues={selectedIndividualsMap[action.id]}
-                        onSelect={(selectedOptions) => handleIndividuals(action.id, selectedOptions)}
-                        onRemove={(selectedOptions) => handleIndividuals(action.id, selectedOptions)}
+                        selectedValues={selectedIndividualsMap[action.action.id]}
+                        onSelect={(selectedOptions) => handleIndividuals(action.action.id, selectedOptions)}
+                        onRemove={(selectedOptions) => handleIndividuals(action.action.id, selectedOptions)}
                       />
                       <Flex justify="center">
-                        <YellowButton mt="16px" onClick={() => add(action.id, "individuals")}>
+                        <YellowButton mt="16px" onClick={() => add(action.action.id, "individuals")}>
                           Create new individual
                         </YellowButton>
                       </Flex>
                     </>
                   )}
 
-                  {itemType[action.id] === "habitats" && (
+                  {itemType[action.action.id] === "habitats" && (
                     <>
                       <Text fontSize="lg" color="#306844" as="b" mt="16px">
                         HABITATS
                       </Text>
-                      {action.habitats.map((habitat, index) => (
+                      {action.action.habitats.map((habitat, index) => (
                         <Box
                           key={index}
                           position="relative"
@@ -754,7 +766,7 @@ export default function NewActions() {
                             top="0px"
                             right="0px"
                             variant="unstyled"
-                            onClick={() => remove(action.id, index, "habitats")}
+                            onClick={() => remove(action.action.id, index, "habitats")}
                           >
                             ✖
                           </Button>
@@ -768,7 +780,7 @@ export default function NewActions() {
                             _hover={{ borderColor: "#97B3A1" }}
                             focusBorderColor="#306844"
                             borderColor="#306844"
-                            onChange={(e) => handleChange(e, action.id, index, "name", "habitats")}
+                            onChange={(e) => handleChange(e, action.action.id, index, "name", "habitats")}
                           />
 
                           <Text fontSize="lg" mt="16px" textAlign="center">
@@ -780,7 +792,7 @@ export default function NewActions() {
                             _hover={{ borderColor: "#97B3A1" }}
                             focusBorderColor="#306844"
                             borderColor="#306844"
-                            onChange={(e) => handleChange(e, action.id, index, "description", "habitats")}
+                            onChange={(e) => handleChange(e, action.action.id, index, "description", "habitats")}
                           />
 
                           <Flex direction="column" align="center">
@@ -788,7 +800,7 @@ export default function NewActions() {
                               Photo
                             </Text>
                             <Flex mt="8px" direction="column" align="center">
-                              <label htmlFor={`file-upload-habitat-${action.id}-${index}`}>
+                              <label htmlFor={`file-upload-habitat-${action.action.id}-${index}`}>
                                 <GreenButton size="sm" as="span" mb="8px" variant="outline">
                                   Upload photo
                                 </GreenButton>
@@ -797,10 +809,10 @@ export default function NewActions() {
                                 <img style={{ width: "264px" }} src={habitat.photo} alt={habitat.name} />
                               )}
                               <Input
-                                id={`file-upload-habitat-${action.id}-${index}`}
+                                id={`file-upload-habitat-${action.action.id}-${index}`}
                                 display="none"
                                 type="file"
-                                onChange={(e) => handlePhotoChange(e, action.id, index, "habitats")}
+                                onChange={(e) => handlePhotoChange(e, action.action.id, index, "habitats")}
                               />
                             </Flex>
                           </Flex>
@@ -811,13 +823,13 @@ export default function NewActions() {
                       </Text>
                       <Multiselect
                         options={existingHabitats}
-                        displayValue="species"
-                        selectedValues={selectedHabitatsMap[action.id]}
-                        onSelect={(selectedOptions) => handleHabitats(action.id, selectedOptions)}
-                        onRemove={(selectedOptions) => handleHabitats(action.id, selectedOptions)}
+                        displayValue="name"
+                        selectedValues={selectedHabitatsMap[action.action.id]}
+                        onSelect={(selectedOptions) => handleHabitats(action.action.id, selectedOptions)}
+                        onRemove={(selectedOptions) => handleHabitats(action.action.id, selectedOptions)}
                       />
                       <Flex justify="center">
-                        <YellowButton mt="16px" onClick={() => add(action.id, "habitats")}>
+                        <YellowButton mt="16px" onClick={() => add(action.action.id, "habitats")}>
                           Create new habitat
                         </YellowButton>
                       </Flex>
@@ -829,7 +841,7 @@ export default function NewActions() {
                   <Text fontSize="lg" color="#306844" as="b">
                     TRACKERS
                   </Text>
-                  {action.trackers.map((tracker) => (
+                  {action.action.trackers.map((tracker) => (
                     <Box align="center" key={tracker.id}>
                       <Avatar size="xl" url="tracker.photo" />
                       <Text fontSize="2xl" align="center">
@@ -852,7 +864,7 @@ export default function NewActions() {
                             top="0px"
                             right="0px"
                             variant="unstyled"
-                            onClick={() => removeTask(action.id, tracker.id, taskIndex)}
+                            onClick={() => removeTask(action.action.id, tracker.id, taskIndex)}
                           >
                             ✖
                           </Button>
@@ -865,7 +877,7 @@ export default function NewActions() {
                             value={task.title}
                             _hover={{ borderColor: "#97B3A1" }}
                             focusBorderColor="#306844"
-                            onChange={(e) => handleTaskChange(e, action.id, tracker.id, taskIndex, "title")}
+                            onChange={(e) => handleTaskChange(e, action.action.id, tracker.id, taskIndex, "title")}
                           />
 
                           <Text mt="16px" fontSize="lg" textAlign="center">
@@ -884,7 +896,7 @@ export default function NewActions() {
                                 color: "white",
                               },
                             }}
-                            onChange={(e) => handleTaskChange(e, action.id, tracker.id, taskIndex, "content")}
+                            onChange={(e) => handleTaskChange(e, action.action.id, tracker.id, taskIndex, "content")}
                           >
                             <chakra.option value="Set up a camera">Set up a camera</chakra.option>
                             <chakra.option value="Set up a gps tracker">Set up a gps tracker</chakra.option>
@@ -910,7 +922,7 @@ export default function NewActions() {
                               />
                               <RoutingMachine
                                 profile={tracker.medium}
-                                actionId={action.id}
+                                actionId={action.action.id}
                                 trackerId={tracker.id}
                                 taskIndex={taskIndex}
                               />
@@ -927,13 +939,15 @@ export default function NewActions() {
                                   w="500px"
                                   value={comment}
                                   onChange={(e) =>
-                                    handleTaskCommentChange(e, action.id, tracker.id, taskIndex, commentIndex)
+                                    handleTaskCommentChange(e, action.action.id, tracker.id, taskIndex, commentIndex)
                                   }
                                 />
                                 <YellowButton
                                   size="sm"
                                   w="200px"
-                                  onClick={() => removeTaskComment(action.id, taskIndex, tracker.id, commentIndex)}
+                                  onClick={() =>
+                                    removeTaskComment(action.action.id, taskIndex, tracker.id, commentIndex)
+                                  }
                                   mt="8px"
                                   mb="16px"
                                 >
@@ -945,14 +959,14 @@ export default function NewActions() {
                               size="sm"
                               w="200px"
                               mt="16px"
-                              onClick={() => addTaskComment(action.id, tracker.id, taskIndex)}
+                              onClick={() => addTaskComment(action.action.id, tracker.id, taskIndex)}
                             >
                               Add Comment
                             </GreenButton>
                           </Flex>
                         </Box>
                       ))}
-                      <YellowButton mt="16px" onClick={() => addTask(action.id, tracker.id)}>
+                      <YellowButton mt="16px" onClick={() => addTask(action.action.id, tracker.id)}>
                         Add task
                       </YellowButton>
 
@@ -961,7 +975,7 @@ export default function NewActions() {
                   ))}
 
                   <Flex justify="center">
-                    <GreenButton w="200px" mt="16px" onClick={() => handleSubmit(action.id)}>
+                    <GreenButton w="200px" mt="16px" onClick={() => handleSubmit(action.action.id)}>
                       Submit
                     </GreenButton>
                   </Flex>
