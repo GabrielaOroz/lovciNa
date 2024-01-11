@@ -3,10 +3,7 @@ package apl.restController;
 import apl.dao.*;
 import apl.domain.*;
 //import apl.service.ResearcherService;
-import apl.dto.DtoAction;
-import apl.dto.DtoManager;
-import apl.dto.DtoRequest;
-import apl.dto.DtoUser;
+import apl.dto.*;
 import apl.enums.HandleRequest;
 import apl.service.ResearcherService;
 import apl.service.impl.TestResearcherService;
@@ -98,7 +95,6 @@ public class ResearcherController {
     @GetMapping("/managers")
     public ResponseEntity<List<DtoManager>> getManagers(HttpSession session){
         Long usrId = authorize2(session.getAttribute("id"));
-
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
         if (researcherService.listAllManagersDto() != null) {
@@ -111,7 +107,6 @@ public class ResearcherController {
     @GetMapping("/actions")
     public ResponseEntity<List<DtoAction>> getActions(HttpSession session) {
         Long usrId = authorize2(session.getAttribute("id"));
-
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
         if (researcherService.getAllActions(usrId) != null) {
@@ -124,7 +119,6 @@ public class ResearcherController {
     @GetMapping("/finished-actions")
     public ResponseEntity<List<DtoAction>> getFinishedActions(HttpSession session) {
         Long usrId = authorize2(session.getAttribute("id"));
-
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
         if (researcherService.getAllActions(usrId) != null) {
@@ -137,13 +131,49 @@ public class ResearcherController {
     @GetMapping("/unfinished-actions")
     public ResponseEntity<List<DtoAction>> getUnfinishedActions(HttpSession session) {
         Long usrId = authorize2(session.getAttribute("id"));
-
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
         if (researcherService.getAllActions(usrId) != null) {
             return ResponseEntity.ok(researcherService.getAllUnfinishedActions(usrId));
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(researcherService.getAllActions(usrId));
+        }
+    }
+
+
+    @GetMapping("/species")
+    public ResponseEntity<List<DtoSpecies>> getAllSpecies(HttpSession session) {
+        Long usrId = authorize2(session.getAttribute("id"));
+        if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+
+        if (researcherService.getAllSpecies() != null) {
+            return ResponseEntity.ok(researcherService.getAllSpecies());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @GetMapping("/individuals")
+    public ResponseEntity<List<DtoAnimal>> getAllIndividuals(HttpSession session) {
+        Long usrId = authorize2(session.getAttribute("id"));
+        if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+
+        if (researcherService.getAllAnimals() != null) {
+            return ResponseEntity.ok(researcherService.getAllAnimals());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @GetMapping("/habitats")
+    public ResponseEntity<List<DtoHabitat>> getAllHabitats(HttpSession session) {
+        Long usrId = authorize2(session.getAttribute("id"));
+        if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+
+        if (researcherService.getAllHabitats() != null) {
+            return ResponseEntity.ok(researcherService.getAllHabitats());
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
 }

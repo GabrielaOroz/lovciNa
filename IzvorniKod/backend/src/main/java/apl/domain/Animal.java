@@ -164,7 +164,7 @@ public class Animal implements ConvertibleToDTO<DtoAnimal>, ConvertibleToLocatio
         action.getAnimals().add(this);
     }
 
-    public void addMultipleAnimals(List<Action> actions) {
+    public void addMultipleActions(List<Action> actions) {
         for (Action action:actions) addAction(action);
     }
 

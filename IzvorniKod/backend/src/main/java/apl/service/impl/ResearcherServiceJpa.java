@@ -1,13 +1,9 @@
 package apl.service.impl;
 
-import apl.dao.ManagerRepository;
-import apl.dao.RequestRepository;
-import apl.dao.ResearcherRepository;
-import apl.dao.UserRepository;
+import apl.converters.MyConverter;
+import apl.dao.*;
 import apl.domain.*;
-import apl.dto.DtoAction;
-import apl.dto.DtoManager;
-import apl.dto.DtoUser;
+import apl.dto.*;
 import apl.enums.ActionStatus;
 import apl.enums.HandleRequest;
 import apl.service.ResearcherService;
@@ -32,6 +28,15 @@ public class ResearcherServiceJpa implements ResearcherService {
 
     @Autowired
     RequestRepository requestRepo;
+
+    @Autowired
+    SpeciesRepository speciesRepo;
+
+    @Autowired
+    AnimalRepository animalRepo;
+
+    @Autowired
+    HabitatRepository habitatRepo;
 
     @Transactional
     public DtoUser createAction(Action action, Long usrId) {
@@ -73,16 +78,15 @@ public class ResearcherServiceJpa implements ResearcherService {
         List<DtoAction> dtoActions = new LinkedList<>();
         Researcher researcher = researcherRepo.findById(idResearcher).orElse(null);
         List<Action> actions = researcher.getActions();
-        if (actions != null) {
-            for (Action action : actions) {
-                DtoAction dtoAction = action.toDTO();
-                dtoActions.add(dtoAction);
-            }
+        for (Action action : actions) {
+            DtoAction dtoAction = action.toDTO();
+            dtoAction.setSpecies(MyConverter.convertToDTOList(speciesRepo.findByAnimalsActionsId(action.getId())));
+            dtoActions.add(dtoAction);
         }
         return dtoActions;
     }
 
-    @Override
+    @Transactional
     public List<DtoAction> getAllFinishedActions(Long usrId) {
         List<DtoAction> dtoActions = getAllActions(usrId);
         List<DtoAction> dtoFinishedActions = new LinkedList<>();
@@ -94,7 +98,7 @@ public class ResearcherServiceJpa implements ResearcherService {
         return dtoFinishedActions;
     }
 
-    @Override
+    @Transactional
     public List<DtoAction> getAllUnfinishedActions(Long usrId) {
         List<DtoAction> dtoActions = getAllActions(usrId);
         List<DtoAction> dtoUnfinishedActions = new LinkedList<>();
@@ -104,5 +108,38 @@ public class ResearcherServiceJpa implements ResearcherService {
             }
         }
         return dtoUnfinishedActions;
+    }
+
+    @Transactional
+    public List<DtoSpecies> getAllSpecies() {
+        List<DtoSpecies> dtoSpecies = new LinkedList<>();
+        List<Species> species = speciesRepo.findAll();
+        for (Species species1 : species) {
+            DtoSpecies dtoSpecies1 = species1.toDTO();
+            dtoSpecies.add(dtoSpecies1);
+        }
+        return dtoSpecies;
+    }
+
+    @Transactional
+    public List<DtoAnimal> getAllAnimals() {
+        List<DtoAnimal> dtoAnimals = new LinkedList<>();
+        List<Animal> animals = animalRepo.findAll();
+        for (Animal animal : animals) {
+            DtoAnimal dtoAnimal = animal.toDTO();
+            dtoAnimals.add(dtoAnimal);
+        }
+        return dtoAnimals;
+    }
+
+    @Transactional
+    public List<DtoHabitat> getAllHabitats() {
+        List<DtoHabitat> dtoHabitats = new LinkedList<>();
+        List<Habitat> habitats = habitatRepo.findAll();
+        for (Habitat habitat : habitats) {
+            DtoHabitat dtoHabitat = habitat.toDTO();
+            dtoHabitats.add(dtoHabitat);
+        }
+        return dtoHabitats;
     }
 }

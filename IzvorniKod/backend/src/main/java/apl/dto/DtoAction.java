@@ -23,11 +23,9 @@ import java.util.Map;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class DtoAction {
 
-
     private Long id;
 
     private DtoManager manager;
-
 
     private DtoResearcher researcher;
 
@@ -39,30 +37,23 @@ public class DtoAction {
 
     private ActionStatus status;
 
-
     private Map<MediumType, Long> requirements;
-
 
     private List<DtoTask> tasks;
 
-
     private List<DtoActionComment> actionComments;
-
-
 
     private List<DtoAnimalComment> animalComments;
 
-
     private List<DtoRequest> requests;
-
 
     private List<DtoAnimal> animals;
 
-
     private List<DtoHabitat> habitats;
 
-
     private List<DtoTrackerActionMedium> trackerActionMedia;
+
+    private List<DtoSpecies> species; //not in class action
 
 
 }
