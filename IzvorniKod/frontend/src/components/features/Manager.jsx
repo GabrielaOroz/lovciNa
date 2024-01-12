@@ -16,9 +16,8 @@ import {
   ModalBody,
   ModalFooter,
 } from '@chakra-ui/react';
-import { LayerGroup, LayersControl, MapContainer, Marker, Popup, TileLayer, useMapEvents } from "react-leaflet";
-import podaci from "../../pomoc.jsx";
-import { marker } from 'leaflet';
+import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from "react-leaflet";
+import podaci from "../../pomoc2.jsx";
 import { Link } from "react-router-dom";
 import GreenButton from "../shared/GreenButton";
 import YellowButton from '../shared/YellowButton.jsx';
@@ -30,6 +29,9 @@ export default function Manager() {
   const [currentSelectedTracker, setCurrentSelectedTracker] = useState(null); // u prozoru
   const [selectedAll, setSelectedAll] = useState(false);
 
+  //slobodni trackeri
+  const [availableTrackers, setAvailableTrackers] = useState(podaci);
+
   //selectana postaja 
   const [markerPosition, setMarkerPosition] = useState(null);
   const[markerName, setMarkerName] = useState('');
@@ -40,14 +42,10 @@ export default function Manager() {
   const [selectedAbilities, setSelectedAbilities] = useState({}); //rijecnik - tracker i abilities
 
   const mapRef = useRef(null);
-
-  const [incomingRequests, setIncomingRequests] = useState(podaci);
   const [showRequests, setShowRequests] = useState(false)
 
-
   const fetchExistingStationData = () => {
-    // Make a request to check if the station already exists
-    fetch("http://localhost:8000/stations", {
+    fetch("http://localhost:8000/manager/station", {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -55,9 +53,9 @@ export default function Manager() {
     })
       .then((res) => res.json())
       .then((data) => {
-        // If the station exists, set its data
-        if (data && data.length > 0) {
-          const existingStation = data[0]; 
+        //ako postoji
+        if (data) {
+          const existingStation = data; 
           setSelectedStation(true)
           setMarkerName(existingStation.name);
           setMarkerPosition([existingStation.lat, existingStation.lng]);
@@ -69,15 +67,14 @@ export default function Manager() {
   };
 
 
-
   const fetchTrackers = () => {
-    return fetch("http://localhost:8000/trackers", {
+    return fetch("http://localhost:8000/manager/trackers", {
       headers : {
         "Content-Type": "application/json",
       }
       })
       .then((res) => res.json())
-      .then((trackers) => setTrackerOptions(trackers))
+      .then((trackers) => setAvailableTrackers(trackers))
   }
 
   const fetchAbilities = () => {
@@ -90,12 +87,11 @@ export default function Manager() {
       .then((abilities) => setAbilityOptions(abilities))
   }
 
-
   useEffect(() => {
     /*
+    fetchExistingStationData();
     fetchTrackers();
     fetchAbilities(); //pitnanje hoce li trebat
-    fetchExistingStationData();
     */
   }, [])
 
@@ -117,7 +113,6 @@ export default function Manager() {
     }
   };
 
-
   const handleConfirmName = () => {
     //poziva se kad confirmam ime postaje
     setSelectedStation(true); //odabrano
@@ -127,8 +122,7 @@ export default function Manager() {
 
     // šaljemo na back naziv postaje, lat i lon
 
-    /*
-    fetch("http://localhost:8000/stations", {
+    fetch("http://localhost:8000/manager/selected-station", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
@@ -148,7 +142,7 @@ export default function Manager() {
     console.error("Error saving station:", error);
   });
     
-    */
+  
   }
 
   const MapEvents = () => {
@@ -174,70 +168,70 @@ export default function Manager() {
   
 
   const handleCheckboxChangeTracker = (tracker) => {
-    const isTrackerSelected = selectedTrackers.includes(tracker);
-
-    if (isTrackerSelected) {
-      // odznaci trackera 
-      setSelectedTrackers(selectedTrackers.filter((selected) => selected !== tracker)); // zadrzavamo one koji nisu jedaki trackeru
-      // provjeri je li tragac prisutan u rječniku i ukloni ga ako postoji
-      if (selectedAbilities[tracker]) {
-        setSelectedAbilities((prevAbilities) => {
-          const { [tracker]: removed, ...newAbilities } = prevAbilities;
-          return newAbilities;
-        });
-    }
-    } else {
-      //inace dodaj selectanog trackera
-      setSelectedTrackers([...selectedTrackers, tracker]);
-    }
-
-    // dodaj sposobnosti (ništa) za novog odabranog tragača
+    setSelectedTrackers((prevTrackers) => {
+      const isTrackerSelected = prevTrackers.includes(tracker);
+  
+      if (isTrackerSelected) {
+        // Deselect tracker
+        return prevTrackers.filter((selected) => selected !== tracker);
+      } else {
+        // Select tracker
+        return [...prevTrackers, tracker];
+      }
+    });
+  
+    // Ensure selectedAbilities includes all selected trackers with empty abilities
     setSelectedAbilities((prevAbilities) => {
-      return {
-        ...prevAbilities,
-        [tracker]: [],
-      };
+      const updatedAbilities = { ...prevAbilities };
+  
+      if (!updatedAbilities[tracker.id]) {
+        updatedAbilities[tracker.id] = [];
+      }
+  
+      return updatedAbilities;
     });
   };
+  
 
   const handleAbilitiesCheckboxChange = (ability) => {
 
+   
     setSelectedAbilities((prevAbilities) => {
-      const currentAbilities = prevAbilities[selectedTracker] || [];
-      
+      const currentAbilities = prevAbilities[currentSelectedTracker.id] || [];
+
       if (currentAbilities.includes(ability)) {
         // Ako je sposobnost već odabrana, uklonite je
         return {
           ...prevAbilities, //kopira sve prije
           //ureduje selectanog i njegove abilitiese taji da mice taj ability
-          [selectedTracker]: currentAbilities.filter((a) => a !== ability),
+          [selectedTracker.id]: currentAbilities.filter((a) => a !== ability),
         };
       } else {
        
         // Inače, dodaj sposobnost
         return {
           ...prevAbilities,
-          [selectedTracker]: [...currentAbilities, ability],
+          [selectedTracker.id]: [...currentAbilities, ability],
         }
       }
-    });
+    });  
+   // console.log(selectedAbilities)
+   console.log(selectedAbilities);
+      
 
   };
 
-
   const handleSaveAbilities = () => {
     const trackersWithoutAbilities = selectedTrackers.filter(
-      (tracker) => !selectedAbilities[tracker] || selectedAbilities[tracker].length === 0
+      (tracker) => !selectedAbilities[tracker.id] || selectedAbilities[tracker.id].length === 0
     );
   
     if (trackersWithoutAbilities.length > 0) {
       alert(`Please select abilities for tracker(s): ${trackersWithoutAbilities.join(', ')}`);
       return;
     }
-  
-    // slanje na back
 
-   {/* fetch("http://localhost:8000/saveAbilities", {
+   fetch("http://localhost:8000/manager/saveAbilities", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -247,18 +241,15 @@ export default function Manager() {
       .then((res) => res.json())
       .then((data) => {
         console.log("Response from server:", data);
-        setIsAbilitiesModalOpen(false);
       })
       .catch((error) => {
         console.error("Error saving abilities:", error);
-      }); */}
-
+      }); 
 
     console.log('Selected Abilities:', selectedAbilities);
     setIsAbilitiesModalOpen(false);
     setSelectedAll(true);
   };
-
 
 
   return (
@@ -271,7 +262,6 @@ export default function Manager() {
          Click on the map and select the location of your station.
         </Text>
       )}
-
 
       <Box h="600px" p="16px" id="mapSection">
         <MapContainer ref={mapRef} style={{ height: "100%", width: "100%" }} 
@@ -318,38 +308,27 @@ export default function Manager() {
       </Box>
  
 
-      <Card w={{ base: '300px', md: '600px', lg: '800px' }} background="#f9f7e8" alignSelf="center" padding="20px" alignItems="center">
-        {selectedStation && !selectedAll && (
-          <Stack spacing={4} direction="column" padding="14px">
-          {/*
-          {trackerOptions.map((tracker) => (
-            <Checkbox key={tracker.id} value={tracker.name}
-            colorScheme="green" isChecked={selectedTrackers.includes(tracker.name)}
-                onChange={() => handleCheckboxChangeTracker(tracker.name)}
-            >
-              {tracker.name} 
-              {tracker.surname}
-            </Checkbox>
-          ))}
-          */} 
-
-            <Checkbox colorScheme="green" isChecked={selectedTrackers.includes('Tracker 1')}
-                onChange={() => handleCheckboxChangeTracker('Tracker 1')}>
-              Tracker 1
-            </Checkbox>
-            <Checkbox colorScheme="green" isChecked={selectedTrackers.includes('Tracker 2')}
-                onChange={() => handleCheckboxChangeTracker('Tracker 2')}>
-              Tracker 2
-            </Checkbox>
-            <Checkbox colorScheme="green" isChecked={selectedTrackers.includes('Tracker 3')}
-                onChange={() => handleCheckboxChangeTracker('Tracker 3')}>
-              Tracker 3
-            </Checkbox>
+      <Card w={{ base: '300px', md: '600px', lg: '800px' }} background="#f9f7e8" alignSelf="center" padding="24px" alignItems="center">
+      {selectedStation && !selectedAll && (
+        <Box maxHeight="240px" overflowY="auto" padding="16px">
+          <Stack spacing={4} direction="column">
+            {availableTrackers.map((tracker) => (
+              <Checkbox
+                key={tracker.id}
+                value={tracker.name}
+                colorScheme="green"
+                isChecked={selectedTrackers.includes(tracker)}
+                onChange={() => handleCheckboxChangeTracker(tracker)}
+              >
+                {tracker.name} {tracker.surname}
+              </Checkbox>
+            ))}
           </Stack>
-        )}
+        </Box>
+)}
 
         {selectedStation && selectedTrackers.length > 0 && !selectedAll && (
-          <YellowButton  margin="14px" onClick= {() => {setIsAbilitiesModalOpen(true) 
+          <YellowButton  margin="16px" onClick= {() => {setIsAbilitiesModalOpen(true) 
                                                               setCurrentSelectedTracker(null)}}>
             Edit Trackers Abilities</YellowButton>
         )}
@@ -363,16 +342,20 @@ export default function Manager() {
               <Select
                 padding="6px"
                 placeholder="Select Tracker"
-                onChange={(e) => {setSelectedTracker(e.target.value);
-                                setCurrentSelectedTracker(e.target.value);}} 
+                onChange={(e) => {
+                  const selectedTrackerObject = availableTrackers.find(
+                    (tracker) => tracker.name === e.target.value
+                  );
+                  setSelectedTracker(selectedTrackerObject);
+                  setCurrentSelectedTracker(selectedTrackerObject);
+                }}
               >
-              {selectedTrackers.map((tracker) => (
-                <option key={tracker} value={tracker}>
-                  {tracker}
-                </option>
-              ))}
-              </Select>
-              
+                {selectedTrackers.map((tracker) => (
+                  <option key={tracker.id} value={tracker.name}>
+                    {tracker.name}
+                  </option>
+                ))}
+</Select>
 
               {selectedTracker && currentSelectedTracker === selectedTracker && (
                 <Stack margin="8px" spacing={4} direction="column">
@@ -385,13 +368,13 @@ export default function Manager() {
                   </Checkbox>
                 ))} */}
                   <Checkbox colorScheme="green" isChecked=
-                  {selectedTracker && selectedAbilities[selectedTracker]?.includes('foot')}
-                  onChange={() => handleAbilitiesCheckboxChange('foot')}>By foot</Checkbox>
+                  {selectedTracker && selectedAbilities[selectedTracker.id]?.includes('byfoot')}
+                  onChange={() => handleAbilitiesCheckboxChange('byfoot')}>By foot</Checkbox>
                   <Checkbox colorScheme="green" isChecked=
-                  {selectedTracker && selectedAbilities[selectedTracker]?.includes('car')}
+                  {selectedTracker && selectedAbilities[selectedTracker.id]?.includes('car')}
                   onChange={() => handleAbilitiesCheckboxChange('car')}>Car</Checkbox>
                   <Checkbox colorScheme="green" isChecked=
-                  {selectedTracker && selectedAbilities[selectedTracker]?.includes('airplane')} 
+                  {selectedTracker && selectedAbilities[selectedTracker.id]?.includes('airplane')} 
                   onChange={() => handleAbilitiesCheckboxChange('airplane')}>Airplane</Checkbox>
                 </Stack>
               )}
@@ -416,16 +399,8 @@ export default function Manager() {
           </Link>
 
         )}
-             <Link to="/requirments">
-            <GreenButton margin="14px" onClick={handleToggleRequests}>
-              Requirments
-            </GreenButton> 
-          </Link>
-   
       </Card>
   </>
 
   );
 }
-
-
