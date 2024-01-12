@@ -40,6 +40,7 @@ public interface TrackerRepository extends JpaRepository<Tracker, Long> {
     Optional<Tracker> findByIdAndTrackerActionMediaActionId(Long id, Long actionId);            //check if some tracker is/was in some action
 
 
+    List<Tracker> findByStationIdIsNullAndRegisteredIsTrue();
 
 
     int countByUsername(String username);

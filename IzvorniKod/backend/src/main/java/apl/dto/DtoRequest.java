@@ -2,6 +2,7 @@ package apl.dto;
 
 import apl.domain.*;
 import apl.enums.HandleRequest;
+import apl.enums.RequestStatus;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -32,4 +33,6 @@ public class DtoRequest {
 
 
     private DtoUser user;
+
+    private RequestStatus status;
 }

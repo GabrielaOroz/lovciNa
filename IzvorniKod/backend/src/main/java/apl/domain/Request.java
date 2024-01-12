@@ -7,6 +7,7 @@ import apl.dto.DtoRequest;
 import apl.dto.DtoUser;
 import apl.entityWrapper.EntityWrapper;
 import apl.enums.HandleRequest;
+import apl.enums.RequestStatus;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -50,6 +51,7 @@ public class Request implements ConvertibleToDTO<DtoRequest> {
         entities.add(new EntityWrapper(this.getClass(), this.id));
         DtoRequest request = new DtoRequest();
         request.setId(this.id);
+        request.setStatus(this.requestStatus);
         request.setType(this.type);
         request.setCreationTime(this.creationTime);
         if (this.action!=null) request.setAction(this.action.toDTO(entities));
@@ -66,6 +68,7 @@ public class Request implements ConvertibleToDTO<DtoRequest> {
         DtoRequest request = new DtoRequest();
         request.setId(this.id);
         request.setType(this.type);
+        request.setStatus(this.requestStatus);
         request.setCreationTime(this.creationTime);
         if (this.action!=null) request.setAction(this.action.toDTO(localEntities));
         if (this.user!=null) request.setUser(this.user.toDTO(localEntities));
@@ -111,4 +114,8 @@ public class Request implements ConvertibleToDTO<DtoRequest> {
         if (this.user==null) return null;
         return this.user.toDTO();
     }
+
+    @Column(nullable = false)
+    @Enumerated(EnumType.STRING)
+    private RequestStatus requestStatus = RequestStatus.ACTIVE;
 }
