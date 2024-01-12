@@ -117,26 +117,26 @@ public class ResearcherController {
     }
 
     @GetMapping("/finished-actions")
-    public ResponseEntity<List<DtoAction>> getFinishedActions(HttpSession session) {
+    public ResponseEntity<List<ActionDTO>> getFinishedActions(HttpSession session) {
         Long usrId = authorize2(session.getAttribute("id"));
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
-        if (researcherService.getAllActions(usrId) != null) {
+        if (researcherService.getAllFinishedActions(usrId) != null) {
             return ResponseEntity.ok(researcherService.getAllFinishedActions(usrId));
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(researcherService.getAllActions(usrId));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(researcherService.getAllFinishedActions(usrId));
         }
     }
 
     @GetMapping("/unfinished-actions")
-    public ResponseEntity<List<DtoAction>> getUnfinishedActions(HttpSession session) {
+    public ResponseEntity<List<ActionDTO>> getUnfinishedActions(HttpSession session) {
         Long usrId = authorize2(session.getAttribute("id"));
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
-        if (researcherService.getAllActions(usrId) != null) {
+        if (researcherService.getAllUnfinishedActions(usrId) != null) {
             return ResponseEntity.ok(researcherService.getAllUnfinishedActions(usrId));
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(researcherService.getAllActions(usrId));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(researcherService.getAllUnfinishedActions(usrId));
         }
     }
 

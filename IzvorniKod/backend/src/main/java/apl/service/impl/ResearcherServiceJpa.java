@@ -87,9 +87,9 @@ public class ResearcherServiceJpa implements ResearcherService {
     }
 
     @Transactional
-    public List<DtoAction> getAllFinishedActions(Long usrId) {
+    public List<ActionDTO> getAllFinishedActions(Long usrId) {
         List<DtoAction> dtoActions = getAllActions(usrId);
-        List<DtoAction> dtoFinishedActions = new LinkedList<>();
+        List<ActionDTO> dtoFinishedActions = new LinkedList<>();
         for (DtoAction dtoAction : dtoActions) {
             if (ActionStatus.FINISHED.equals(dtoAction.getStatus())) {
                 dtoFinishedActions.add(dtoAction);
@@ -99,12 +99,14 @@ public class ResearcherServiceJpa implements ResearcherService {
     }
 
     @Transactional
-    public List<DtoAction> getAllUnfinishedActions(Long usrId) {
+    public List<ActionDTO> getAllUnfinishedActions(Long usrId) {
         List<DtoAction> dtoActions = getAllActions(usrId);
-        List<DtoAction> dtoUnfinishedActions = new LinkedList<>();
+        List<ActionDTO> dtoUnfinishedActions = new LinkedList<>();
         for (DtoAction dtoAction : dtoActions) {
-            if (ActionStatus.ACTIVE.equals(dtoAction.getStatus())) {
-                dtoUnfinishedActions.add(dtoAction);
+            if (dtoAction.getStartOfAction() == null) {
+                ActionDTO actionDTO = new ActionDTO();
+                actionDTO.setDtoAction(dtoAction);
+                dtoUnfinishedActions.add(actionDTO);
             }
         }
         return dtoUnfinishedActions;
