@@ -88,14 +88,15 @@ public class ResearcherServiceJpa implements ResearcherService {
 
     @Transactional
     public List<ActionDTO> getAllFinishedActions(Long usrId) {
-        List<DtoAction> dtoActions = getAllActions(usrId);
+        /*List<DtoAction> dtoActions = getAllActions(usrId);
         List<ActionDTO> dtoFinishedActions = new LinkedList<>();
         for (DtoAction dtoAction : dtoActions) {
             if (ActionStatus.FINISHED.equals(dtoAction.getStatus())) {
                 dtoFinishedActions.add(dtoAction);
             }
         }
-        return dtoFinishedActions;
+        return dtoFinishedActions;*/
+        return null;
     }
 
     @Transactional

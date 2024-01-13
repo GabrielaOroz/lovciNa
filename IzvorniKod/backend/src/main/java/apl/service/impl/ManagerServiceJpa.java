@@ -3,18 +3,19 @@ package apl.service.impl;
 import apl.converters.MyConverter;
 import apl.dao.*;
 import apl.domain.*;
-import apl.dto.DtoRequest;
-import apl.dto.DtoStation;
-import apl.dto.DtoTracker;
+import apl.dto.*;
 import apl.enums.ActionStatus;
+import apl.enums.MediumType;
 import apl.enums.RequestStatus;
 import apl.service.ManagerService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ManagerServiceJpa implements ManagerService {
@@ -70,15 +71,21 @@ public class ManagerServiceJpa implements ManagerService {
     }
 
     @Override
-    public List<DtoRequest> getIncomingRequests(Long managerId) {
+    public List<DtoAction> getIncomingRequests(Long managerId) {
 
         List<DtoRequest> incomingRequests = MyConverter.convertToDTOList(requestRepo.findByActionManagerIdAndRequestStatus(managerId, RequestStatus.ACTIVE));
 
-        return incomingRequests;
+        List<DtoAction> actions = new LinkedList<>();
+
+        for(DtoRequest request : incomingRequests){
+            actions.add(request.getAction());
+        }
+
+        return actions;
     }
 
     @Override
-    public List<DtoTracker> getTrackersForManager(Long managerId) {
+    public List<DtoTracker> getAvailableTrackersForManager(Long managerId) {
         Manager manager = managerRepo.findById(managerId).orElse(null);
 
         List<Tracker> trackersFromStation = manager.getStation().getTrackers();
@@ -92,6 +99,7 @@ public class ManagerServiceJpa implements ManagerService {
         return trackers;
     }
 
+    @Transactional
     @Override
     public Action submitAction(RequestDTO requestDTO) {
         Request request = requestRepo.findById(requestDTO.getRequestId()).orElse(null);
@@ -99,11 +107,41 @@ public class ManagerServiceJpa implements ManagerService {
         request.setRequestStatus(RequestStatus.INACTIVE);
 
         Action action = actionRepo.findById(request.getAction().getId()).orElse(null);
+        //ili request.getAction() ??
 
         action.setStartOfAction(LocalDateTime.now());
         action.setStatus(ActionStatus.ACTIVE);
 
+        Map<Tracker, Medium> trackersForAction = requestDTO.getTrackers();
 
-        return null;
+        List<TrackerActionMedium> trackersInAction = new LinkedList<>();
+
+        for (Tracker tracker : trackersForAction.keySet()){
+                Medium medium = trackersForAction.get(tracker);
+
+                trackersInAction.add(new TrackerActionMedium(tracker, action, medium));
+        }
+
+        action.setTrackerActionMedia(trackersInAction);
+
+        return action;
+    }
+
+    @Override
+    public Station saveTrackerQualification(Long usrId, Map<Long, List<Medium>> map) {
+        Station station = stationRepo.findByManagerId(usrId);
+
+        List<Tracker> trackers = new LinkedList<>();
+
+        for (Long trackerId : map.keySet()){
+            Tracker tracker = trackerRepo.findById(trackerId).orElse(null);
+            tracker.setQualification(map.get(trackerId));
+            tracker.setStation(station);
+            trackers.add(tracker);
+        }
+
+        station.setTrackers(trackers);
+
+        return station;
     }
 }

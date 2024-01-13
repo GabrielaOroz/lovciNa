@@ -5,8 +5,18 @@ import apl.dao.ResearcherRepository;
 import apl.dao.TrackerRepository;
 import apl.dao.UserRepository;
 import apl.domain.Tracker;
+import apl.dto.DtoAnimal;
+import apl.dto.DtoHabitat;
+import apl.dto.DtoSpecies;
+import apl.dto.DtoTracker;
+import apl.service.impl.TrackerServiceJpa;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 
 @CrossOrigin(
@@ -28,6 +38,9 @@ public class TrackerController {
     @Autowired
     private TrackerRepository trackerRepo;
 
+    @Autowired
+    private TrackerServiceJpa trackerService;
+
     private Long authorize(Object idObj) {
         if (idObj instanceof Long id) {
             Tracker tracker=trackerRepo.findById(id).orElse(null);
@@ -41,4 +54,65 @@ public class TrackerController {
     Long usrId=authorize(session.getAttribute("id"));
     if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
     */
+
+    @GetMapping("/myInfo")
+    public ResponseEntity<DtoTracker> getTrackerInformation(HttpSession session) {
+        Long usrId = authorize(session.getAttribute("id"));
+        if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+
+        if (trackerService.getTrackerInfo(usrId) != null) {
+            return ResponseEntity.ok(trackerService.getTrackerInfo(usrId));         //jel vraca i name i surname?
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+
+    @GetMapping("/trackers")
+    public ResponseEntity<List<DtoTracker>> allTrackersOnAction(HttpSession session) {
+        Long usrId = authorize(session.getAttribute("id"));
+        if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+
+        if (trackerService.getAllTrackersOnAction(usrId) != null) {
+            return ResponseEntity.ok(trackerService.getAllTrackersOnAction(usrId));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @GetMapping("/individuals")
+    public ResponseEntity<List<DtoAnimal>> allIndividuals(HttpSession session) {
+        Long usrId = authorize(session.getAttribute("id"));
+        if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+
+        if (trackerService.getAllAnimals(usrId) != null) {
+            return ResponseEntity.ok(trackerService.getAllAnimals(usrId));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @GetMapping("/species")
+    public ResponseEntity<List<DtoSpecies>> allSpecies(HttpSession session) {
+        Long usrId = authorize(session.getAttribute("id"));
+        if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+
+        if (trackerService.getAllSpecies(usrId) != null) {
+            return ResponseEntity.ok(trackerService.getAllSpecies(usrId));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @GetMapping("/habitats")
+    public ResponseEntity<List<DtoHabitat>> allHabitats(HttpSession session) {
+        Long usrId = authorize(session.getAttribute("id"));
+        if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+
+        if (trackerService.getAllHabitats(usrId) != null) {
+            return ResponseEntity.ok(trackerService.getAllHabitats(usrId));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
 }

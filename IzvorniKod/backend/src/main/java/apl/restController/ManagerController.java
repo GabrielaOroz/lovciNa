@@ -5,10 +5,7 @@ import apl.dao.ResearcherRepository;
 import apl.dao.TrackerRepository;
 import apl.dao.UserRepository;
 import apl.domain.*;
-import apl.dto.DtoRequest;
-import apl.dto.DtoSpecies;
-import apl.dto.DtoStation;
-import apl.dto.DtoTracker;
+import apl.dto.*;
 import apl.service.ManagerService;
 import apl.service.impl.ManagerServiceJpa;
 import jakarta.servlet.http.HttpSession;
@@ -18,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 
 @CrossOrigin(
@@ -106,8 +104,20 @@ public class ManagerController {
         }
     }
 
+    @PostMapping("/saveAbilities")
+    public ResponseEntity<Station> saveAbilities(@RequestBody Map<Long, List<Medium>> map, HttpSession session) {
+        Long usrId = authorize2(session.getAttribute("id"));
+        if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+
+        if (managerService.saveTrackerQualification(usrId, map) != null) {
+            return ResponseEntity.ok(managerService.saveTrackerQualification(usrId, map));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
     @GetMapping("/incoming-requests")
-    public ResponseEntity<List<DtoRequest>> getIncomingRequests(HttpSession session) {
+    public ResponseEntity<List<DtoAction>> getIncomingRequests(HttpSession session) {
         Long usrId = authorize2(session.getAttribute("id"));
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
@@ -123,8 +133,8 @@ public class ManagerController {
         Long usrId = authorize2(session.getAttribute("id"));
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
-        if (managerService.getTrackersForManager(usrId) != null) {
-            return ResponseEntity.ok(managerService.getTrackersForManager(usrId));
+        if (managerService.getAvailableTrackersForManager(usrId) != null) {
+            return ResponseEntity.ok(managerService.getAvailableTrackersForManager(usrId));
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
