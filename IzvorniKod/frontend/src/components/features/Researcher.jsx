@@ -37,8 +37,8 @@ export default function Researcher() {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
-        //setFormData(data);
+        console.log("response data: ", data);
+        setFormData(data);
       });
   }, []);
 
@@ -55,18 +55,27 @@ export default function Researcher() {
   }, []);
 
   const [openActions, setOpenActions] = useState(false);
-  const [showTrackers, setShowTrackers] = useState(() =>
-    formData.reduce((obj, action) => {
-      obj[action.id] = false;
-      return obj;
-    }, {})
-  );
-  const [showAnimals, setShowAnimals] = useState(() =>
-    formData.reduce((obj, action) => {
-      obj[action.id] = false;
-      return obj;
-    }, {})
-  );
+
+  const [showTrackers, setShowTrackers] = useState(() => {
+    if (formData.length > 0) {
+      return formData.reduce((obj, action) => {
+        obj[action.id] = false;
+        return obj;
+      }, {});
+    } else {
+      return {};
+    }
+  });
+  const [showAnimals, setShowAnimals] = useState(() => {
+    if (formData.length > 0) {
+      return formData.reduce((obj, action) => {
+        obj[action.id] = false;
+        return obj;
+      }, {});
+    } else {
+      return {};
+    }
+  });
 
   const handleToggleTracker = (id) => {
     setShowTrackers({ ...showTrackers, [id]: !showTrackers[id] });
@@ -97,27 +106,27 @@ export default function Researcher() {
     if (!mapRef.current) return;
 
     let points = [];
-    if (filter == 1) {
+    if (filter == 1 && coords.animals) {
       points = coords.animals.flatMap((animal) => animal.coords.map((p) => [p[0], p[1], p[2]]));
-      if (filterSpecificAnimals == 1) {
+      if (filterSpecificAnimals == 1 && speciesFilter) {
         const species = speciesFilter;
         points = coords.animals
           .filter((animal) => animal.species == species)
           .flatMap((animal) => animal.coords.map((p) => [p[0], p[1], p[2]]));
-      } else if (filterSpecificAnimals == 2) {
+      } else if (filterSpecificAnimals == 2 && individualFilter) {
         const id = individualFilter;
         points = coords.animals
           .filter((animal) => animal.id == id)
           .flatMap((animal) => animal.coords.map((p) => [p[0], p[1], p[2]]));
       }
-    } else if (filter == 2) {
+    } else if (filter == 2 && coords.trackers) {
       points = coords.trackers.flatMap((tracker) => tracker.coords.map((p) => [p[0], p[1], p[2]]));
-      if (filterSpecificTrackers == 1) {
+      if (filterSpecificTrackers == 1 && mediumFilter) {
         const medium = mediumFilter;
         points = coords.trackers
           .filter((tracker) => tracker.medium == medium)
           .flatMap((tracker) => tracker.coords.map((p) => [p[0], p[1], p[2]]));
-      } else if (filterSpecificTrackers == 2) {
+      } else if (filterSpecificTrackers == 2 && trackerFilter) {
         const id = trackerFilter;
         points = coords.trackers
           .filter((tracker) => tracker.id == id)
@@ -154,8 +163,8 @@ export default function Researcher() {
         <RadioGroup colorScheme="yellow" onChange={setFilter} value={filter}>
           <Stack direction="row">
             <Radio value="0">Only current positions</Radio>
-            <Radio value="1">History of tracked animals</Radio>
-            <Radio value="2">History of trackers</Radio>
+            {formData.length > 0 && <Radio value="1">History of tracked animals</Radio>}
+            {formData.length > 0 && <Radio value="2">History of trackers</Radio>}
           </Stack>
         </RadioGroup>
         {filter == "1" && (
@@ -194,7 +203,7 @@ export default function Researcher() {
             onChange={(e) => setSpeciesFilter(e.target.value)}
           >
             {formData.map((action) =>
-              action.species.map((species, index) => <option value={species.name}>{species.name}</option>)
+              action.species.length > 0 && action.species.map((species, index) => <option value={species.name}>{species.name}</option>)
             )}
           </Select>
         )}
@@ -217,7 +226,7 @@ export default function Researcher() {
             }}
           >
             {formData.map((action) =>
-              action.individuals.map((animal, index) => <option value={animal.id}>{animal.name}</option>)
+              action.individuals.length > 0 && action.individuals.map((animal, index) => <option value={animal.id}>{animal.name}</option>)
             )}
           </Select>
         )}
@@ -264,7 +273,7 @@ export default function Researcher() {
             onChange={(e) => setTrackerFilter(e.target.value)}
           >
             {formData.map((action) =>
-              action.trackers.map((tracker, index) => (
+              action.trackers.length > 0 && action.trackers.map((tracker, index) => (
                 <option value={tracker.id}>
                   {tracker.name} {tracker.surname}
                 </option>
@@ -284,39 +293,42 @@ export default function Researcher() {
           <LayersControl position="topright">
             <LayersControl.Overlay checked name="Postaje">
               <LayerGroup>
-                {formData.map((action, index) => (
-                  <Marker
-                    key={index}
-                    icon={blackIcon}
-                    position={[action.manager.station.latitude, action.manager.station.longitude]}
-                  >
-                    <Popup>{action.manager.station.name}</Popup>
-                  </Marker>
-                ))}
+                {formData.length > 0 &&
+                  formData.map((action, index) => (
+                    <Marker
+                      key={index}
+                      icon={blackIcon}
+                      position={[action.manager.station.latitude, action.manager.station.longitude]}
+                    >
+                      <Popup>{action.manager.station.name}</Popup>
+                    </Marker>
+                  ))}
               </LayerGroup>
             </LayersControl.Overlay>
             <LayersControl.Overlay checked name="Pozicije tragača na akciji">
               <LayerGroup>
-                {formData.map((action, index) =>
-                  action.trackers.map((tracker, index) => (
-                    <Marker key={index} icon={greenIcon} position={[tracker.latitude, tracker.longitude]}>
-                      <Popup>
-                        {tracker.name} {tracker.surname}
-                      </Popup>
-                    </Marker>
-                  ))
-                )}
+                {formData.length > 0 &&
+                  formData.map((action, index) =>
+                    action.trackers.map((tracker, index) => (
+                      <Marker key={index} icon={greenIcon} position={[tracker.latitude, tracker.longitude]}>
+                        <Popup>
+                          {tracker.name} {tracker.surname}
+                        </Popup>
+                      </Marker>
+                    ))
+                  )}
               </LayerGroup>
             </LayersControl.Overlay>
             <LayersControl.Overlay checked name="Pozicije praćenih životinja">
               <LayerGroup>
-                {formData.map((action) =>
-                  action.individuals.map((animal, index) => (
-                    <Marker key={index} icon={redIcon} position={[animal.latitude, animal.longitude]}>
-                      <Popup>{animal.name}</Popup>
-                    </Marker>
-                  ))
-                )}
+                {formData.length > 0 &&
+                  formData.map((action) =>
+                    action.individuals.map((animal, index) => (
+                      <Marker key={index} icon={redIcon} position={[animal.latitude, animal.longitude]}>
+                        <Popup>{animal.name}</Popup>
+                      </Marker>
+                    ))
+                  )}
               </LayerGroup>
             </LayersControl.Overlay>
           </LayersControl>
@@ -352,278 +364,285 @@ export default function Researcher() {
 
       {openActions && (
         <Flex p="16px" gap="16px" direction="column">
-          {formData.map((action) => (
-            <Flex
-              border="solid 1px #306844"
-              borderRadius="8px"
-              p="16px"
-              direction="column"
-              justify="space-between"
-              key={action.id}
-            >
-              <Text color="#306844" fontSize="3xl" align="center">
-                {action.title}
-              </Text>
-              <Text
-                fontSize="lg"
-                align="center"
-                _hover={{ cursor: "pointer", color: "#306844" }}
-                onClick={() => {
-                  if (mapRef.current)
-                    mapRef.current.flyTo([action.manager.station.latitude, action.manager.station.longitude], 18);
-                  scrollToMap();
-                }}
-              >
-                {action.manager.name + " " + action.manager.surname + ", " + action.manager.station.name}
-              </Text>
-              <Text color="gray" fontSize="sm" align="center">
-                {(action.status == 0 ? "not started" : action.status == 1 ? "in progress" : "completed") +
-                  ", " +
-                  action.start +
-                  " - " +
-                  action.end}
-              </Text>
-              {action.comment && (
-                <Text mt="8px" align="center">
-                  ○ {action.comment}
-                </Text>
-              )}
-
-              <Box position="relative" padding="10">
-                <Divider borderColor="#306844" />
-                <AbsoluteCenter bg="#F9F7ED" px="4" color="#306844">
+          {formData.length > 0 &&
+            formData.map(
+              (action) =>
+                action.id && (
                   <Flex
-                    _hover={{ cursor: "pointer" }}
-                    align="center"
-                    gap="8px"
-                    onClick={() => handleToggleAnimals(action.id)}
+                    border="solid 1px #306844"
+                    borderRadius="8px"
+                    p="16px"
+                    direction="column"
+                    justify="space-between"
+                    key={action.id}
                   >
-                    {!showAnimals[action.id] && (
-                      <>
-                        <IoIosArrowDown /> show species, individuals and habitats
-                      </>
-                    )}
+                    <Text color="#306844" fontSize="3xl" align="center">
+                      {action.title}
+                    </Text>
+                    <Text
+                      fontSize="lg"
+                      align="center"
+                      _hover={{ cursor: "pointer", color: "#306844" }}
+                      onClick={() => {
+                        if (mapRef.current)
+                          mapRef.current.flyTo([action.manager.station.latitude, action.manager.station.longitude], 18);
+                        scrollToMap();
+                      }}
+                    >
+                      {action.manager.name + " " + action.manager.surname + ", " + action.manager.station.name}
+                    </Text>
+                    <Text color="gray" fontSize="sm" align="center">
+                      {(action.status == 0 ? "not started" : action.status == 1 ? "in progress" : "completed") +
+                        ", " +
+                        action.start +
+                        " - " +
+                        action.end}
+                    </Text>
+                    {action.comments.length > 0 &&
+                      action.comments.map((comment) => (
+                        <Text mt="8px" align="center">
+                          ○ {comment}
+                        </Text>
+                      ))}
+
+                    <Box position="relative" padding="10">
+                      <Divider borderColor="#306844" />
+                      <AbsoluteCenter bg="#F9F7ED" px="4" color="#306844">
+                        <Flex
+                          _hover={{ cursor: "pointer" }}
+                          align="center"
+                          gap="8px"
+                          onClick={() => handleToggleAnimals(action.id)}
+                        >
+                          {showAnimals && !showAnimals[action.id] && (
+                            <>
+                              <IoIosArrowDown /> show species, individuals and habitats
+                            </>
+                          )}
+                          {showAnimals && showAnimals[action.id] && (
+                            <>
+                              <IoIosArrowUp />
+                              hide species, individuals and habitats
+                            </>
+                          )}
+                        </Flex>
+                      </AbsoluteCenter>
+                    </Box>
+
                     {showAnimals[action.id] && (
                       <>
-                        <IoIosArrowUp />
-                        hide species, individuals and habitats
+                        {action.species.length > 0 && (
+                          <>
+                            <Text mt="16px" color="#306844" fontSize="3xl" align="center">
+                              SPECIES
+                            </Text>
+                            <Flex p="16px" gap="16px" wrap="wrap" justify="center">
+                              {action.species.map((species, index) => (
+                                <Flex
+                                  border="solid 1px #306844"
+                                  borderRadius="8px"
+                                  p="16px"
+                                  direction="column"
+                                  justify="space-between"
+                                  key={index}
+                                >
+                                  <Flex direction="column" align="center">
+                                    <Text color="#306844" fontSize="3xl">
+                                      {species.name}
+                                    </Text>
+                                    <Avatar size="2xl" src={species.photo} alt={species.name} borderRadius="8px" />
+                                    <Text pt="8px">{species.description}</Text>
+                                  </Flex>
+                                </Flex>
+                              ))}
+                            </Flex>
+                          </>
+                        )}
+
+                        {action.individuals.length > 0 && (
+                          <>
+                            <Text mt="16px" color="#306844" fontSize="3xl" align="center">
+                              INDIVIDUALS
+                            </Text>
+                            <Flex p="16px" gap="16px" wrap="wrap" justify="center">
+                              {action.individuals.map((individual, index) => (
+                                <Flex
+                                  border="solid 1px #306844"
+                                  borderRadius="8px"
+                                  p="16px"
+                                  direction="column"
+                                  justify="space-between"
+                                  key={index}
+                                >
+                                  <Flex direction="column" align="center">
+                                    <Text
+                                      color="#306844"
+                                      fontSize="3xl"
+                                      _hover={{ cursor: "pointer" }}
+                                      onClick={() => {
+                                        if (mapRef.current)
+                                          mapRef.current.flyTo([individual.latitude, individual.longitude], 18);
+                                        scrollToMap();
+                                      }}
+                                    >
+                                      {individual.species}
+                                    </Text>
+                                    <Avatar
+                                      size="2xl"
+                                      src={individual.photo}
+                                      alt={individual.species}
+                                      borderRadius="8px"
+                                      _hover={{ cursor: "pointer" }}
+                                      onClick={() => {
+                                        if (mapRef.current)
+                                          mapRef.current.flyTo([individual.latitude, individual.longitude], 18);
+                                        scrollToMap();
+                                      }}
+                                    />
+                                    <Text pt="8px">{individual.description}</Text>
+                                  </Flex>
+                                  {individual.comments.length == 0 ? (
+                                    ""
+                                  ) : (
+                                    <Flex direction="column">
+                                      <Divider borderColor="#306844" mt="8px" mb="8px" />
+                                      <List mb="8px">
+                                        {individual.comments.map((comment, index) => (
+                                          <Text key={index}>○ {comment}</Text>
+                                        ))}
+                                      </List>
+                                    </Flex>
+                                  )}
+                                </Flex>
+                              ))}
+                            </Flex>
+                          </>
+                        )}
+
+                        {action.habitats.length > 0 && (
+                          <>
+                            <Text mt="16px" color="#306844" fontSize="3xl" align="center">
+                              HABITATS
+                            </Text>
+                            <Flex p="16px" gap="16px" wrap="wrap" justify="center">
+                              {action.habitats.map((habitat, index) => (
+                                <Flex
+                                  border="solid 1px #306844"
+                                  borderRadius="8px"
+                                  p="16px"
+                                  direction="column"
+                                  justify="space-between"
+                                  key={index}
+                                >
+                                  <Flex direction="column" align="center">
+                                    <Text
+                                      color="#306844"
+                                      fontSize="3xl"
+                                      _hover={{ cursor: "pointer" }}
+                                      onClick={() => {
+                                        if (mapRef.current)
+                                          mapRef.current.flyTo([habitat.latitude, habitat.longitude], 18);
+                                        scrollToMap();
+                                      }}
+                                    >
+                                      {habitat.name}
+                                    </Text>
+                                    <Avatar
+                                      size="2xl"
+                                      src={habitat.photo}
+                                      alt={habitat.name}
+                                      borderRadius="8px"
+                                      _hover={{ cursor: "pointer" }}
+                                      onClick={() => {
+                                        if (mapRef.current)
+                                          mapRef.current.flyTo([habitat.latitude, habitat.longitude], 18);
+                                        scrollToMap();
+                                      }}
+                                    />
+                                    <Text pt="8px">{habitat.description}</Text>
+                                  </Flex>
+                                </Flex>
+                              ))}
+                            </Flex>
+                          </>
+                        )}
                       </>
                     )}
-                  </Flex>
-                </AbsoluteCenter>
-              </Box>
 
-              {showAnimals[action.id] && (
-                <>
-                  {action.species.length > 0 && (
-                    <>
-                      <Text mt="16px" color="#306844" fontSize="3xl" align="center">
-                        SPECIES
-                      </Text>
-                      <Flex p="16px" gap="16px" wrap="wrap" justify="center">
-                        {action.species.map((species, index) => (
-                          <Flex
-                            border="solid 1px #306844"
-                            borderRadius="8px"
-                            p="16px"
-                            direction="column"
-                            justify="space-between"
-                            key={index}
-                          >
-                            <Flex direction="column" align="center">
-                              <Text color="#306844" fontSize="3xl">
-                                {species.name}
-                              </Text>
-                              <Avatar size="2xl" src={species.photo} alt={species.name} borderRadius="8px" />
-                              <Text pt="8px">{species.description}</Text>
-                            </Flex>
-                          </Flex>
-                        ))}
-                      </Flex>
-                    </>
-                  )}
+                    <Box position="relative" padding="10">
+                      <Divider borderColor="#306844" />
+                      <AbsoluteCenter bg="#F9F7ED" px="4" color="#306844">
+                        <Flex
+                          _hover={{ cursor: "pointer" }}
+                          align="center"
+                          gap="8px"
+                          onClick={() => handleToggleTracker(action.id)}
+                        >
+                          {!showTrackers[action.id] && (
+                            <>
+                              <IoIosArrowDown /> show trackers
+                            </>
+                          )}
+                          {showTrackers[action.id] && (
+                            <>
+                              <IoIosArrowUp /> hide trackers
+                            </>
+                          )}
+                        </Flex>
+                      </AbsoluteCenter>
+                    </Box>
 
-                  {action.individuals.length > 0 && (
-                    <>
-                      <Text mt="16px" color="#306844" fontSize="3xl" align="center">
-                        INDIVIDUALS
-                      </Text>
-                      <Flex p="16px" gap="16px" wrap="wrap" justify="center">
-                        {action.individuals.map((individual, index) => (
-                          <Flex
-                            border="solid 1px #306844"
-                            borderRadius="8px"
-                            p="16px"
-                            direction="column"
-                            justify="space-between"
-                            key={index}
-                          >
-                            <Flex direction="column" align="center">
-                              <Text
-                                color="#306844"
-                                fontSize="3xl"
-                                _hover={{ cursor: "pointer" }}
-                                onClick={() => {
-                                  if (mapRef.current)
-                                    mapRef.current.flyTo([individual.latitude, individual.longitude], 18);
-                                  scrollToMap();
-                                }}
-                              >
-                                {individual.species}
-                              </Text>
-                              <Avatar
-                                size="2xl"
-                                src={individual.photo}
-                                alt={individual.species}
-                                borderRadius="8px"
-                                _hover={{ cursor: "pointer" }}
-                                onClick={() => {
-                                  if (mapRef.current)
-                                    mapRef.current.flyTo([individual.latitude, individual.longitude], 18);
-                                  scrollToMap();
-                                }}
-                              />
-                              <Text pt="8px">{individual.description}</Text>
-                            </Flex>
-                            {individual.comments.length == 0 ? (
-                              ""
-                            ) : (
-                              <Flex direction="column">
-                                <Divider borderColor="#306844" mt="8px" mb="8px" />
-                                <List mb="8px">
-                                  {individual.comments.map((comment, index) => (
-                                    <Text key={index}>○ {comment}</Text>
-                                  ))}
-                                </List>
-                              </Flex>
-                            )}
-                          </Flex>
-                        ))}
-                      </Flex>
-                    </>
-                  )}
-
-                  {action.habitats.length > 0 && (
-                    <>
-                      <Text mt="16px" color="#306844" fontSize="3xl" align="center">
-                        HABITATS
-                      </Text>
-                      <Flex p="16px" gap="16px" wrap="wrap" justify="center">
-                        {action.habitats.map((habitat, index) => (
-                          <Flex
-                            border="solid 1px #306844"
-                            borderRadius="8px"
-                            p="16px"
-                            direction="column"
-                            justify="space-between"
-                            key={index}
-                          >
-                            <Flex direction="column" align="center">
-                              <Text
-                                color="#306844"
-                                fontSize="3xl"
-                                _hover={{ cursor: "pointer" }}
-                                onClick={() => {
-                                  if (mapRef.current) mapRef.current.flyTo([habitat.latitude, habitat.longitude], 18);
-                                  scrollToMap();
-                                }}
-                              >
-                                {habitat.name}
-                              </Text>
-                              <Avatar
-                                size="2xl"
-                                src={habitat.photo}
-                                alt={habitat.name}
-                                borderRadius="8px"
-                                _hover={{ cursor: "pointer" }}
-                                onClick={() => {
-                                  if (mapRef.current) mapRef.current.flyTo([habitat.latitude, habitat.longitude], 18);
-                                  scrollToMap();
-                                }}
-                              />
-                              <Text pt="8px">{habitat.description}</Text>
-                            </Flex>
-                          </Flex>
-                        ))}
-                      </Flex>
-                    </>
-                  )}
-                </>
-              )}
-
-              <Box position="relative" padding="10">
-                <Divider borderColor="#306844" />
-                <AbsoluteCenter bg="#F9F7ED" px="4" color="#306844">
-                  <Flex
-                    _hover={{ cursor: "pointer" }}
-                    align="center"
-                    gap="8px"
-                    onClick={() => handleToggleTracker(action.id)}
-                  >
-                    {!showTrackers[action.id] && (
-                      <>
-                        <IoIosArrowDown /> show trackers
-                      </>
-                    )}
                     {showTrackers[action.id] && (
                       <>
-                        <IoIosArrowUp /> hide trackers
+                        {action.trackers.map((tracker, index) => (
+                          <Box align="center" key={index} mb="32px">
+                            <Avatar size="xl" url="tracker.photo" />
+                            <Text
+                              fontSize="2xl"
+                              align="center"
+                              _hover={{ cursor: "pointer", color: "#306844" }}
+                              onClick={() => {
+                                if (mapRef.current) mapRef.current.flyTo([tracker.latitude, tracker.longitude], 18);
+                                scrollToMap();
+                              }}
+                            >
+                              {tracker.name + " " + tracker.surname}
+                            </Text>
+                            <Text color="gray" fontSize="sm" align="center">
+                              medium - {tracker.medium}
+                            </Text>
+                            {tracker.tasks.map((task, index) => (
+                              <Box key={index}>
+                                <Text color="#306844" fontSize="2xl" align="center" mt="16px">
+                                  {task.title}
+                                </Text>
+
+                                <Text color="gray" fontSize="sm" align="center">
+                                  {(task.status == 0 ? "not started" : task.status == 1 ? "in progress" : "completed") +
+                                    ", " +
+                                    task.start +
+                                    " - " +
+                                    task.end}
+                                </Text>
+                                <Text mt="8px" align="center">
+                                  {task.content}
+                                </Text>
+                                {task.comments.map((comment, index) => (
+                                  <Box key={index}>
+                                    <Text mt="8px" align="center" fontSize="sm">
+                                      ○ {comment}
+                                    </Text>
+                                  </Box>
+                                ))}
+                              </Box>
+                            ))}
+                          </Box>
+                        ))}
                       </>
                     )}
                   </Flex>
-                </AbsoluteCenter>
-              </Box>
-
-              {showTrackers[action.id] && (
-                <>
-                  {action.trackers.map((tracker, index) => (
-                    <Box align="center" key={index} mb="32px">
-                      <Avatar size="xl" url="tracker.photo" />
-                      <Text
-                        fontSize="2xl"
-                        align="center"
-                        _hover={{ cursor: "pointer", color: "#306844" }}
-                        onClick={() => {
-                          if (mapRef.current) mapRef.current.flyTo([tracker.latitude, tracker.longitude], 18);
-                          scrollToMap();
-                        }}
-                      >
-                        {tracker.name + " " + tracker.surname}
-                      </Text>
-                      <Text color="gray" fontSize="sm" align="center">
-                        medium - {tracker.medium}
-                      </Text>
-                      {tracker.tasks.map((task, index) => (
-                        <Box key={index}>
-                          <Text color="#306844" fontSize="2xl" align="center" mt="16px">
-                            {task.title}
-                          </Text>
-
-                          <Text color="gray" fontSize="sm" align="center">
-                            {(task.status == 0 ? "not started" : task.status == 1 ? "in progress" : "completed") +
-                              ", " +
-                              task.start +
-                              " - " +
-                              task.end}
-                          </Text>
-                          <Text mt="8px" align="center">
-                            {task.content}
-                          </Text>
-                          {task.comments.map((comment, index) => (
-                            <Box key={index}>
-                              <Text mt="8px" align="center" fontSize="sm">
-                                ○ {comment}
-                              </Text>
-                            </Box>
-                          ))}
-                        </Box>
-                      ))}
-                    </Box>
-                  ))}
-                </>
-              )}
-            </Flex>
-          ))}
+                )
+            )}
         </Flex>
       )}
     </>

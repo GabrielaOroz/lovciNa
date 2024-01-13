@@ -49,9 +49,9 @@ export default function NewActions() {
           existingSpecies: selectedSpeciesMap[actionId],
           existingIndividuals: selectedIndividualsMap[actionId],
           existingHabitats: selectedHabitatsMap[actionId],
-        }
+        };
       }
-    })
+    });
 
     console.log(postData);
 
@@ -150,29 +150,50 @@ export default function NewActions() {
 
   /* CHANGING FORM DATA */
   const handleFormChange = (actionId, field, value) => {
-    setFormData((prevFormData) => {
-      return prevFormData.map((ac) => {
-        if (ac.action.id == actionId) {
-          return {
-            ...ac,
-            action: {
-              ...ac.action,
-              [field]: value,
-            },
-          };
-        }
-        return ac;
+    if (field == "comments") {
+      setFormData((prevFormData) => {
+        return prevFormData.map((ac) => {
+          if (ac.action.id == actionId) {
+            return {
+              ...ac,
+              action: {
+                ...ac.action,
+                comments: [value],
+              },
+            };
+          }
+          return ac;
+        });
       });
-    });
+    } else {
+      setFormData((prevFormData) => {
+        return prevFormData.map((ac) => {
+          if (ac.action.id == actionId) {
+            return {
+              ...ac,
+              action: {
+                ...ac.action,
+                [field]: value,
+              },
+            };
+          }
+          return ac;
+        });
+      });
+    }
   };
 
   /* CHOOSING SPECIES/INDIVIDUALS/HABITATS AND THEIR DATA*/
-  const [itemType, setItemType] = useState(() =>
-    formData.reduce((obj, action) => {
-      obj[action.action.id] = "species"; //every action gets species as a default
-      return obj;
-    }, {})
-  );
+  const [itemType, setItemType] = useState(() => {
+    if (formData.length > 0) {
+      return formData.reduce((obj, action) => {
+        obj[action.action.id] = "species"; //every action gets species as a default
+        return obj;
+      }, {});
+    } else {
+      return {};
+    }
+  });
 
   const handleItemTypeChange = (actionId, value) => {
     setItemType((prevItemTypes) => ({
@@ -471,7 +492,7 @@ export default function NewActions() {
             <Header />
           </Flex>
           <Flex align="center" mt="64px" mb="64px" gap="32px" direction="column">
-            {formData &&
+            {formData.length > 0 &&
               formData.map((action) => (
                 <Flex
                   w="800px"
@@ -502,8 +523,8 @@ export default function NewActions() {
                     COMMENT
                   </Text>
                   <Input
-                    id="comment"
-                    value={action.action.comment}
+                    id="comments"
+                    value={action.action.comments}
                     onChange={(e) => handleFormChange(action.action.id, e.target.id, e.target.value)}
                   />
 
@@ -599,16 +620,21 @@ export default function NewActions() {
                           </Flex>
                         </Box>
                       ))}
-                      <Text fontSize="lg" color="#306844" align="center" mt="16px">
-                        <strong>Add existing species</strong>
-                      </Text>
-                      <Multiselect
-                        options={existingSpecies}
-                        displayValue="name"
-                        selectedValues={selectedSpeciesMap[action.action.id]}
-                        onSelect={(selectedOptions) => handleSpecies(action.action.id, selectedOptions)}
-                        onRemove={(selectedOptions) => handleSpecies(action.action.id, selectedOptions)}
-                      />
+                      {existingSpecies.length > 0 && (
+                        <>
+                          <Text fontSize="lg" color="#306844" align="center" mt="16px">
+                            <strong>Add existing species</strong>
+                          </Text>
+
+                          <Multiselect
+                            options={existingSpecies}
+                            displayValue="name"
+                            selectedValues={selectedSpeciesMap[action.action.id]}
+                            onSelect={(selectedOptions) => handleSpecies(action.action.id, selectedOptions)}
+                            onRemove={(selectedOptions) => handleSpecies(action.action.id, selectedOptions)}
+                          />
+                        </>
+                      )}
                       <Flex justify="center">
                         <YellowButton w="200px" mt="16px" onClick={() => add(action.action.id, "species")}>
                           Create new species
@@ -729,16 +755,21 @@ export default function NewActions() {
                           </Flex>
                         </Box>
                       ))}
-                      <Text fontSize="lg" color="#306844" align="center" mt="16px">
-                        <strong>Add existing individual</strong>
-                      </Text>
-                      <Multiselect
-                        options={existingIndividuals}
-                        displayValue="name"
-                        selectedValues={selectedIndividualsMap[action.action.id]}
-                        onSelect={(selectedOptions) => handleIndividuals(action.action.id, selectedOptions)}
-                        onRemove={(selectedOptions) => handleIndividuals(action.action.id, selectedOptions)}
-                      />
+                      {existingIndividuals.length > 0 && (
+                        <>
+                          <Text fontSize="lg" color="#306844" align="center" mt="16px">
+                            <strong>Add existing individual</strong>
+                          </Text>
+
+                          <Multiselect
+                            options={existingIndividuals}
+                            displayValue="name"
+                            selectedValues={selectedIndividualsMap[action.action.id]}
+                            onSelect={(selectedOptions) => handleIndividuals(action.action.id, selectedOptions)}
+                            onRemove={(selectedOptions) => handleIndividuals(action.action.id, selectedOptions)}
+                          />
+                        </>
+                      )}
                       <Flex justify="center">
                         <YellowButton mt="16px" onClick={() => add(action.action.id, "individuals")}>
                           Create new individual
@@ -818,16 +849,21 @@ export default function NewActions() {
                           </Flex>
                         </Box>
                       ))}
-                      <Text fontSize="lg" color="#306844" align="center" mt="16px">
-                        <strong>Add existing habitat</strong>
-                      </Text>
-                      <Multiselect
-                        options={existingHabitats}
-                        displayValue="name"
-                        selectedValues={selectedHabitatsMap[action.action.id]}
-                        onSelect={(selectedOptions) => handleHabitats(action.action.id, selectedOptions)}
-                        onRemove={(selectedOptions) => handleHabitats(action.action.id, selectedOptions)}
-                      />
+                      {existingHabitats.length > 0 && (
+                        <>
+                          <Text fontSize="lg" color="#306844" align="center" mt="16px">
+                            <strong>Add existing habitat</strong>
+                          </Text>
+
+                          <Multiselect
+                            options={existingHabitats}
+                            displayValue="name"
+                            selectedValues={selectedHabitatsMap[action.action.id]}
+                            onSelect={(selectedOptions) => handleHabitats(action.action.id, selectedOptions)}
+                            onRemove={(selectedOptions) => handleHabitats(action.action.id, selectedOptions)}
+                          />
+                        </>
+                      )}
                       <Flex justify="center">
                         <YellowButton mt="16px" onClick={() => add(action.action.id, "habitats")}>
                           Create new habitat
