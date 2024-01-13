@@ -88,11 +88,11 @@ export default function Manager() {
   }
 
   useEffect(() => {
-    /*
-    fetchExistingStationData();
-    fetchTrackers();
-    fetchAbilities(); //pitnanje hoce li trebat
-    */
+    
+    //fetchExistingStationData();
+    //fetchTrackers();
+    //fetchAbilities(); //pitnanje hoce li trebat
+    
   }, [])
 
   const handleMapClick = (e) => {
@@ -140,6 +140,7 @@ export default function Manager() {
   })
   .catch((error) => {
     console.error("Error saving station:", error);
+    
   });
     
   
@@ -225,11 +226,13 @@ export default function Manager() {
     const trackersWithoutAbilities = selectedTrackers.filter(
       (tracker) => !selectedAbilities[tracker.id] || selectedAbilities[tracker.id].length === 0
     );
-  
+    
     if (trackersWithoutAbilities.length > 0) {
-      alert(`Please select abilities for tracker(s): ${trackersWithoutAbilities.join(', ')}`);
+      const trackerNamesWithoutAbilities = trackersWithoutAbilities.map((tracker) => tracker.name);
+      alert(`Please select abilities for tracker(s): ${trackerNamesWithoutAbilities.join(', ')}`);
       return;
     }
+    
 
    fetch("http://localhost:8000/manager/saveAbilities", {
       method: "POST",

@@ -24,7 +24,7 @@ export default function CreateAction() {
 
   useEffect(() => {
     fetchCurrentUser();
-    //fetchIncomingRequests();
+    fetchIncomingRequests();
 
   }, []);
 
@@ -41,7 +41,7 @@ export default function CreateAction() {
   }
 
   const fetchIncomingRequests = () => {
-    fetch("http://localhost:8000/api/incoming-requests", {
+    fetch("http://localhost:8000/manager/incoming-requests", {
         method: "GET",
         credentials: "include",
       })
@@ -55,7 +55,7 @@ export default function CreateAction() {
         });
   }
   const fetchTrackers = () => {
-    fetch("http://localhost:8000/api/trackers", {
+    fetch("http://localhost:8000/manager/available-trackers", {
         method: "GET",
         credentials: "include",
         })
@@ -68,6 +68,11 @@ export default function CreateAction() {
             console.error("Error fetching trackers:", error);
         });
     };
+
+  const getFilteredTrackers = (ability) => {
+      return trackers.filter((tracker) => tracker.abilities.includes(ability));
+    };
+
   const hasAccess = session && session.role === "manager" && session.approved === true;
 
   const navigate = useNavigate();
@@ -77,10 +82,16 @@ export default function CreateAction() {
     navigate("/home");
   }
 
-  const handleResponseButtonClick = () => {
+  const handleResponseButtonClick = (request) => {
+      fetchTrackers();
       setModalOpen(true); 
       setSelectedRequestId(request.id);
-      fetchTrackers();
+
+      const requestAbility = request.ability;
+      const filteredTrackers = getFilteredTrackers(requestAbility);
+      setTrackers(filteredTrackers);
+
+      
     };
   
   const handleTrackerCheckboxChange = (trackerId) => {
@@ -172,7 +183,7 @@ export default function CreateAction() {
                   <td style={{ padding: "8px" }}>{request.numberOfTrackers}</td>
                   <td style={{ padding: "8px" }}>{request.ability}</td>
                   <td style={{ padding: "8px" }}>
-                    <YellowButton onClick={() => handleResponseButtonClick()}>
+                    <YellowButton onClick={() => handleResponseButtonClick(request)}>
                       Respond
                     </YellowButton>
                   </td>
