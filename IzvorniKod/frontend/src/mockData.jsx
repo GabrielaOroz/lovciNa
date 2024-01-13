@@ -27,7 +27,7 @@ const mockData = {
       start: "15.1.2023.", // biljezi se automatski kreiranjem akcije
       end: "15.2.2023", // biljezi se automatski kad se registrira da su svi tragaci zavrsili svoje zadatke
       status: 2, // 0: Not started, 1: In Progress, 2: Completed
-      comment: "Be careful.",
+      comments: ["Be careful."],
       species: [
         {
           id: 1,
@@ -85,18 +85,18 @@ const mockData = {
               end: "15.2.2023",
               status: 2, // 0: Not started, 1: In Progress, 2: Completed
               coordinatesStart: [45, 15],
-              coordinatesFinish: [45, 15],
+              coordinatesFinish: [45.2, 15.2],
               content: "Setting up cameras in designated areas.",
               comments: ["Weather conditions may affect camera placements."],
             },
             {
               id: 5,
-              title: "Camera Trap Setup",
+              title: "Camera Trap Setup 2",
               start: "15.1.2023.",
               end: "15.2.2023",
               status: 2,
               coordinatesStart: [45, 15],
-              coordinatesFinish: [45, 15],
+              coordinatesFinish: [45.1, 15.1],
               content: "Setting up cameras in designated areas.",
               comments: ["Weather conditions may affect camera placements."],
             },
@@ -116,7 +116,7 @@ const mockData = {
       start: "20.2.2023.",
       end: "",
       status: 1,
-      comment: "",
+      comments: [""],
       species: [],
       individuals: [
         {
@@ -201,7 +201,7 @@ const mockData = {
           surname: "Doe",
           station: { name: "Puntijarka", latitude: 45.8659, longitude: 15.9722 },
         },
-        comment: "",
+        comments: [""],
         species: [],
         individuals: [],
         habitats: [],
@@ -232,7 +232,7 @@ const mockData = {
           surname: "Johnson",
           station: { name: "Sljeme", latitude: 45.8634, longitude: 15.9772 },
         },
-        comment: "",
+        comments: [""],
         species: [],
         individuals: [],
         habitats: [],
@@ -442,6 +442,96 @@ const mockData = {
       },
     ],
   },
+
+  /* TRACKERS */
+  tracker: {
+    action: { title: "This is the title of the action", comments: ["yoyo"] },
+    name: "Alice",
+    surname: "Smith",
+    medium: "CAR",
+    station: { name: "Puntijarka", latitude: 45.9166667, longitude: 15.9666667 },
+  },
+  trackers: [
+    {
+      name: "Milka",
+      surname: "Smith",
+      coordinates: [45.9178, 15.9687],
+    },
+    {
+      name: "Mirko",
+      surname: "Smith",
+      coordinates: [45.9202, 15.9764],
+    },
+    {
+      name: "Marica",
+      surname: "Smith",
+      coordinates: [45.9123, 15.9601],
+    },
+  ],
+  species: [
+    {
+      id: 1,
+      name: "African Lion",
+      photo: "lion_photo_url",
+      description: "They like to eat",
+    },
+  ],
+  individuals: [
+    {
+      id: 3,
+      name: "Magpie",
+      species: "Eurasian Magpie",
+      photo: "magpie_photo_url",
+      description: "Adult male magpie",
+      latitude: 45.8639,
+      longitude: 15.9778,
+      comments: ["hi", "hi2"],
+    },
+    {
+      id: 4,
+      name: "Magpie 2",
+      species: "Eurasian Magpie",
+      photo: "magpie_photo_url",
+      description: "Adult female magpie",
+      latitude: 45.8631,
+      longitude: 15.9785,
+      comments: [],
+    },
+  ],
+  habitats: [
+    {
+      id: 1,
+      name: "Habitat of Lions",
+      photo: "photo_url",
+      description: "Some amazing stuff",
+      latitude: 45.8668,
+      longitude: 15.9732,
+    },
+  ],
+  tasks: [
+    {
+      id: 1,
+      title: "Camera Trap Setup",
+      start: "15.1.2023.",
+      end: "15.2.2023",
+      status: 0,
+      coordinatesStart: [45, 15],
+      coordinatesFinish: [45.01, 15.01],
+      content: "Setting up cameras in designated areas.",
+      comments: ["Weather conditions may affect camera placements."],
+    },
+    {
+      id: 5,
+      title: "Camera Trap Setup 2",
+      start: "15.1.2023.",
+      end: "15.2.2023",
+      status: 0,
+      coordinatesStart: [45.1, 15.1],
+      coordinatesFinish: [45.11, 15.11],
+      content: "Setting up cameras in designated areas.",
+      comments: ["Weather conditions may affect camera placements."],
+    },
+  ]
 };
 
 export default mockData;
