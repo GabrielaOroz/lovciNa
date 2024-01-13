@@ -224,15 +224,15 @@ export default function Manager() {
 
   const handleSaveAbilities = () => {
     const trackersWithoutAbilities = selectedTrackers.filter(
-      (tracker) => !selectedAbilities[tracker.id] || selectedAbilities[tracker.id].length === 0
-    );
-    
-    if (trackersWithoutAbilities.length > 0) {
-      const trackerNamesWithoutAbilities = trackersWithoutAbilities.map((tracker) => tracker.name);
-      alert(`Please select abilities for tracker(s): ${trackerNamesWithoutAbilities.join(', ')}`);
-      return;
-    }
-    
+  (tracker) => !selectedAbilities[tracker.id] || selectedAbilities[tracker.id].length === 0
+);
+
+if (trackersWithoutAbilities.length > 0) {
+  const trackerNamesWithoutAbilities = trackersWithoutAbilities.map((tracker) => tracker.name);
+  alert(`Please select abilities for tracker(s): ${trackerNamesWithoutAbilities.join(', ')}`);
+  return;
+}
+
 
    fetch("http://localhost:8000/manager/saveAbilities", {
       method: "POST",
@@ -371,14 +371,30 @@ export default function Manager() {
                   </Checkbox>
                 ))} */}
                   <Checkbox colorScheme="green" isChecked=
-                  {selectedTracker && selectedAbilities[selectedTracker.id]?.includes('byfoot')}
-                  onChange={() => handleAbilitiesCheckboxChange('byfoot')}>By foot</Checkbox>
+                  {selectedTracker && selectedAbilities[selectedTracker.id]?.includes('on_foot')}
+                  onChange={() => handleAbilitiesCheckboxChange('on_foot')}>On foot</Checkbox>
+                  <Checkbox colorScheme="green" isChecked=
+                  {selectedTracker && selectedAbilities[selectedTracker.id]?.includes('bicycle')}
+                  onChange={() => handleAbilitiesCheckboxChange('bicycle')}>Bicycle</Checkbox>
+                  <Checkbox colorScheme="green" isChecked=
+                  {selectedTracker && selectedAbilities[selectedTracker.id]?.includes('motorcycle')}
+                  onChange={() => handleAbilitiesCheckboxChange('motorcycle')}>Motorcycle</Checkbox>
                   <Checkbox colorScheme="green" isChecked=
                   {selectedTracker && selectedAbilities[selectedTracker.id]?.includes('car')}
                   onChange={() => handleAbilitiesCheckboxChange('car')}>Car</Checkbox>
                   <Checkbox colorScheme="green" isChecked=
+                  {selectedTracker && selectedAbilities[selectedTracker.id]?.includes('boat')}
+                  onChange={() => handleAbilitiesCheckboxChange('boat')}>Boat</Checkbox>
+                  <Checkbox colorScheme="green" isChecked=
+                  {selectedTracker && selectedAbilities[selectedTracker.id]?.includes('drone')}
+                  onChange={() => handleAbilitiesCheckboxChange('drone')}>Drone</Checkbox>
+                  <Checkbox colorScheme="green" isChecked=
+                  {selectedTracker && selectedAbilities[selectedTracker.id]?.includes('helicopter')} 
+                  onChange={() => handleAbilitiesCheckboxChange('helicopter')}>Helicopter</Checkbox>
+                  <Checkbox colorScheme="green" isChecked=
                   {selectedTracker && selectedAbilities[selectedTracker.id]?.includes('airplane')} 
                   onChange={() => handleAbilitiesCheckboxChange('airplane')}>Airplane</Checkbox>
+                  
                 </Stack>
               )}
             </ModalBody>
