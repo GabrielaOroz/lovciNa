@@ -53,7 +53,7 @@ export default function NewActions() {
       }
     });
 
-    console.log(postData);
+    //console.log(postData);
 
     fetch("http://localhost:8000/researcher/finished-action", {
       method: "PUT",
@@ -71,7 +71,6 @@ export default function NewActions() {
 
   /* DATA */
   const [formData, setFormData] = useState(mockData.mockNewActions);
-  //console.log(formData);
   useEffect(() => {
     fetch("http://localhost:8000/researcher/unfinished-actions", {
       method: "GET",
@@ -79,7 +78,7 @@ export default function NewActions() {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        console.log("Unfinished-actions: ", data);
         setFormData(data);
       });
   }, []);
@@ -94,7 +93,7 @@ export default function NewActions() {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        console.log("Existing species: ", data);
         setExistingSpecies(data);
       });
   }, []);
@@ -105,7 +104,7 @@ export default function NewActions() {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        console.log("Existing individuals: ", data);
         setExistingIndividuals(data);
       });
   }, []);
@@ -116,7 +115,7 @@ export default function NewActions() {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        console.log("Existing habitats: ", data);
         setExistingHabitats(data);
       });
   }, []);

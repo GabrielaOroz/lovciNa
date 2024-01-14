@@ -29,27 +29,26 @@ export default function Researcher() {
   const [coords, setCoords] = useState(mockData.mockCoords);
 
   /* GET DATA */
-  console.log(formData);
   useEffect(() => {
-    fetch("http://localhost:5173/researcher/actions", {
+    fetch("http://localhost:8000/researcher/actions", {
       method: "GET",
       credentials: "include",
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log("response data: ", data);
+        console.log("Actions: ", data);
         setFormData(data);
       });
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost:5173/researcher/coords", {
+    fetch("http://localhost:8000/researcher/coords", {
       method: "GET",
       credentials: "include",
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        console.log("Coords: ", data);
         setCoords(data);
       });
   }, []);
