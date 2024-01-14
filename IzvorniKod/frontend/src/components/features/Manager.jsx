@@ -30,8 +30,8 @@ export default function Manager() {
   const [selectedAll, setSelectedAll] = useState(false);
 
   //slobodni trackeri
-  //const [availableTrackers, setAvailableTrackers] = useState(podaci);
-  const [availableTrackers, setAvailableTrackers] = useState();
+  const [availableTrackers, setAvailableTrackers] = useState(podaci);
+  //const [availableTrackers, setAvailableTrackers] = useState();
 
   
 
@@ -55,20 +55,31 @@ export default function Manager() {
         "Content-Type": "application/json",
       },
     })
-      .then((res) => res.json())
+      .then((res) => {
+        if (res.status === 404) {
+          //nije pronasao
+          console.log("Station not found.");
+          return null; 
+        }
+        return res.json();
+      })
       .then((data) => {
-        //ako postoji
+        // postavi
         if (data) {
-          const existingStation = data; 
-          setSelectedStation(true)
+          const existingStation = data;
+          setSelectedStation(true);
           setMarkerName(existingStation.name);
-          setMarkerPosition([existingStation.lat, existingStation.lng]);
+          const lat = existingStation.latitude;
+          const lng = existingStation.longitude;
+          setMarkerPosition({ lat, lng });
+
         }
       })
       .catch((error) => {
         console.error("Error fetching existing station data:", error);
       });
   };
+  
 
 
   const fetchTrackers = () => {
@@ -96,7 +107,6 @@ export default function Manager() {
   useEffect(() => {
     fetchExistingStationData();
     fetchTrackers();
-    
   }, [])
 
   const handleMapClick = (e) => {
