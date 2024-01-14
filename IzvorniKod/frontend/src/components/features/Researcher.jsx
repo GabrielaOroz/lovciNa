@@ -50,7 +50,7 @@ export default function Researcher() {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        //setCoords(data);
+        setCoords(data);
       });
   }, []);
 

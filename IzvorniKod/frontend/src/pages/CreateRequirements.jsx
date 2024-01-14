@@ -15,7 +15,7 @@ export default function CreateAction() {
     })
       .then((res) => res.json())
       .then((data) => {
-        //console.log(data);
+        console.log(data);
         setSession(data);
       });
   }, []);
@@ -33,7 +33,7 @@ export default function CreateAction() {
   const [error, setError] = useState();
 
   /* GET DATA */
-  //console.log(managers);
+  console.log(managers);
   useEffect(() => {
     fetch("http://localhost:8000/researcher/managers", {
       method: "GET",
@@ -42,7 +42,7 @@ export default function CreateAction() {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        //setManagers(data);
+        setManagers(data);
       });
   }, []);
 
