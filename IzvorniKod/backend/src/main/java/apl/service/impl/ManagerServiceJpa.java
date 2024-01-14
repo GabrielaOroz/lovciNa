@@ -35,6 +35,7 @@ public class ManagerServiceJpa implements ManagerService {
     @Autowired
     private ActionRepository actionRepo;
 
+    @Transactional
     @Override
     public DtoStation getExistingStation(Long userId) {
         Station station = stationRepo.findByManagerId(userId);
@@ -44,6 +45,7 @@ public class ManagerServiceJpa implements ManagerService {
         return null;
     }
 
+    @Transactional
     @Override
     public List<DtoTracker> getAvailableTrackers() {
 
@@ -57,6 +59,7 @@ public class ManagerServiceJpa implements ManagerService {
         return availableTrackers1;
     }
 
+    @Transactional
     @Override
     public Station addNewStation(Long managerId, Station station) {
         Manager manager = managerRepo.findById(managerId).orElse(null);
@@ -70,6 +73,7 @@ public class ManagerServiceJpa implements ManagerService {
         return station;
     }
 
+    @Transactional
     @Override
     public List<DtoAction> getIncomingRequests(Long managerId) {
 
@@ -84,6 +88,7 @@ public class ManagerServiceJpa implements ManagerService {
         return actions;
     }
 
+    @Transactional
     @Override
     public List<DtoTracker> getAvailableTrackersForManager(Long managerId) {
         Manager manager = managerRepo.findById(managerId).orElse(null);
@@ -124,23 +129,39 @@ public class ManagerServiceJpa implements ManagerService {
 
         action.setTrackerActionMedia(trackersInAction);
 
+        try{
+            actionRepo.save(action);
+        } catch (Exception e){
+            return null;
+        }
+
+        try{
+            requestRepo.save(request);
+        } catch (Exception e){
+            return null;
+        }
+
         return action;
     }
 
+   @Transactional
     @Override
     public Station saveTrackerQualification(Long usrId, Map<Long, List<Medium>> map) {
         Station station = stationRepo.findByManagerId(usrId);
 
-        List<Tracker> trackers = new LinkedList<>();
-
         for (Long trackerId : map.keySet()){
             Tracker tracker = trackerRepo.findById(trackerId).orElse(null);
-            tracker.setQualification(map.get(trackerId));
-            tracker.setStation(station);
-            trackers.add(tracker);
+            tracker.addMultipleMedia(map.get(trackerId));
+            tracker.assignStation(station);
+            tracker.setLongitude(station.getLongitude());
+            tracker.setLatitude(station.getLatitude());
+            try{
+                trackerRepo.save(tracker);
+            } catch (Exception e){
+                return null;
+            }
         }
 
-        station.setTrackers(trackers);
 
         return station;
     }

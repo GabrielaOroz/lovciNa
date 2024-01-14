@@ -381,29 +381,29 @@ if (trackersWithoutAbilities.length > 0) {
                   </Checkbox>
                 ))} */}
                   <Checkbox colorScheme="green" isChecked=
-                  {selectedTracker && selectedAbilities[selectedTracker.id]?.includes('on_foot')}
-                  onChange={() => handleAbilitiesCheckboxChange('on_foot')}>On foot</Checkbox>
+                  {selectedTracker && selectedAbilities[selectedTracker.id]?.includes('ON_FOOT')}
+                  onChange={() => handleAbilitiesCheckboxChange('ON_FOOT')}>On foot</Checkbox>
                   <Checkbox colorScheme="green" isChecked=
-                  {selectedTracker && selectedAbilities[selectedTracker.id]?.includes('bicycle')}
-                  onChange={() => handleAbilitiesCheckboxChange('bicycle')}>Bicycle</Checkbox>
+                  {selectedTracker && selectedAbilities[selectedTracker.id]?.includes('BICYCLE')}
+                  onChange={() => handleAbilitiesCheckboxChange('BICYCLE')}>Bicycle</Checkbox>
                   <Checkbox colorScheme="green" isChecked=
-                  {selectedTracker && selectedAbilities[selectedTracker.id]?.includes('motorcycle')}
-                  onChange={() => handleAbilitiesCheckboxChange('motorcycle')}>Motorcycle</Checkbox>
+                  {selectedTracker && selectedAbilities[selectedTracker.id]?.includes('MOTORCYCLE')}
+                  onChange={() => handleAbilitiesCheckboxChange('MOTORCYCLE')}>Motorcycle</Checkbox>
                   <Checkbox colorScheme="green" isChecked=
-                  {selectedTracker && selectedAbilities[selectedTracker.id]?.includes('car')}
-                  onChange={() => handleAbilitiesCheckboxChange('car')}>Car</Checkbox>
+                  {selectedTracker && selectedAbilities[selectedTracker.id]?.includes('CAR')}
+                  onChange={() => handleAbilitiesCheckboxChange('CAR')}>Car</Checkbox>
                   <Checkbox colorScheme="green" isChecked=
-                  {selectedTracker && selectedAbilities[selectedTracker.id]?.includes('boat')}
-                  onChange={() => handleAbilitiesCheckboxChange('boat')}>Boat</Checkbox>
+                  {selectedTracker && selectedAbilities[selectedTracker.id]?.includes('BOAT')}
+                  onChange={() => handleAbilitiesCheckboxChange('BOAT')}>Boat</Checkbox>
                   <Checkbox colorScheme="green" isChecked=
-                  {selectedTracker && selectedAbilities[selectedTracker.id]?.includes('drone')}
-                  onChange={() => handleAbilitiesCheckboxChange('drone')}>Drone</Checkbox>
+                  {selectedTracker && selectedAbilities[selectedTracker.id]?.includes('DRONE')}
+                  onChange={() => handleAbilitiesCheckboxChange('DRONE')}>Drone</Checkbox>
                   <Checkbox colorScheme="green" isChecked=
-                  {selectedTracker && selectedAbilities[selectedTracker.id]?.includes('helicopter')} 
-                  onChange={() => handleAbilitiesCheckboxChange('helicopter')}>Helicopter</Checkbox>
+                  {selectedTracker && selectedAbilities[selectedTracker.id]?.includes('HELICOPTER')} 
+                  onChange={() => handleAbilitiesCheckboxChange('HELICOPTER')}>Helicopter</Checkbox>
                   <Checkbox colorScheme="green" isChecked=
-                  {selectedTracker && selectedAbilities[selectedTracker.id]?.includes('airplane')} 
-                  onChange={() => handleAbilitiesCheckboxChange('airplane')}>Airplane</Checkbox>
+                  {selectedTracker && selectedAbilities[selectedTracker.id]?.includes('AIRPLANE')} 
+                  onChange={() => handleAbilitiesCheckboxChange('AIRPLANE')}>Airplane</Checkbox>
                   
                 </Stack>
               )}

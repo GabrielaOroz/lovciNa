@@ -4,19 +4,15 @@ import apl.converters.ConvertibleToDTO;
 import apl.converters.MyConverter;
 import apl.dao.*;
 import apl.domain.*;
-import apl.dto.DtoAnimal;
-import apl.dto.DtoHabitat;
-import apl.dto.DtoSpecies;
-import apl.dto.DtoTracker;
+import apl.dto.*;
 import apl.enums.ActionStatus;
+import apl.enums.TaskStatus;
 import apl.service.TrackerService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Scanner;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Service
 public class TrackerServiceJpa implements TrackerService {
@@ -35,6 +31,12 @@ public class TrackerServiceJpa implements TrackerService {
 
     @Autowired
     private HabitatRepository habitatRepo;
+
+    @Autowired
+    private TaskRepository taskRepo;
+
+    @Autowired
+    private ActionRepository actionRepo;
 
 
     @Override
@@ -106,6 +108,88 @@ public class TrackerServiceJpa implements TrackerService {
             habitatsList.add(dtoHabitat);
         }
         return habitatsList;
+    }
+
+    @Override
+    public List<DtoTask> getAllTasks(Long id) {
+        List<DtoTask> tasksList = new LinkedList<>();
+
+        List<Task> tasks = taskRepo.findByTrackerId(id);
+
+        for (Task task : tasks) {
+            tasksList.add(task.toDTO());
+        }
+        return tasksList;
+    }
+
+    @Override
+    public DtoAction updateAllDoneTasks(Map<Long, Long> lista, Long usrId) {
+        Action action = trackerActionMediumRepo.findTopByTrackerIdAndActionStatus(usrId, ActionStatus.ACTIVE).orElse(null).getAction();
+
+        List<Task> allTasksOfTracker = taskRepo.findByActionIdAndTrackerId(action.getId(), usrId);
+
+        for(Task task : allTasksOfTracker){
+            if(lista.containsKey(task.getId())){
+                if(lista.get(task.getId()) == 2){
+                    task.setStatus(TaskStatus.SOLVED);
+                    task.setEndOfTask(LocalDateTime.now());
+                    try{
+                        taskRepo.save(task);
+                    } catch (Exception e){
+                        return null;
+                    }
+                }
+            }
+        }
+
+        boolean temp = false;
+        for(Task task : action.getTasks()){
+            if(task.getStatus().equals(TaskStatus.ACTIVE)){
+                temp = true;
+            }
+        }
+
+        if(!temp){
+            action.setStatus(ActionStatus.FINISHED);
+            action.setEndOfAction(LocalDateTime.now());
+            try{
+                actionRepo.save(action);
+            } catch (Exception e){
+                return null;
+            }
+        }
+
+        return action.toDTO();
+    }
+
+    @Override
+    public List<DtoAnimal> updateNewComments(Map<Long, List<AnimalComment>> comments, Long usrId) {
+        List<Animal> animalsOnAction = animalRepo.findByActionsId(trackerActionMediumRepo.findTopByTrackerIdAndActionStatus(usrId, ActionStatus.ACTIVE).orElse(null).getAction().getId());
+
+        for(Long id : comments.keySet()){
+            Animal animal = animalRepo.findById(id).orElse(null);
+            animal.addMultipleComments(comments.get(id));
+            try{
+                animalRepo.save(animal);
+            } catch (Exception e){
+                return null;
+            }
+        }
+        return MyConverter.convertToDTOList(animalsOnAction);
+    }
+
+    @Override
+    public DtoAction updateNewCommentsOnAction(List<ActionComment> comments, Long usrId) {
+        Action action = trackerActionMediumRepo.findTopByTrackerIdAndActionStatus(usrId, ActionStatus.ACTIVE).orElse(null).getAction();
+
+        action.addMultipleActionComments(comments);
+        try{
+            actionRepo.save(action);
+        } catch (Exception e){
+            return null;
+        }
+
+        return action.toDTO();
     }
 
 

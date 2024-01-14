@@ -4,11 +4,10 @@ import apl.dao.ManagerRepository;
 import apl.dao.ResearcherRepository;
 import apl.dao.TrackerRepository;
 import apl.dao.UserRepository;
+import apl.domain.ActionComment;
+import apl.domain.AnimalComment;
 import apl.domain.Tracker;
-import apl.dto.DtoAnimal;
-import apl.dto.DtoHabitat;
-import apl.dto.DtoSpecies;
-import apl.dto.DtoTracker;
+import apl.dto.*;
 import apl.service.impl.TrackerServiceJpa;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 
 @CrossOrigin(
@@ -111,6 +111,54 @@ public class TrackerController {
 
         if (trackerService.getAllHabitats(usrId) != null) {
             return ResponseEntity.ok(trackerService.getAllHabitats(usrId));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @GetMapping("/tasks")
+    public ResponseEntity<List<DtoTask>> allTasks(HttpSession session) {
+        Long usrId = authorize(session.getAttribute("id"));
+        if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+
+        if (trackerService.getAllTasks(usrId) != null) {
+            return ResponseEntity.ok(trackerService.getAllTasks(usrId));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @PutMapping("/doneTasks")
+    public ResponseEntity<DtoAction> allDoneTasks(@RequestBody Map<Long, Long> lista , HttpSession session) {
+        Long usrId = authorize(session.getAttribute("id"));
+        if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+
+        if (trackerService.updateAllDoneTasks(lista, usrId) != null) {
+            return ResponseEntity.ok(trackerService.updateAllDoneTasks(lista, usrId));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @PutMapping("/newComments")
+    public ResponseEntity<List<DtoAnimal>> addNewComments(@RequestBody Map<Long, List<AnimalComment>> comments , HttpSession session) {
+        Long usrId = authorize(session.getAttribute("id"));
+        if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+
+        if (trackerService.updateNewComments(comments, usrId) != null) {
+            return ResponseEntity.ok(trackerService.updateNewComments(comments, usrId));
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+    @PutMapping("/actionComments")
+    public ResponseEntity<DtoAction> addNewCommentsOnAction(@RequestBody List<ActionComment> comments , HttpSession session) {
+        Long usrId = authorize(session.getAttribute("id"));
+        if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+
+        if (trackerService.updateNewCommentsOnAction(comments, usrId) != null) {
+            return ResponseEntity.ok(trackerService.updateNewCommentsOnAction(comments, usrId));
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
