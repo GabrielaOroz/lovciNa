@@ -50,6 +50,7 @@ export default function Manager() {
   const fetchExistingStationData = () => {
     fetch("http://localhost:8000/manager/station", {
       method: "GET",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
@@ -72,6 +73,7 @@ export default function Manager() {
 
   const fetchTrackers = () => {
     return fetch("http://localhost:8000/manager/trackers", {
+      credentials: "include",
       headers : {
         "Content-Type": "application/json",
       }
@@ -82,6 +84,7 @@ export default function Manager() {
 
   const fetchAbilities = () => {
     return fetch("http://localhost:8000/abilities", {
+      credentials: "include",
       headers : {
         "Content-Type": "application/json",
       }
@@ -119,6 +122,7 @@ export default function Manager() {
 
     fetch("http://localhost:8000/manager/selected-station", {
     method: "POST",
+    credentials: "include",
     headers: {
       "Content-Type": "application/json",
     },
@@ -231,6 +235,7 @@ if (trackersWithoutAbilities.length > 0) {
 
    fetch("http://localhost:8000/manager/saveAbilities", {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },

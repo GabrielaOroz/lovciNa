@@ -143,6 +143,7 @@ export default function CreateAction() {
       // slanje na back
       fetch("http://localhost:8000/api/submit-action", {
       method: "POST",
+      credentials: "include",
       headers: {
         "Content-Type": "application/json",
       },
