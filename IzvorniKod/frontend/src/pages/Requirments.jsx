@@ -14,11 +14,13 @@ import { useNavigate } from "react-router-dom";
 
 export default function CreateAction() {
   const [session, setSession] = useState(null);
-  const [incomingRequests, setIncomingRequests] = useState(podaci); // kasnije []
+  //const [incomingRequests, setIncomingRequests] = useState(podaci); // kasnije []
+  const [incomingRequests, setIncomingRequests] = useState(); 
   const [isModalOpen, setModalOpen] = useState(false);
-  const [trackers, setTrackers] = useState(trackersData); //kasnije prazno
+  //const [trackers, setTrackers] = useState(trackersData); //kasnije prazno
+  const [trackers, setTrackers] = useState(); //kasnije prazno
   const [selectedRequestId, setSelectedRequestId] = useState(null); //trenutni odabrani
-  const [selectedTrackers, setSelectedTrackers] = useState([]); //šaljem trackera i ability
+  const [selectedTrackers, setSelectedTrackers] = useState({}); //šaljem trackera i ability
 
   const [selectedRequestAbilities, setSelectedRequestAbilities] = useState({}); //car : 5
 
@@ -26,10 +28,9 @@ export default function CreateAction() {
   const [currentTab, setCurrentTab] = useState(0);
 
 
-
   useEffect(() => {
     fetchCurrentUser();
-    //fetchIncomingRequests();
+    fetchIncomingRequests();
 
   }, []);
 
@@ -40,7 +41,7 @@ export default function CreateAction() {
       })
         .then((res) => res.json())
         .then((data) => {
-          console.log(data);
+          //console.log(data);
           setSession(data);
         });
   }
@@ -66,7 +67,7 @@ export default function CreateAction() {
         })
         .then((res) => res.json())
         .then((data) => {
-            console.log(data);
+            //console.log(data);
             setTrackers(data);
         })
         .catch((error) => {
@@ -74,10 +75,13 @@ export default function CreateAction() {
         });
     };
 
-    const getFilteredTrackers = (ability) => {
+  const getFilteredTrackers = (ability) => {
      return trackers.filter((tracker) => tracker.abilities.includes(ability));
-    };
+  };
+  
 
+  
+  
   const hasAccess = session && session.role === "manager" && session.approved === true;
 
   const navigate = useNavigate();
@@ -88,13 +92,10 @@ export default function CreateAction() {
   }
 
   const handleResponseButtonClick = (request) => {
-      //fetchTrackers();
+      //fetchTrackers(); //dohvacam slobodne trackere tj one koji nisu niti na jednoj akciji
       setModalOpen(true); 
       setSelectedRequestId(request.id);
 
-
-      //const filteredTrackers = getFilteredTrackers(requestAbility);
-      //setTrackers(filteredTrackers);
       setSelectedRequestAbilities(request.requirments);
       
     };
@@ -108,23 +109,22 @@ export default function CreateAction() {
     }
   
     const ability = Object.keys(selectedRequestAbilities)[currentTab]; // Dobavi ability prema trenutnom tabu
-    const updatedTrackers = selectedTrackers.some((tracker) => tracker.id === selectedTracker.id)
-      ? selectedTrackers.filter((tracker) => tracker.id !== selectedTracker.id)
-      : [
-          ...selectedTrackers,
-          { id: selectedTracker.id, ability: ability },
-        ];
-  
+    const updatedTrackers = { ...selectedTrackers };
+
+    if (updatedTrackers[trackerId]) {
+      delete updatedTrackers[trackerId];
+    } else {
+      updatedTrackers[trackerId] = ability;
+    }
     setSelectedTrackers(updatedTrackers);
-    console.log(selectedTrackers);
-    //const updatedTrackers = selectedTrackers.includes(trackerId)
-      //? selectedTrackers.filter((selectedId) => selectedId !== trackerId)
-      //: [...selectedTrackers, trackerId];
-    //setSelectedTrackers(updatedTrackers);
-  };
+  }; 
+  
 
   const handleDoneButtonClick = () => {
+
+
     console.log(selectedTrackers);
+    {/*}
     const requestedTrackersCount =
       incomingRequests.find((request) => request.id === selectedRequestId)
         ?.numberOfTrackers || 0;
@@ -136,15 +136,9 @@ export default function CreateAction() {
       // Ako je odabrano više tragača od traženog broja
       alert(`Please select exactly ${requestedTrackersCount} trackers!`);
     } else {
+    */}
       // Ako je odabrano točno traženi broj tragača
       // Šaljemo na backend listu tragača s njihovim id-ijem i imenom
-      const selectedTrackersData = selectedTrackers.map((trackerId) => {
-        const selectedTracker = trackers.find((tracker) => tracker.id === trackerId);
-        return {
-          id: selectedTracker.id,
-          name: selectedTracker.name,
-        };
-      });
   
       // slanje na back
       fetch("http://localhost:8000/api/submit-action", {
@@ -154,7 +148,7 @@ export default function CreateAction() {
       },
       body: JSON.stringify({
         requestId: selectedRequestId,
-        selectedTrackers: selectedTrackersData,
+        selectedTrackers: selectedTrackers,
       }),
     })
       .then((response) => response.json())
@@ -170,14 +164,9 @@ export default function CreateAction() {
       prevRequests.filter((request) => request.id !== selectedRequestId)
     );
     
-  
-      // Uklanjamo zahtjev iz stanja incomingRequests
-      setIncomingRequests((prevRequests) =>
-        prevRequests.filter((request) => request.id !== selectedRequestId)
-      );
-      setSelectedTrackers([]);
+      setSelectedTrackers({});
       setModalOpen(false);
-    }
+    
   };
 
   return (
@@ -308,9 +297,6 @@ export default function CreateAction() {
                 </Tab>
               ))}
             </TabList>
-
-
-
               <TabPanels>
                 {Object.keys(selectedRequestAbilities).map((ability) => (
                   <TabPanel key={ability}>
@@ -327,13 +313,13 @@ export default function CreateAction() {
                           alignItems: "center", // Dodano kako bi se checkboxevi poravnavali s tekstu
                         }}
                       >
-                        <Checkbox
-                          isChecked={selectedTrackers.some((t) => t.id === tracker.id)}
-                          onChange={() => handleTrackerCheckboxChange(tracker.id)}
-                          colorScheme=""
-                        >
-                          {tracker.name}
-                        </Checkbox>
+                      <Checkbox
+                        isChecked={selectedTrackers[tracker.id]}
+                        onChange={() => handleTrackerCheckboxChange(tracker.id)}
+                        colorScheme=""
+                      >
+                        {tracker.name}
+                      </Checkbox>
                       </Text>
                     ))}
                     </Box>

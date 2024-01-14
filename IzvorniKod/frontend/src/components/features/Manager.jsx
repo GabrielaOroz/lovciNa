@@ -30,7 +30,10 @@ export default function Manager() {
   const [selectedAll, setSelectedAll] = useState(false);
 
   //slobodni trackeri
-  const [availableTrackers, setAvailableTrackers] = useState(podaci);
+  //const [availableTrackers, setAvailableTrackers] = useState(podaci);
+  const [availableTrackers, setAvailableTrackers] = useState();
+
+  
 
   //selectana postaja 
   const [markerPosition, setMarkerPosition] = useState(null);
@@ -88,10 +91,8 @@ export default function Manager() {
   }
 
   useEffect(() => {
-    
-    //fetchExistingStationData();
-    //fetchTrackers();
-    //fetchAbilities(); //pitnanje hoce li trebat
+    fetchExistingStationData();
+    fetchTrackers();
     
   }, [])
 
@@ -103,13 +104,6 @@ export default function Manager() {
       setMarkerName("")
       console.log(`Latitude: ${lat}, Longitude: ${lng}`);
   
-      //sve na novo - NEPOTREBNO AKO SAMO JEDNOM SMIJE BIRAT LOKACIJU
-      /*
-      setSelectedTracker(null);
-      setSelectedAbilities([]);
-      setSelectedTrackers([]);
-      */
-
     }
   };
 
@@ -121,6 +115,7 @@ export default function Manager() {
     
 
     // šaljemo na back naziv postaje, lat i lon
+    console.log(markerName, markerPosition);
 
     fetch("http://localhost:8000/manager/selected-station", {
     method: "POST",
