@@ -79,8 +79,8 @@ export default function NewActions() {
     })
       .then((res) => res.json())
       .then((data) => {
-        //console.log(data);
-        //setFormData(data);
+        console.log(data);
+        setFormData(data);
       });
   }, []);
 
@@ -95,7 +95,7 @@ export default function NewActions() {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        //setExistingSpecies(data);
+        setExistingSpecies(data);
       });
   }, []);
   useEffect(() => {
@@ -106,7 +106,7 @@ export default function NewActions() {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        //setExistingIndividuals(data);
+        setExistingIndividuals(data);
       });
   }, []);
   useEffect(() => {
@@ -117,7 +117,7 @@ export default function NewActions() {
       .then((res) => res.json())
       .then((data) => {
         console.log(data);
-        //setExistingHabitats(data);
+        setExistingHabitats(data);
       });
   }, []);
 
