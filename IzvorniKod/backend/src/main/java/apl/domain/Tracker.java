@@ -70,6 +70,7 @@ public class Tracker extends User implements ConvertibleToLocation {
         tracker.setSurname(this.getSurname());
         tracker.setEmail(this.getEmail());
         tracker.setRegistered(this.isRegistered());
+        tracker.setQualification(MyConverter.convertToDTOList(this.getQualification()));
         if (this.station!=null) tracker.setStation(this.station.toDTO(entities));
         tracker.setLongitude(this.longitude);
         tracker.setLatitude(this.latitude);
@@ -92,6 +93,7 @@ public class Tracker extends User implements ConvertibleToLocation {
         tracker.setSurname(this.getSurname());
         tracker.setEmail(this.getEmail());
         tracker.setRegistered(this.isRegistered());
+        tracker.setQualification(MyConverter.convertToDTOList(this.getQualification()));
         if (this.station!=null) tracker.setStation(this.station.toDTO(localEntities));
         tracker.setLongitude(this.longitude);
         tracker.setLatitude(this.latitude);

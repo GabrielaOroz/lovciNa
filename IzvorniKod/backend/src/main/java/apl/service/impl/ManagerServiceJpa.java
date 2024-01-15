@@ -101,6 +101,7 @@ public class ManagerServiceJpa implements ManagerService {
 
         for (Tracker tracker : trackersFromStation){
             if(!tracker.isTryingToHaveMultipleActiveActionsByMistake())
+                System.out.println(tracker.getQualification().toString());
                 trackers.add(tracker.toTrackerDTO());
         }
 
@@ -142,9 +143,9 @@ public class ManagerServiceJpa implements ManagerService {
             }
         }
 
-        action.setTrackerActionMedia(trackersInAction);
+       //action.setTrackerActionMedia(trackersInAction);
 
-        try{
+        /*try{
             actionRepo.save(action);
         } catch (Exception e){
             return null;
@@ -154,7 +155,7 @@ public class ManagerServiceJpa implements ManagerService {
             requestRepo.save(request);
         } catch (Exception e){
             return null;
-        }
+        }*/
 
         return action;
     }
