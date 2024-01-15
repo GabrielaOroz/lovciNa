@@ -5,7 +5,7 @@ import { Box, Button, Card, Flex, Input, Select, Text, Modal, Checkbox,
     ModalHeader,
     ModalCloseButton,
     ModalBody,
-    ModalFooter,  Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
+    ModalFooter,  Tabs, TabList, TabPanels, Tab, TabPanel, } from "@chakra-ui/react";
 import GreenButton from "../components/shared/GreenButton";
 import YellowButton from "../components/shared/YellowButton";
 import podaci from "../pomoc.jsx";
@@ -14,23 +14,23 @@ import { useNavigate } from "react-router-dom";
 
 export default function CreateAction() {
   const [session, setSession] = useState(null);
-  //const [incomingRequests, setIncomingRequests] = useState(podaci); // kasnije []
-  const [incomingRequests, setIncomingRequests] = useState(); 
+  const [incomingRequests, setIncomingRequests] = useState(podaci); // kasnije []
+  //const [incomingRequests, setIncomingRequests] = useState([]); 
   const [isModalOpen, setModalOpen] = useState(false);
-  //const [trackers, setTrackers] = useState(trackersData); //kasnije prazno
-  const [trackers, setTrackers] = useState(); //kasnije prazno
+  const [trackers, setTrackers] = useState(trackersData);
+  //const [trackers, setTrackers] = useState([]); 
+ 
   const [selectedRequestId, setSelectedRequestId] = useState(null); //trenutni odabrani
   const [selectedTrackers, setSelectedTrackers] = useState({}); //šaljem trackera i ability
 
   const [selectedRequestAbilities, setSelectedRequestAbilities] = useState({}); //car : 5
 
   const [selectedTab, setSelectedTab] = useState(0)
-  const [currentTab, setCurrentTab] = useState(0);
 
 
   useEffect(() => {
     fetchCurrentUser();
-    fetchIncomingRequests();
+   fetchIncomingRequests();
 
   }, []);
 
@@ -67,8 +67,9 @@ export default function CreateAction() {
         })
         .then((res) => res.json())
         .then((data) => {
-            //console.log(data);
+            console.log(data);
             setTrackers(data);
+            console.log(trackers);
         })
         .catch((error) => {
             console.error("Error fetching trackers:", error);
@@ -92,10 +93,10 @@ export default function CreateAction() {
   }
 
   const handleResponseButtonClick = (request) => {
+    console.log(trackers)
       //fetchTrackers(); //dohvacam slobodne trackere tj one koji nisu niti na jednoj akciji
       setModalOpen(true); 
       setSelectedRequestId(request.id);
-
       setSelectedRequestAbilities(request.requirments);
       
     };
@@ -108,7 +109,7 @@ export default function CreateAction() {
       return;
     }
   
-    const ability = Object.keys(selectedRequestAbilities)[currentTab]; // Dobavi ability prema trenutnom tabu
+    const ability = Object.keys(selectedRequestAbilities)[selectedTab]; // Dobavi ability prema trenutnom tabu
     const updatedTrackers = { ...selectedTrackers };
 
     if (updatedTrackers[trackerId]) {
@@ -291,7 +292,6 @@ export default function CreateAction() {
                  css={{ _selected: { color: "black", backgroundColor: "green" }}}
                   onClick={() => {
                     setSelectedTab(index);
-                    setCurrentTab(index); // Postavi trenutni tab kada se klikne
                   }}
                 >
                   {ability}
@@ -311,7 +311,7 @@ export default function CreateAction() {
                           paddingLeft: "32px",
                           paddingBottom: "10px",
                           display: "flex",
-                          alignItems: "center", // Dodano kako bi se checkboxevi poravnavali s tekstu
+                          alignItems: "center", 
                         }}
                       >
                       <Checkbox

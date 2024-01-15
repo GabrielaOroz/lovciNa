@@ -41,11 +41,11 @@ export default function Manager() {
   const[isNamingModalOpen, setIsNamingModalOpen] = useState(false);
 
   //selectani trackeri
-  const [selectedTrackers, setSelectedTrackers] = useState([])
+  const [selectedTrackers, setSelectedTrackers] = useState([]);
   const [selectedAbilities, setSelectedAbilities] = useState({}); //rijecnik - tracker i abilities
 
   const mapRef = useRef(null);
-  const [showRequests, setShowRequests] = useState(false)
+
 
   const fetchExistingStationData = () => {
     fetch("http://localhost:8000/manager/station", {
@@ -72,6 +72,10 @@ export default function Manager() {
           const lat = existingStation.latitude;
           const lng = existingStation.longitude;
           setMarkerPosition({ lat, lng });
+
+          console.log(lat)
+          console.log(lng)
+          mapRef.current.setView([lat, lng], 16);
 
         }
       })
@@ -163,16 +167,11 @@ export default function Manager() {
   };
 
   const handleToggleRequests = () => {
+    console.log(markerName)
+    console.log(markerPosition)
     if (!selectedStation || selectedTrackers.length === 0 || 
       Object.values(selectedAbilities).some((abilities) => abilities.length === 0)) {
       alert("Please select a station, trackers, and abilities.");
-    } else {
-      if (!showRequests) {
-        setShowRequests(true);
-      } else {
-        setShowRequests(false);
-      }
-      
     }
   };
   
@@ -368,7 +367,7 @@ if (trackersWithoutAbilities.length > 0) {
                     {tracker.name}
                   </option>
                 ))}
-</Select>
+            </Select>
 
               {selectedTracker && currentSelectedTracker === selectedTracker && (
                 <Stack margin="8px" spacing={4} direction="column">
@@ -420,7 +419,7 @@ if (trackersWithoutAbilities.length > 0) {
             </ModalFooter>
           </ModalContent>
         </Modal>
-        {selectedAll && (
+        {true && (
           <Link to="/requirments">
             <GreenButton margin="14px" onClick={handleToggleRequests}>
               Requirments
