@@ -2,8 +2,10 @@ package apl.dto;
 
 import apl.domain.*;
 import apl.filter.LazyFieldsFilter;
+import apl.serializers.DtoSpeciesCustomSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Transient;
@@ -21,6 +23,7 @@ import java.util.List;
 @NoArgsConstructor
 @ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonSerialize(using = DtoSpeciesCustomSerializer.class)
 public class DtoSpecies {
 
     private Long id;

@@ -3,8 +3,10 @@ package apl.dto;
 import apl.converters.ConvertibleToLocation;
 import apl.domain.*;
 import apl.location.Location;
+import apl.serializers.DtoAnimalCustomSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,6 +21,7 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @ToString
 @JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonSerialize(using = DtoAnimalCustomSerializer.class)
 public class DtoAnimal implements ConvertibleToLocation {
 
 
