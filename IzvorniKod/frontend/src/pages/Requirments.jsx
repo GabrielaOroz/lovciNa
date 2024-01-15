@@ -5,7 +5,7 @@ import { Box, Button, Card, Flex, Input, Select, Text, Modal, Checkbox,
     ModalHeader,
     ModalCloseButton,
     ModalBody,
-    ModalFooter,  Tabs, TabList, TabPanels, Tab, TabPanel, } from "@chakra-ui/react";
+    ModalFooter,  Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
 import GreenButton from "../components/shared/GreenButton";
 import YellowButton from "../components/shared/YellowButton";
 import podaci from "../pomoc.jsx";
@@ -14,8 +14,8 @@ import { useNavigate } from "react-router-dom";
 
 export default function CreateAction() {
   const [session, setSession] = useState(null);
-  const [incomingRequests, setIncomingRequests] = useState(podaci); // kasnije []
-  //const [incomingRequests, setIncomingRequests] = useState([]); 
+  //const [incomingRequests, setIncomingRequests] = useState(podaci); // kasnije []
+  const [incomingRequests, setIncomingRequests] = useState(); 
   const [isModalOpen, setModalOpen] = useState(false);
   const [trackers, setTrackers] = useState(trackersData);
   //const [trackers, setTrackers] = useState([]); 
@@ -26,40 +26,41 @@ export default function CreateAction() {
   const [selectedRequestAbilities, setSelectedRequestAbilities] = useState({}); //car : 5
 
   const [selectedTab, setSelectedTab] = useState(0)
+  const [currentTab, setCurrentTab] = useState(0);
 
 
   useEffect(() => {
     fetchCurrentUser();
-   fetchIncomingRequests();
+    fetchIncomingRequests();
 
   }, []);
 
   const fetchCurrentUser = () => {
     fetch("http://localhost:8000/auth/current-user", {
-        method: "GET",
-        credentials: "include",
-      })
-        .then((res) => res.json())
-        .then((data) => {
-          //console.log(data);
-          setSession(data);
-        });
-  }
+      method: "GET",
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        //console.log(data);
+        setSession(data);
+      });
+  };
 
   const fetchIncomingRequests = () => {
     fetch("http://localhost:8000/manager/incoming-requests", {
-        method: "GET",
-        credentials: "include",
+      method: "GET",
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log(data);
+        setIncomingRequests(data);
       })
-        .then((res) => res.json())
-        .then((data) => {
-          console.log(data);
-          setIncomingRequests(data);
-        })
-        .catch((error) => {
-          console.error("Error fetching incoming requests:", error);
-        });
-  }
+      .catch((error) => {
+        console.error("Error fetching incoming requests:", error);
+      });
+  };
   const fetchTrackers = () => {
     fetch("http://localhost:8000/manager/available-trackers", {
         method: "GET",
@@ -67,9 +68,8 @@ export default function CreateAction() {
         })
         .then((res) => res.json())
         .then((data) => {
-            console.log(data);
+            //console.log(data);
             setTrackers(data);
-            console.log(trackers);
         })
         .catch((error) => {
             console.error("Error fetching trackers:", error);
@@ -77,26 +77,22 @@ export default function CreateAction() {
     };
 
   const getFilteredTrackers = (ability) => {
-     return trackers.filter((tracker) => tracker.abilities.includes(ability));
+    return trackers.filter((tracker) => tracker.abilities.includes(ability));
   };
-  
 
-  
-  
   const hasAccess = session && session.role === "manager" && session.approved === true;
 
   const navigate = useNavigate();
 
-
   const submit = () => {
     navigate("/home");
-  }
+  };
 
   const handleResponseButtonClick = (request) => {
-    console.log(trackers)
       //fetchTrackers(); //dohvacam slobodne trackere tj one koji nisu niti na jednoj akciji
       setModalOpen(true); 
       setSelectedRequestId(request.id);
+
       setSelectedRequestAbilities(request.requirments);
       
     };
@@ -109,7 +105,7 @@ export default function CreateAction() {
       return;
     }
   
-    const ability = Object.keys(selectedRequestAbilities)[selectedTab]; // Dobavi ability prema trenutnom tabu
+    const ability = Object.keys(selectedRequestAbilities)[currentTab]; // Dobavi ability prema trenutnom tabu
     const updatedTrackers = { ...selectedTrackers };
 
     if (updatedTrackers[trackerId]) {
@@ -118,14 +114,12 @@ export default function CreateAction() {
       updatedTrackers[trackerId] = ability;
     }
     setSelectedTrackers(updatedTrackers);
-  }; 
-  
+  };
 
   const handleDoneButtonClick = () => {
-
-
     console.log(selectedTrackers);
-    {/*}
+    {
+      /*}
     const requestedTrackersCount =
       incomingRequests.find((request) => request.id === selectedRequestId)
         ?.numberOfTrackers || 0;
@@ -137,12 +131,13 @@ export default function CreateAction() {
       // Ako je odabrano više tragača od traženog broja
       alert(`Please select exactly ${requestedTrackersCount} trackers!`);
     } else {
-    */}
-      // Ako je odabrano točno traženi broj tragača
-      // Šaljemo na backend listu tragača s njihovim id-ijem i imenom
-  
-      // slanje na back
-      fetch("http://localhost:8000/api/submit-action", {
+    */
+    }
+    // Ako je odabrano točno traženi broj tragača
+    // Šaljemo na backend listu tragača s njihovim id-ijem i imenom
+
+    // slanje na back
+    fetch("http://localhost:8000/api/submit-action", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -162,51 +157,51 @@ export default function CreateAction() {
       });
 
     // Uklanjamo zahtjev iz stanja incomingRequests
-    setIncomingRequests((prevRequests) =>
-      prevRequests.filter((request) => request.id !== selectedRequestId)
-    );
-    
-      setSelectedTrackers({});
-      setModalOpen(false);
-    
+    setIncomingRequests((prevRequests) => prevRequests.filter((request) => request.id !== selectedRequestId));
+
+    setSelectedTrackers({});
+    setModalOpen(false);
   };
 
   return (
     <>
-    {session && hasAccess && (
-        <Flex flexDirection="column" justifyContent="center" alignItems="center" minHeight="100vh">
-        <Card background="#F9F7ED" w="800px" padding="32px" align="center" borderRadius="12px 12px 0 0" style={{ height: "360px", overflow: "auto" }}>
-
-          <h1 style={{ paddingBottom: "24px", paddingTop: "8px"}}>Incoming Requests...</h1>
-          <table style={{ width: "100%" }}>
-            <thead>
-              <tr>
-                <th style={{ padding: "8px" }}>TITLE</th>
-                <th style={{ padding: "8px" }}>RESEARCHER</th>
-                <th style={{ padding: "8px" }}></th>
-              </tr>
-            </thead>
-            <tbody>
-              {incomingRequests.map((request) => (
-                <tr key={request.id}>
-                  <td style={{padding: "8px" }}>{request.title}</td>
-                  <td style={{ padding: "8px" }}>{request.researcher}</td>
-                  <td style={{ padding: "8px" }}>
-                    <YellowButton onClick={() => handleResponseButtonClick(request)}>
-                      Respond
-                    </YellowButton>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </Card>
-        <Card background="#F9F7ED" w="800px" padding="16px" align="center"  borderRadius="0 0 12px 12px" >
-          <GreenButton onClick={submit}>
-            Home
-          </GreenButton>
-        </Card>
-    </Flex>
+      {session && hasAccess && (
+        <>
+          <Flex flexDirection="column" justifyContent="center" alignItems="center" minHeight="100vh">
+            <Card
+              background="#F9F7ED"
+              w="800px"
+              padding="32px"
+              align="center"
+              borderRadius="12px 12px 0 0"
+              style={{ height: "360px", overflow: "auto" }}
+            >
+              <h1 style={{ paddingBottom: "24px", paddingTop: "8px" }}>Incoming Requests...</h1>
+              <table style={{ width: "100%" }}>
+                <thead>
+                  <tr>
+                    <th style={{ padding: "8px" }}>TITLE</th>
+                    <th style={{ padding: "8px" }}>RESEARCHER</th>
+                    <th style={{ padding: "8px" }}></th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {incomingRequests.map((request) => (
+                    <tr key={request.id}>
+                      <td style={{ padding: "8px" }}>{request.title}</td>
+                      <td style={{ padding: "8px" }}>{request.researcher}</td>
+                      <td style={{ padding: "8px" }}>
+                        <YellowButton onClick={() => handleResponseButtonClick(request)}>Respond</YellowButton>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </Card>
+            <Card background="#F9F7ED" w="800px" padding="16px" align="center" borderRadius="0 0 12px 12px">
+              <GreenButton onClick={submit}>Home</GreenButton>
+            </Card>
+          </Flex>
 
     )}
     
@@ -292,6 +287,7 @@ export default function CreateAction() {
                  css={{ _selected: { color: "black", backgroundColor: "green" }}}
                   onClick={() => {
                     setSelectedTab(index);
+                    setCurrentTab(index); // Postavi trenutni tab kada se klikne
                   }}
                 >
                   {ability}
@@ -311,7 +307,7 @@ export default function CreateAction() {
                           paddingLeft: "32px",
                           paddingBottom: "10px",
                           display: "flex",
-                          alignItems: "center", 
+                          alignItems: "center", // Dodano kako bi se checkboxevi poravnavali s tekstu
                         }}
                       >
                       <Checkbox

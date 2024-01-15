@@ -20,77 +20,77 @@ export default function Tracker() {
 
   /* TRACKER INFO */
   useEffect(() => {
-    fetch("http://localhost:5173/tracker/myInfo", {
+    fetch("http://localhost:8000/tracker/myInfo", {
       method: "GET",
       credentials: "include",
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
-        //setTracker(data);
+        console.log("currentTrackerInfo: ", data);
+        setTracker(data);
       });
   }, []);
 
   /* TRACKERS ON ACTION */
   useEffect(() => {
-    fetch("http://localhost:5173/tracker/trackers", {
+    fetch("http://localhost:8000/tracker/trackers", {
       method: "GET",
       credentials: "include",
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
-        //setTrackers(data);
+        console.log("TrackersOnAction: ", data);
+        setTrackers(data);
       });
   }, []);
 
   /* ANIMALS */
   useEffect(() => {
-    fetch("http://localhost:5173/tracker/individuals", {
+    fetch("http://localhost:8000/tracker/individuals", {
       method: "GET",
       credentials: "include",
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
-        //setIndividuals(data);
+        console.log("IndividualsOnAction: ", data);
+        setIndividuals(data);
       });
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost:5173/tracker/species", {
+    fetch("http://localhost:8000/tracker/species", {
       method: "GET",
       credentials: "include",
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
-        //setSpecies(data);
+        console.log("SpeciesOnAction: ", data);
+        setSpecies(data);
       });
   }, []);
 
   useEffect(() => {
-    fetch("http://localhost:5173/tracker/habitats", {
+    fetch("http://localhost:8000/tracker/habitats", {
       method: "GET",
       credentials: "include",
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
-        //setHabitats(data);
+        console.log("HabitatsOnAction: ", data);
+        setHabitats(data);
       });
   }, []);
 
   /* TASKS */
   useEffect(() => {
-    fetch("http://localhost:5173/tracker/tasks", {
+    fetch("http://localhost:8000/tracker/tasks", {
       method: "GET",
       credentials: "include",
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
-        //setTasks(data);
+        console.log("Tasks: ", data);
+        setTasks(data);
       });
   }, []);
 
@@ -101,12 +101,12 @@ export default function Tracker() {
       return obj;
     }, {})
   );
-  console.log(doneTasks);
+  //console.log(doneTasks);
   const handleDoneTasks = (id) => {
     setDoneTasks({ ...doneTasks, [id]: 2 });
   };
   useEffect(() => {
-    fetch("http://localhost:5173/tracker/doneTasks", {
+    fetch("http://localhost:8000/tracker/doneTasks", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -127,7 +127,7 @@ export default function Tracker() {
       return obj;
     }, {})
   );
-  console.log(comments);
+  //console.log(comments);
   const handleKeyDown = (e, id) => {
     if (e.key === "Enter") {
       e.preventDefault();
@@ -135,7 +135,7 @@ export default function Tracker() {
     }
   };
   useEffect(() => {
-    fetch("http://localhost:5173/tracker/newComments", {
+    fetch("http://localhost:8000/tracker/newComments", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -159,9 +159,9 @@ export default function Tracker() {
       setCommentsAction([...commentsAction, e.target.value]);
     }
   };
-  console.log(commentsAction);
+  //console.log(commentsAction);
   useEffect(() => {
-    fetch("http://localhost:5173/tracker/actionComments", {
+    fetch("http://localhost:8000/tracker/actionComments", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

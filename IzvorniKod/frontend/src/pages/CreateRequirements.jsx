@@ -7,7 +7,6 @@ import Header from "../components/shared/Header";
 
 export default function CreateAction() {
   const [session, setSession] = useState(null);
-
   useEffect(() => {
     fetch("http://localhost:8000/auth/current-user", {
       method: "GET",
@@ -15,15 +14,13 @@ export default function CreateAction() {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        console.log("Current user: ", data);
         setSession(data);
       });
   }, []);
-
   const hasAccess = session && session.role === "researcher" && session.approved === true;
 
   const navigate = useNavigate();
-
   const [formData, setFormData] = useState({
     title: "",
     manager: { id: "" },
@@ -33,7 +30,6 @@ export default function CreateAction() {
   const [error, setError] = useState();
 
   /* GET DATA */
-  console.log(managers);
   useEffect(() => {
     fetch("http://localhost:8000/researcher/managers", {
       method: "GET",
@@ -41,7 +37,7 @@ export default function CreateAction() {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        console.log("Managers: ", data);
         setManagers(data);
       });
   }, []);
@@ -51,7 +47,7 @@ export default function CreateAction() {
     if (Object.values(formData.requirements).some((value) => value > 0) && formData.title && formData.manager.id) {
       setError(false);
 
-      console.log(formData);
+      //console.log(formData);
       fetch("http://localhost:8000/researcher/create-requests", {
         method: "POST",
         headers: {
