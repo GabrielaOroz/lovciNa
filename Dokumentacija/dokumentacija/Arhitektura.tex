@@ -587,6 +587,11 @@
 			\eject
 		\section{Dijagram komponenti}
 		
-			\textbf{\textit{dio 2. revizije}}\\
-		
-			 \textit{Potrebno je priložiti dijagram komponenti s pripadajućim opisom. Dijagram komponenti treba prikazivati strukturu cijele aplikacije.}
+			\noindent Dijagram komponenti opisuje organizaciju i međuovisnost komponenti, interne strukture i odnose prema okolini. Na slici ispod prikazan je dijagram sustava aplikacije WildTrack. Sustavu se pristupa preko dva sučelja. Pomoću sučelja za dohvat HTML, CSS i JS datoteka poslužuju se datoteke potrebne za frontend dio aplikacije. Pomoću router komponente, koja je dio Reacta, određuje se koje će se datoteke poslati na sučelje aplikacije.  Na frontendu se nalaze JavaScript datoteke koje zajedno čine razne komponente nazvane po aktorima kojima se pristupa. Preko sučelja za dohvat podataka u JSON obliku pristupa se REST API komponenti koja poslužuje podatke s backend dijela aplikacije. Hibernate komponenta dohvaća podatke iz SQL baze podataka te ih prosljeđuje DTO-u. Controller komponenta zadužena je primanje upita i odlučuje što se uzima od DTO komponente. React-view komponenta komunicira s aplikacijom i prikazuje potrebne podatke ovisno o zahtjevima.
+			
+			\begin{figure}[H]
+				\includegraphics[scale=0.4]{slike/dijagram_komponenti.PNG} %veličina slike u odnosu na originalnu datoteku i pozicija slike
+				\centering
+				\caption{Dijagram komponenti}
+				\label{fig:promjene}
+			\end{figure}
