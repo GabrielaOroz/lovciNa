@@ -47,7 +47,6 @@ public class ResearcherServiceJpa implements ResearcherService {
 
             User user = userRepo.findById(manager.getId()).orElse(null);
 
-
             Action action1 = new Action(manager, researcher, action.getTitle(), action.getRequirements());
 
             Request request = new Request(HandleRequest.MANAGER_CHOOOSE_TRACKERS_FOR_ACTION, action1, user);
@@ -65,8 +64,10 @@ public class ResearcherServiceJpa implements ResearcherService {
         List<Manager> managers = managerRepo.listAllManagers();
         if (managers != null) {
             for (Manager manager : managers) {
-                DtoManager dtoManager = manager.toManagerDTO();
-                dtoManagers.add(dtoManager);
+                if(manager.getStation() != null) {
+                    DtoManager dtoManager = manager.toManagerDTO();
+                    dtoManagers.add(dtoManager);
+                }
             }
         }
         return dtoManagers;
@@ -79,9 +80,12 @@ public class ResearcherServiceJpa implements ResearcherService {
         Researcher researcher = researcherRepo.findById(idResearcher).orElse(null);
         List<Action> actions = researcher.getActions();
         for (Action action : actions) {
-            DtoAction dtoAction = action.toDTO();
-            dtoAction.setSpecies(MyConverter.convertToDTOList(speciesRepo.findByAnimalsActionsId(action.getId())));
-            dtoActions.add(dtoAction);
+            if(action.getStartOfAction() != null){
+                DtoAction dtoAction = action.toDTO();
+                dtoAction.setSpecies(MyConverter.convertToDTOList(speciesRepo.findByAnimalsActionsId(action.getId())));
+                dtoActions.add(dtoAction);
+            }
+
         }
         return dtoActions;
     }

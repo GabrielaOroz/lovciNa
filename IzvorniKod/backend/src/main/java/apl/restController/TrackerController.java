@@ -7,6 +7,7 @@ import apl.dao.UserRepository;
 import apl.domain.ActionComment;
 import apl.domain.AnimalComment;
 import apl.domain.Tracker;
+import apl.domain.TrackerDTO;
 import apl.dto.*;
 import apl.service.impl.TrackerServiceJpa;
 import jakarta.servlet.http.HttpSession;
@@ -56,7 +57,7 @@ public class TrackerController {
     */
 
     @GetMapping("/myInfo")
-    public ResponseEntity<DtoTracker> getTrackerInformation(HttpSession session) {
+    public ResponseEntity<TrackerDTO> getTrackerInformation(HttpSession session) {
         Long usrId = authorize(session.getAttribute("id"));
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 

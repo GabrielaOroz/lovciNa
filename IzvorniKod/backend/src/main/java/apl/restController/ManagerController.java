@@ -6,6 +6,7 @@ import apl.dao.TrackerRepository;
 import apl.dao.UserRepository;
 import apl.domain.*;
 import apl.dto.*;
+import apl.enums.MediumType;
 import apl.service.ManagerService;
 import apl.service.impl.ManagerServiceJpa;
 import jakarta.servlet.http.HttpSession;
@@ -105,7 +106,7 @@ public class ManagerController {
     }
 
     @PostMapping("/saveAbilities")
-    public ResponseEntity<Station> saveAbilities(@RequestBody Map<Long, List<Medium>> selectedAbilities, HttpSession session) {
+    public ResponseEntity<Station> saveAbilities(@RequestBody Map<Long, List<MediumType>> selectedAbilities, HttpSession session) {
         Long usrId = authorize2(session.getAttribute("id"));
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 

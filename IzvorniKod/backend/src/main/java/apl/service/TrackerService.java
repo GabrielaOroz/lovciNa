@@ -1,9 +1,6 @@
 package apl.service;
 
-import apl.domain.Action;
-import apl.domain.ActionComment;
-import apl.domain.AnimalComment;
-import apl.domain.Tracker;
+import apl.domain.*;
 import apl.dto.*;
 
 import java.sql.ClientInfoStatus;
@@ -12,7 +9,7 @@ import java.util.Map;
 
 public interface TrackerService {
 
-    DtoTracker getTrackerInfo(Long id);
+    TrackerDTO getTrackerInfo(Long id);
 
     List<DtoTracker> getAllTrackersOnAction(Long id);
 

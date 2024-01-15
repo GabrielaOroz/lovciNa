@@ -8,5 +8,6 @@ public enum MediumType {
     AIRPLANE,
     BICYCLE,
     MOTORCYCLE,
+    DRON,
     HELICOPTER;
 }

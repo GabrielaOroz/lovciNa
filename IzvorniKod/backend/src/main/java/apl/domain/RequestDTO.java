@@ -17,5 +17,5 @@ public class RequestDTO {
 
     private Long requestId;
 
-    private Map<Tracker, Medium> trackers;
+    private Map<Long, MediumType> selectedTrackers;
 }

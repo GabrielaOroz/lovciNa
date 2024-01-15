@@ -40,10 +40,21 @@ public class TrackerServiceJpa implements TrackerService {
 
 
     @Override
-    public DtoTracker getTrackerInfo(Long id) {
+    public TrackerDTO getTrackerInfo(Long id) {
         Tracker tracker = trackerRepo.findById(id).orElse(null);
+        TrackerActionMedium actionMedium = trackerActionMediumRepo.findTopByTrackerIdAndActionStatus(id, ActionStatus.ACTIVE).orElse(null);
 
-        return tracker.toTrackerDTO();
+        TrackerDTO trackerDTO = new TrackerDTO(tracker.getId(), tracker.getName(), tracker.getSurname());
+
+        if(actionMedium != null){
+            trackerDTO.setMedium(actionMedium.getMedium().toDTO());
+            trackerDTO.setAction(actionMedium.getAction().toDTO());
+        }
+        if(tracker.getStation() != null){
+            trackerDTO.setStation(tracker.getStation().toDTO());
+        }
+
+        return trackerDTO;
     }
 
     @Override
@@ -82,7 +93,11 @@ public class TrackerServiceJpa implements TrackerService {
 
     @Override
     public List<DtoSpecies> getAllSpecies(Long id) {
+        if (trackerActionMediumRepo.findTopByTrackerIdAndActionStatus(id, ActionStatus.ACTIVE).orElse(null) == null) {
+            return null;
+        }
         Long actionId = trackerActionMediumRepo.findTopByTrackerIdAndActionStatus(id, ActionStatus.ACTIVE).orElse(null).getId();
+
 
         List<DtoSpecies> speciesList = new LinkedList<>();
 

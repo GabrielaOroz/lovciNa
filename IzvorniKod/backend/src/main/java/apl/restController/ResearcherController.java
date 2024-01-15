@@ -83,6 +83,7 @@ public class ResearcherController {
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
         DtoUser user1 = researcherService.createAction(action, usrId);
+
         if (user1!=null) {
             System.out.println("not null");
             return ResponseEntity.ok(user1);

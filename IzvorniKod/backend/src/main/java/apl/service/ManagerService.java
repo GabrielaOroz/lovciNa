@@ -8,6 +8,7 @@ import apl.dto.DtoAction;
 import apl.dto.DtoRequest;
 import apl.dto.DtoStation;
 import apl.dto.DtoTracker;
+import apl.enums.MediumType;
 
 import java.util.List;
 import java.util.Map;
@@ -26,6 +27,6 @@ public interface ManagerService {
 
     Action submitAction(RequestDTO requestDTO);
 
-    Station saveTrackerQualification(Long usrId, Map<Long, List<Medium>>  map);
+    Station saveTrackerQualification(Long usrId, Map<Long, List<MediumType>>  map);
 
 }

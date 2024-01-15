@@ -41,7 +41,7 @@ public class DtoAction {
 
     private List<DtoTask> tasks;
 
-    private List<DtoActionComment> actionComments;
+    private List<DtoActionComment> comments;
 
     private List<DtoAnimalComment> animalComments;
 
