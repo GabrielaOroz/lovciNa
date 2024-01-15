@@ -367,14 +367,6 @@ export default function Manager() {
 
               {selectedTracker && currentSelectedTracker === selectedTracker && (
                 <Stack margin="8px" spacing={4} direction="column">
-                  {/*
-                {abilityOptions.map((ability) => (
-                  <Checkbox colorScheme="green" key={ability.name} 
-                  isChecked={selectedAbilities[selectedTracker]?.includes(???)
-                  onChange={() => handleAbilitiesCheckboxChange({ability})}>
-                    {ability.name}
-                  </Checkbox>
-                ))} */}
                   <Checkbox
                     colorScheme="green"
                     isChecked={selectedTracker && selectedAbilities[selectedTracker.id]?.includes("ON_FOOT")}

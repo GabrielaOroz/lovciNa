@@ -5,7 +5,7 @@ import { Box, Button, Card, Flex, Input, Select, Text, Modal, Checkbox,
     ModalHeader,
     ModalCloseButton,
     ModalBody,
-    ModalFooter,  Tabs, TabList, TabPanels, Tab, TabPanel } from "@chakra-ui/react";
+    ModalFooter,  Tabs, TabList, TabPanels, Tab, TabPanel, } from "@chakra-ui/react";
 import GreenButton from "../components/shared/GreenButton";
 import YellowButton from "../components/shared/YellowButton";
 import podaci from "../pomoc.jsx";
@@ -14,8 +14,8 @@ import { useNavigate } from "react-router-dom";
 
 export default function CreateAction() {
   const [session, setSession] = useState(null);
-  //const [incomingRequests, setIncomingRequests] = useState(podaci); // kasnije []
-  const [incomingRequests, setIncomingRequests] = useState(); 
+  const [incomingRequests, setIncomingRequests] = useState(podaci); // kasnije []
+  //const [incomingRequests, setIncomingRequests] = useState([]); 
   const [isModalOpen, setModalOpen] = useState(false);
   const [trackers, setTrackers] = useState(trackersData);
   //const [trackers, setTrackers] = useState([]); 
@@ -26,8 +26,6 @@ export default function CreateAction() {
   const [selectedRequestAbilities, setSelectedRequestAbilities] = useState({}); //car : 5
 
   const [selectedTab, setSelectedTab] = useState(0)
-  const [currentTab, setCurrentTab] = useState(0);
-
 
   useEffect(() => {
     fetchCurrentUser();
@@ -68,8 +66,9 @@ export default function CreateAction() {
         })
         .then((res) => res.json())
         .then((data) => {
-            //console.log(data);
+            console.log(data);
             setTrackers(data);
+            console.log(trackers);
         })
         .catch((error) => {
             console.error("Error fetching trackers:", error);
@@ -89,10 +88,10 @@ export default function CreateAction() {
   };
 
   const handleResponseButtonClick = (request) => {
-      //fetchTrackers(); //dohvacam slobodne trackere tj one koji nisu niti na jednoj akciji
+    console.log(trackers)
+      fetchTrackers(); //dohvacam slobodne trackere tj one koji nisu niti na jednoj akciji
       setModalOpen(true); 
       setSelectedRequestId(request.id);
-
       setSelectedRequestAbilities(request.requirments);
       
     };
@@ -105,7 +104,7 @@ export default function CreateAction() {
       return;
     }
   
-    const ability = Object.keys(selectedRequestAbilities)[currentTab]; // Dobavi ability prema trenutnom tabu
+    const ability = Object.keys(selectedRequestAbilities)[selectedTab]; // Dobavi ability prema trenutnom tabu
     const updatedTrackers = { ...selectedTrackers };
 
     if (updatedTrackers[trackerId]) {
@@ -203,148 +202,157 @@ export default function CreateAction() {
             </Card>
           </Flex>
 
-    )}
-    
-      {!session && <Text>You don't have access to this page.</Text>}
-      <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)}>
-        <ModalOverlay />
-          <ModalContent style={{
-            backgroundColor: "#306844",
-            boxShadow: "0 0 10px rgba(255, 255, 255, 0.8)",
-            height: "auto",
-            maxHeight: "90vh",
-            overflowY: "auto",
-            overflowX: "hidden",  // Onemogućava vodoravno pomicanje
-            width: "100%",
-            mx: "auto",
-          }}>
-            
-        <ModalHeader style={{ color: "#F1EDD4", fontSize: "24px", }}>
-          {incomingRequests
-            .find((request) => request.id === selectedRequestId)
-            ?.title + " - " + incomingRequests.find((request) => request.id === selectedRequestId)?.researcher}
-        </ModalHeader>
-        <ModalBody>
-            <Text
+          <Modal isOpen={isModalOpen} onClose={() => setModalOpen(false)}>
+            <ModalOverlay />
+            <ModalContent
               style={{
-                color: "#F1EDD4",
-                paddingTop: "8px",
-                paddingBottom: "8px",
-                fontSize: "18px",
+                backgroundColor: "#306844",
+                boxShadow: "0 0 10px rgba(255, 255, 255, 0.8)",
+                height: "auto",
+                maxHeight: "90vh",
+                overflowY: "auto",
+                overflowX: "hidden", // Onemogućava vodoravno pomicanje
+                width: "100%",
+                mx: "auto",
               }}
             >
-              Abilities required:
-            </Text>
-            <Box>
-              {Object.entries(selectedRequestAbilities).map(
-                ([ability, count]) => (
-                  <Text
-                    key={ability}
-                    style={{
-                      whiteSpace: "pre-wrap",
-                      color: "#F1EDD4",
-                      paddingLeft: "24px",
-                      paddingBottom: "10px",
-                      paddingRight: "32px",
-                      display: "flex",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <span>{`•    ${ability}:`}</span>
-                    <span>{count}</span>
-                  </Text>
-                )
-              )}
-            </Box>
-            <Text
-              style={{
-                color: "#F1EDD4",
-                paddingTop: "40px",
-                paddingBottom: "24px",
-                textAlign: "center",
-                fontSize: "22px",
-                textTransform: "uppercase",
-              }}
-            >
-              Select trackers for action
-            </Text>
-            <Tabs>
-            <TabList
-              style={{
-                overflowX: "auto",
-                whiteSpace: "nowrap",
-                overflowY: "hidden",
-              }}
-            >
-              {Object.keys(selectedRequestAbilities).map((ability, index) => (
-                <Tab
-                  key={ability}
+              <ModalHeader style={{ color: "#F1EDD4", fontSize: "24px" }}>
+                {incomingRequests.find((request) => request.id === selectedRequestId)?.title +
+                  " - " +
+                  incomingRequests.find((request) => request.id === selectedRequestId)?.researcher}
+              </ModalHeader>
+              <ModalBody>
+                <Text
                   style={{
-                    color: selectedTab === index ? "#306844" : "#F1EDD4", 
-                    backgroundColor: selectedTab === index ? "#F1EDD4" : "#306844", 
-                    fontSize: "16px",
-                  }}
-                 css={{ _selected: { color: "black", backgroundColor: "green" }}}
-                  onClick={() => {
-                    setSelectedTab(index);
-                    setCurrentTab(index); // Postavi trenutni tab kada se klikne
+                    color: "#F1EDD4",
+                    paddingTop: "8px",
+                    paddingBottom: "8px",
+                    fontSize: "18px",
                   }}
                 >
-                  {ability}
-                </Tab>
-              ))}
-            </TabList>
-              <TabPanels>
-                {Object.keys(selectedRequestAbilities).map((ability) => (
-                  <TabPanel key={ability}>
-                    <Box overflowY="auto" maxHeight="160px" paddingY="24px">
-                    {getFilteredTrackers(ability).map((tracker) => (
-                      <Text
-                        key={tracker.id}
+                  Abilities required:
+                </Text>
+                <Box>
+                  {Object.entries(selectedRequestAbilities).map(([ability, count]) => (
+                    <Text
+                      key={ability}
+                      style={{
+                        whiteSpace: "pre-wrap",
+                        color: "#F1EDD4",
+                        paddingLeft: "24px",
+                        paddingBottom: "10px",
+                        paddingRight: "32px",
+                        display: "flex",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <span>{`•    ${ability}:`}</span>
+                      <span>{count}</span>
+                    </Text>
+                  ))}
+                </Box>
+                <Text
+                  style={{
+                    color: "#F1EDD4",
+                    paddingTop: "40px",
+                    paddingBottom: "24px",
+                    textAlign: "center",
+                    fontSize: "22px",
+                    textTransform: "uppercase",
+                  }}
+                >
+                  Select trackers for action
+                </Text>
+                <Tabs>
+                  <TabList
+                    style={{
+                      overflowX: "auto",
+                      whiteSpace: "nowrap",
+                      overflowY: "hidden",
+                    }}
+                  >
+                    {Object.keys(selectedRequestAbilities).map((ability, index) => (
+                      <Tab
+                        key={ability}
                         style={{
-                          whiteSpace: "pre-wrap",
-                          color: "#F1EDD4",
-                          paddingLeft: "32px",
-                          paddingBottom: "10px",
-                          display: "flex",
-                          alignItems: "center", // Dodano kako bi se checkboxevi poravnavali s tekstu
+                          color: selectedTab === index ? "#306844" : "#F1EDD4",
+                          backgroundColor: selectedTab === index ? "#F1EDD4" : "#306844",
+                          fontSize: "16px",
+                        }}
+                        css={{ _selected: { color: "black", backgroundColor: "green" } }}
+                        onClick={() => {
+                          setSelectedTab(index);
+                          //setCurrentTab(index); // Postavi trenutni tab kada se klikne
                         }}
                       >
-                      <Checkbox
-                        isChecked={selectedTrackers[tracker.id]}
-                        onChange={() => handleTrackerCheckboxChange(tracker.id)}
-                        colorScheme=""
-                      >
-                        {tracker.name}
-                      </Checkbox>
-                      </Text>
+                        {ability}
+                      </Tab>
                     ))}
-                    </Box>
-                  </TabPanel>
-                ))}
-              </TabPanels>
-            </Tabs>
-           
-            <div style={{ bottom: 0, left: 0, right: 0, display: "flex", justifyContent: "center", margin: "16px" }}>
-              <Button variant="outline" marginRight="8px" style={{ borderColor: "#F1EDD4", color: "#F1EDD4" }} onClick={() => { setModalOpen(false); setSelectedTrackers([]) }}>
-                Close
-              </Button>
-              <YellowButton marginLeft="8px" onClick={() => handleDoneButtonClick()}>
-                Done
-              </YellowButton>
-            </div>
-            <hr
-              style={{
-                borderColor: "#F1EDD4",
-                margin: "32px 0 32px 0",
-                width: "100%",
-                borderWidth: "1px",
-                boxShadow: "0 0 10px rgba(255, 255, 255, 0.8)",
-              }}
-            />
-          </ModalBody>
-        </ModalContent>
-      </Modal>
+                  </TabList>
+                  <TabPanels>
+                    {Object.keys(selectedRequestAbilities).map((ability) => (
+                      <TabPanel key={ability}>
+                        <Box overflowY="auto" maxHeight="160px" paddingY="24px">
+                          {getFilteredTrackers(ability).map((tracker) => (
+                            <Text
+                              key={tracker.id}
+                              style={{
+                                whiteSpace: "pre-wrap",
+                                color: "#F1EDD4",
+                                paddingLeft: "32px",
+                                paddingBottom: "10px",
+                                display: "flex",
+                                alignItems: "center", // Dodano kako bi se checkboxevi poravnavali s tekstu
+                              }}
+                            >
+                              <Checkbox
+                                isChecked={selectedTrackers[tracker.id]}
+                                onChange={() => handleTrackerCheckboxChange(tracker.id)}
+                                colorScheme=""
+                              >
+                                {tracker.name}
+                              </Checkbox>
+                            </Text>
+                          ))}
+                        </Box>
+                      </TabPanel>
+                    ))}
+                  </TabPanels>
+                </Tabs>
+
+                <div
+                  style={{ bottom: 0, left: 0, right: 0, display: "flex", justifyContent: "center", margin: "16px" }}
+                >
+                  <Button
+                    variant="outline"
+                    marginRight="8px"
+                    style={{ borderColor: "#F1EDD4", color: "#F1EDD4" }}
+                    onClick={() => {
+                      setModalOpen(false);
+                      setSelectedTrackers([]);
+                    }}
+                  >
+                    Close
+                  </Button>
+                  <YellowButton marginLeft="8px" onClick={() => handleDoneButtonClick()}>
+                    Done
+                  </YellowButton>
+                </div>
+                <hr
+                  style={{
+                    borderColor: "#F1EDD4",
+                    margin: "32px 0 32px 0",
+                    width: "100%",
+                    borderWidth: "1px",
+                    boxShadow: "0 0 10px rgba(255, 255, 255, 0.8)",
+                  }}
+                />
+              </ModalBody>
+            </ModalContent>
+          </Modal>
+        </>
+      )}
+      {!session && <Text>You don't have access to this page.</Text>}
     </>
   );
 }
