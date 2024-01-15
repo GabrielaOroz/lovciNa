@@ -14,11 +14,11 @@ import { useNavigate } from "react-router-dom";
 
 export default function CreateAction() {
   const [session, setSession] = useState(null);
-  const [incomingRequests, setIncomingRequests] = useState(podaci); // kasnije []
-  //const [incomingRequests, setIncomingRequests] = useState([]); 
+  //const [incomingRequests, setIncomingRequests] = useState(podaci); // kasnije []
+  const [incomingRequests, setIncomingRequests] = useState([]); 
   const [isModalOpen, setModalOpen] = useState(false);
-  const [trackers, setTrackers] = useState(trackersData);
-  //const [trackers, setTrackers] = useState([]); 
+  //const [trackers, setTrackers] = useState(trackersData);
+  const [trackers, setTrackers] = useState([]); 
  
   const [selectedRequestId, setSelectedRequestId] = useState(null); //trenutni odabrani
   const [selectedTrackers, setSelectedTrackers] = useState({}); //šaljem trackera i ability
@@ -32,6 +32,7 @@ export default function CreateAction() {
     fetchIncomingRequests();
 
   }, []);
+  
 
   const fetchCurrentUser = () => {
     fetch("http://localhost:8000/auth/current-user", {
@@ -52,12 +53,14 @@ export default function CreateAction() {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log(data);
+        //console.log(data);
         setIncomingRequests(data);
       })
+    
       .catch((error) => {
         console.error("Error fetching incoming requests:", error);
       });
+
   };
   const fetchTrackers = () => {
     fetch("http://localhost:8000/manager/available-trackers", {
@@ -66,13 +69,16 @@ export default function CreateAction() {
         })
         .then((res) => res.json())
         .then((data) => {
+          console.log("primam")
             console.log(data);
             setTrackers(data);
-            console.log(trackers);
+            //console.log(trackers);
         })
         .catch((error) => {
             console.error("Error fetching trackers:", error);
         });
+        console.log("trackeri")
+        console.log(trackers);
     };
 
   const getFilteredTrackers = (ability) => {
@@ -88,11 +94,16 @@ export default function CreateAction() {
   };
 
   const handleResponseButtonClick = (request) => {
-    console.log(trackers)
+    //console.log(trackers)
       fetchTrackers(); //dohvacam slobodne trackere tj one koji nisu niti na jednoj akciji
       setModalOpen(true); 
       setSelectedRequestId(request.id);
-      setSelectedRequestAbilities(request.requirments);
+      setSelectedRequestAbilities(request.requirements);
+      Object.entries(request.requirements).forEach(([key, value]) => {
+        // Ovdje možete pristupiti ključu i vrijednosti svakog para
+        console.log("Key:", key);
+        console.log("Value:", value);
+      });
       
     };
   
@@ -188,7 +199,7 @@ export default function CreateAction() {
                   {incomingRequests.map((request) => (
                     <tr key={request.id}>
                       <td style={{ padding: "8px" }}>{request.title}</td>
-                      <td style={{ padding: "8px" }}>{request.researcher}</td>
+                      <td style={{ padding: "8px" }}>{request.researcher.name}</td>
                       <td style={{ padding: "8px" }}>
                         <YellowButton onClick={() => handleResponseButtonClick(request)}>Respond</YellowButton>
                       </td>
@@ -219,7 +230,7 @@ export default function CreateAction() {
               <ModalHeader style={{ color: "#F1EDD4", fontSize: "24px" }}>
                 {incomingRequests.find((request) => request.id === selectedRequestId)?.title +
                   " - " +
-                  incomingRequests.find((request) => request.id === selectedRequestId)?.researcher}
+                  incomingRequests.find((request) => request.id === selectedRequestId)?.researcher.name}
               </ModalHeader>
               <ModalBody>
                 <Text
