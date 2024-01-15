@@ -35,14 +35,14 @@ import java.util.stream.Collectors;
         }
 )
 public class TrackerActionMedium implements ConvertibleToDTO<DtoTrackerActionMedium> {
-    public TrackerActionMedium(Tracker tracker, Action action, Medium medium) {
+    /*public TrackerActionMedium(Tracker tracker, Action action, Medium medium) {
         this.tracker = tracker;
         this.action = action;
         this.medium = medium;
-    }
+    }*/
 
 
-    /*public TrackerActionMedium(Tracker tracker, Action action, Medium medium) {
+    public TrackerActionMedium(Tracker tracker, Action action, Medium medium) {
         this.tracker = tracker;
         this.action = action;
         this.medium = medium;
@@ -50,7 +50,7 @@ public class TrackerActionMedium implements ConvertibleToDTO<DtoTrackerActionMed
         tracker.getTrackerActionMedia().add(this);
         action.getTrackerActionMedia().add(this);
         medium.getTrackerActionMedia().add(this);
-    }*/
+    }
 
 
 

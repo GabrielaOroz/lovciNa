@@ -101,7 +101,6 @@ public class ManagerServiceJpa implements ManagerService {
 
         for (Tracker tracker : trackersFromStation){
             if(!tracker.isTryingToHaveMultipleActiveActionsByMistake())
-                System.out.println(tracker.getQualification().toString());
                 trackers.add(tracker.toTrackerDTO());
         }
 
@@ -112,16 +111,12 @@ public class ManagerServiceJpa implements ManagerService {
     @Override
     public Action submitAction(RequestDTO requestDTO) {
         Request request = requestRepo.findById(requestDTO.getRequestId()).orElse(null);
-        System.out.println("tu sam 1");
         request.setRequestStatus(RequestStatus.INACTIVE);
 
         if(actionRepo.findById(request.getAction().getId()).orElse(null) == null){
-            System.out.println("tu sam 2");
             return null;
         }
-
         Action action = actionRepo.findById(request.getAction().getId()).orElse(null);
-        System.out.println("tu sam 3");
         action.setStartOfAction(LocalDateTime.now());
         action.setStatus(ActionStatus.ACTIVE);
 
@@ -130,6 +125,7 @@ public class ManagerServiceJpa implements ManagerService {
         List<TrackerActionMedium> trackersInAction = new LinkedList<>();
 
         for (Long trackerId : trackersForAction.keySet()){
+            System.out.println(trackerId);
                 Medium medium = new Medium();
                 medium.setType(trackersForAction.get(trackerId));
                 Tracker tracker = trackerRepo.findById(trackerId).orElse(null);
@@ -142,21 +138,6 @@ public class ManagerServiceJpa implements ManagerService {
                 return null;
             }
         }
-
-       //action.setTrackerActionMedia(trackersInAction);
-
-        /*try{
-            actionRepo.save(action);
-        } catch (Exception e){
-            return null;
-        }
-
-        try{
-            requestRepo.save(request);
-        } catch (Exception e){
-            return null;
-        }*/
-
         return action;
     }
 
