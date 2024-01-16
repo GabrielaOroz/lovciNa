@@ -232,7 +232,7 @@ export default function Tracker() {
 
   return (
     <>
-      {(!tracker || !tracker.station || !tracker.action) && <Text>You don't have any actions yet</Text>}
+      {(!tracker || !tracker.station || !tracker.action) && <Text align="center"><strong>You don't have any actions yet</strong></Text>}
       {tracker && tracker.station && (
         <>
           <Text color="#306844" fontSize={{ base: "2xl", md: "4xl", lg: "5xl" }} alignSelf="center">
@@ -339,7 +339,7 @@ export default function Tracker() {
             </>
           )}
 
-          <Input
+          {tracker.action && <Input
             ml="16px"
             mt="8px"
             mb="16px"
@@ -352,9 +352,9 @@ export default function Tracker() {
               handleKeyDownAction(e);
             }}
             placeholder="Add a comment..."
-          />
+          />}
 
-          <Flex pl="16px" pr="16px" justify="space-between">
+         {tracker.action && <Flex pl="16px" pr="16px" justify="space-between">
             <Flex gap="8px">
               <GreenButton
                 onClick={() => {
@@ -383,7 +383,7 @@ export default function Tracker() {
                 Close
               </YellowButton>
             )}
-          </Flex>
+          </Flex>}
 
           {openTasks && (
             <Flex direction="column" p="16px" gap="16px">
