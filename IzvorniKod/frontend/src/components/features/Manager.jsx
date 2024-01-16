@@ -267,7 +267,7 @@ export default function Manager() {
     console.log("Selected Abilities:", selectedAbilities);
     setIsAbilitiesModalOpen(false);
     setSelectedAll(true);
-    selected(true);
+    setSelected(true);
   };
 
   return (
