@@ -69,21 +69,27 @@ export default function CreateAction() {
         })
         .then((res) => res.json())
         .then((data) => {
-          console.log("primam")
-            console.log(data);
+          //console.log("primam")
+            //console.log(data);
             setTrackers(data);
-            //console.log(trackers);
         })
         .catch((error) => {
             console.error("Error fetching trackers:", error);
         });
-        console.log("trackeri")
-        console.log(trackers);
+        //console.log("trackeri")
+        //console.log(trackers);
     };
 
-  const getFilteredTrackers = (ability) => {
-    return trackers.filter((tracker) => tracker.abilities.includes(ability));
-  };
+    const getFilteredTrackers = (ability) => {
+      //console.log("trazim ability" + ability);
+      //console.log("trackers");
+      //console.log(trackers);
+      
+      return trackers.filter((tracker) => {
+        return tracker.qualification.some((qualification) => qualification.type === ability);
+      });
+    };
+    
 
   const hasAccess = session && session.role === "manager" && session.approved === true;
 
@@ -94,15 +100,15 @@ export default function CreateAction() {
   };
 
   const handleResponseButtonClick = (request) => {
-    //console.log(trackers)
+
       fetchTrackers(); //dohvacam slobodne trackere tj one koji nisu niti na jednoj akciji
       setModalOpen(true); 
       setSelectedRequestId(request.id);
       setSelectedRequestAbilities(request.requirements);
       Object.entries(request.requirements).forEach(([key, value]) => {
         // Ovdje možete pristupiti ključu i vrijednosti svakog para
-        console.log("Key:", key);
-        console.log("Value:", value);
+        //console.log("Key:", key);
+        //console.log("Value:", value);
       });
       
     };
@@ -124,10 +130,11 @@ export default function CreateAction() {
       updatedTrackers[trackerId] = ability;
     }
     setSelectedTrackers(updatedTrackers);
+    console.log(updatedTrackers);
   };
 
   const handleDoneButtonClick = () => {
-    console.log(selectedTrackers);
+    //console.log(selectedTrackers);
     {
       /*}
     const requestedTrackersCount =
@@ -147,7 +154,7 @@ export default function CreateAction() {
     // Šaljemo na backend listu tragača s njihovim id-ijem i imenom
 
     // slanje na back
-    fetch("http://localhost:8000/api/submit-action", {
+    fetch("http://localhost:8000/manager/submit-action", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -251,14 +258,14 @@ export default function CreateAction() {
                         whiteSpace: "pre-wrap",
                         color: "#F1EDD4",
                         paddingLeft: "24px",
-                        paddingBottom: "10px",
+                        paddingBottom: "8px", 
                         paddingRight: "32px",
                         display: "flex",
                         justifyContent: "space-between",
                       }}
                     >
-                      <span>{`•    ${ability}:`}</span>
-                      <span>{count}</span>
+                      {count > 0 && <span>{`•    ${ability}:`}</span>}
+                      {count > 0 && <span>{count}</span>}
                     </Text>
                   ))}
                 </Box>
@@ -313,11 +320,11 @@ export default function CreateAction() {
                                 paddingLeft: "32px",
                                 paddingBottom: "10px",
                                 display: "flex",
-                                alignItems: "center", // Dodano kako bi se checkboxevi poravnavali s tekstu
+                                alignItems: "center", 
                               }}
                             >
                               <Checkbox
-                                isChecked={selectedTrackers[tracker.id]}
+                                 isChecked={selectedTrackers[tracker.id] === ability}
                                 onChange={() => handleTrackerCheckboxChange(tracker.id)}
                                 colorScheme=""
                               >
