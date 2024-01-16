@@ -5,7 +5,7 @@ import { Box, Button, Card, Flex, Input, Select, Text, Modal, Checkbox,
     ModalHeader,
     ModalCloseButton,
     ModalBody,
-    ModalFooter,  Tabs, TabList, TabPanels, Tab, TabPanel, } from "@chakra-ui/react";
+    ModalFooter,  Tabs, TabList, TabPanels, Tab, TabPanel,  } from "@chakra-ui/react";
 import GreenButton from "../components/shared/GreenButton";
 import YellowButton from "../components/shared/YellowButton";
 import podaci from "../pomoc.jsx";
@@ -41,7 +41,6 @@ export default function CreateAction() {
     })
       .then((res) => res.json())
       .then((data) => {
-        //console.log(data);
         setSession(data);
       });
   };
@@ -53,7 +52,6 @@ export default function CreateAction() {
     })
       .then((res) => res.json())
       .then((data) => {
-        //console.log(data);
         setIncomingRequests(data);
       })
     
@@ -69,22 +67,15 @@ export default function CreateAction() {
         })
         .then((res) => res.json())
         .then((data) => {
-          //console.log("primam")
-            //console.log(data);
             setTrackers(data);
         })
         .catch((error) => {
             console.error("Error fetching trackers:", error);
         });
-        //console.log("trackeri")
-        //console.log(trackers);
+
     };
 
     const getFilteredTrackers = (ability) => {
-      //console.log("trazim ability" + ability);
-      //console.log("trackers");
-      //console.log(trackers);
-      
       return trackers.filter((tracker) => {
         return tracker.qualification.some((qualification) => qualification.type === ability);
       });
@@ -105,11 +96,6 @@ export default function CreateAction() {
       setModalOpen(true); 
       setSelectedRequestId(request.id);
       setSelectedRequestAbilities(request.requirements);
-      Object.entries(request.requirements).forEach(([key, value]) => {
-        // Ovdje možete pristupiti ključu i vrijednosti svakog para
-        //console.log("Key:", key);
-        //console.log("Value:", value);
-      });
       
     };
   
@@ -130,26 +116,14 @@ export default function CreateAction() {
       updatedTrackers[trackerId] = ability;
     }
     setSelectedTrackers(updatedTrackers);
-    console.log(updatedTrackers);
   };
 
   const handleDoneButtonClick = () => {
-    //console.log(selectedTrackers);
-    {
-      /*}
-    const requestedTrackersCount =
-      incomingRequests.find((request) => request.id === selectedRequestId)
-        ?.numberOfTrackers || 0;
-  
-    if (selectedTrackers.length < requestedTrackersCount) {
-      // Ako je odabrano manje tragača od traženog broja
-      alert("Please select more trackers!");
-    } else if (selectedTrackers.length > requestedTrackersCount) {
-      // Ako je odabrano više tragača od traženog broja
-      alert(`Please select exactly ${requestedTrackersCount} trackers!`);
-    } else {
-    */
-    }
+    console.log("id"+selectedRequestId);
+    console.log("rjecnik");
+    console.log(selectedTrackers);
+
+    
     // Ako je odabrano točno traženi broj tragača
     // Šaljemo na backend listu tragača s njihovim id-ijem i imenom
 

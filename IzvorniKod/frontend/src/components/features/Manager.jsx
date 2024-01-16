@@ -252,7 +252,7 @@ export default function Manager() {
   return (
     <>
       <Text color="#306844" fontSize={{ base: "2xl", md: "4xl", lg: "5xl" }} alignSelf="center">
-        Mananger
+        Manger
       </Text>
       {!selectedStation && (
         <Text
@@ -349,22 +349,21 @@ export default function Manager() {
             <ModalHeader>Edit trackers abilities</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-              <Select
-                padding="6px"
-                placeholder="Select Tracker"
-                onChange={(e) => {
-                  const selectedTrackerObject = availableTrackers.find((tracker) => tracker.name === e.target.value);
-                  setSelectedTracker(selectedTrackerObject);
-                  setCurrentSelectedTracker(selectedTrackerObject);
-                }}
-              >
-                {selectedTrackers.map((tracker) => (
-                  <option key={tracker.id} value={tracker.name}>
-                    {tracker.name}
-                  </option>
-                ))}
-</Select>
-
+            <Select
+             padding="6px"
+             placeholder="Select Tracker"
+             onChange={(e) => {
+             const selectedTrackerObject = availableTrackers.find((tracker) => tracker.name === e.target.value);
+             setSelectedTracker(selectedTrackerObject);
+             setCurrentSelectedTracker(selectedTrackerObject);
+            }}
+          >
+            {availableTrackers.map((tracker) => (
+             <option key={tracker.id} value={tracker.name}>
+              {`${tracker.name} ${tracker.surname}`} {/* Dodao sam prezime ovdje */}
+             </option>
+           ))}
+           </Select>
               {selectedTracker && currentSelectedTracker === selectedTracker && (
                 <Stack margin="8px" spacing={4} direction="column">
                   <Checkbox
