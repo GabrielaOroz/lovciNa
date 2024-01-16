@@ -397,7 +397,7 @@ export default function Researcher() {
                         " - " +
                         action.end}
                     </Text>
-                    {action.comments.length > 0 &&
+                    {action.comments && action.comments.length > 0 &&
                       action.comments.map((comment) => (
                         <Text mt="8px" align="center">
                           ○ {comment}
