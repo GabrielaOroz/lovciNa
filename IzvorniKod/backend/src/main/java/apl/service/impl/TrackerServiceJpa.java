@@ -8,6 +8,7 @@ import apl.dto.*;
 import apl.enums.ActionStatus;
 import apl.enums.TaskStatus;
 import apl.service.TrackerService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -39,6 +40,7 @@ public class TrackerServiceJpa implements TrackerService {
     private ActionRepository actionRepo;
 
 
+    @Transactional
     @Override
     public TrackerDTO getTrackerInfo(Long id) {
         Tracker tracker = trackerRepo.findById(id).orElse(null);
@@ -57,15 +59,21 @@ public class TrackerServiceJpa implements TrackerService {
         return trackerDTO;
     }
 
+    @Transactional
     @Override
     public List<DtoTracker> getAllTrackersOnAction(Long id) {
+        List<DtoTracker> dtoTrackers = new LinkedList<>();
+        if(trackerActionMediumRepo.findTopByTrackerIdAndActionStatus(id, ActionStatus.ACTIVE).orElse(null) == null){
+            return dtoTrackers;
+        }
+
         TrackerActionMedium actionMedium = trackerActionMediumRepo.findTopByTrackerIdAndActionStatus(id, ActionStatus.ACTIVE).orElse(null);
 
         Long actionId = actionMedium.getAction().getId();
 
         List<Tracker> trackers = trackerRepo.findByTrackerActionMediaActionId(actionId);
 
-        List<DtoTracker> dtoTrackers = new LinkedList<>();
+
 
         for(Tracker tracker : trackers){
             if(!Objects.equals(tracker.getId(), id))
@@ -75,12 +83,16 @@ public class TrackerServiceJpa implements TrackerService {
         return dtoTrackers;
     }
 
+    @Transactional
     @Override
     public List<DtoAnimal> getAllAnimals(Long id) {
+        List<DtoAnimal> dtoAnimals = new LinkedList<>();
+        if(trackerActionMediumRepo.findTopByTrackerIdAndActionStatus(id, ActionStatus.ACTIVE).orElse(null) == null){
+            return dtoAnimals;
+        }
 
         Long actionId = trackerActionMediumRepo.findTopByTrackerIdAndActionStatus(id, ActionStatus.ACTIVE).orElse(null).getId();
 
-        List<DtoAnimal> dtoAnimals = new LinkedList<>();
 
         List<Animal> animals = animalRepo.findByActionsId(actionId);
 
@@ -91,15 +103,16 @@ public class TrackerServiceJpa implements TrackerService {
         return dtoAnimals;
     }
 
+    @Transactional
     @Override
     public List<DtoSpecies> getAllSpecies(Long id) {
+        List<DtoSpecies> speciesList = new LinkedList<>();
         if (trackerActionMediumRepo.findTopByTrackerIdAndActionStatus(id, ActionStatus.ACTIVE).orElse(null) == null) {
-            return null;
+            return speciesList;
         }
         Long actionId = trackerActionMediumRepo.findTopByTrackerIdAndActionStatus(id, ActionStatus.ACTIVE).orElse(null).getId();
 
 
-        List<DtoSpecies> speciesList = new LinkedList<>();
 
         List<Species> species = speciesRepo.findByAnimalsActionsId(actionId);
 
@@ -110,11 +123,15 @@ public class TrackerServiceJpa implements TrackerService {
         return speciesList;
     }
 
+    @Transactional
     @Override
     public List<DtoHabitat> getAllHabitats(Long id) {
+        List<DtoHabitat> habitatsList = new LinkedList<>();
+        if(trackerActionMediumRepo.findTopByTrackerIdAndActionStatus(id, ActionStatus.ACTIVE).orElse(null) == null){
+            return habitatsList;
+        }
         Long actionId = trackerActionMediumRepo.findTopByTrackerIdAndActionStatus(id, ActionStatus.ACTIVE).orElse(null).getId();
 
-        List<DtoHabitat> habitatsList = new LinkedList<>();
 
         List<Habitat> habitats = habitatRepo.findByActionsId(actionId);
 
@@ -125,6 +142,7 @@ public class TrackerServiceJpa implements TrackerService {
         return habitatsList;
     }
 
+    @Transactional
     @Override
     public List<DtoTask> getAllTasks(Long id) {
         List<DtoTask> tasksList = new LinkedList<>();
@@ -137,8 +155,13 @@ public class TrackerServiceJpa implements TrackerService {
         return tasksList;
     }
 
+    @Transactional
     @Override
     public DtoAction updateAllDoneTasks(Map<Long, Long> lista, Long usrId) {
+        if(trackerActionMediumRepo.findTopByTrackerIdAndActionStatus(usrId, ActionStatus.ACTIVE).orElse(null) == null){
+            return null;
+        }
+
         Action action = trackerActionMediumRepo.findTopByTrackerIdAndActionStatus(usrId, ActionStatus.ACTIVE).orElse(null).getAction();
 
         List<Task> allTasksOfTracker = taskRepo.findByActionIdAndTrackerId(action.getId(), usrId);
@@ -177,6 +200,7 @@ public class TrackerServiceJpa implements TrackerService {
         return action.toDTO();
     }
 
+    @Transactional
     @Override
     public List<DtoAnimal> updateNewComments(Map<Long, List<AnimalComment>> comments, Long usrId) {
         List<Animal> animalsOnAction = animalRepo.findByActionsId(trackerActionMediumRepo.findTopByTrackerIdAndActionStatus(usrId, ActionStatus.ACTIVE).orElse(null).getAction().getId());
@@ -193,6 +217,7 @@ public class TrackerServiceJpa implements TrackerService {
         return MyConverter.convertToDTOList(animalsOnAction);
     }
 
+    @Transactional
     @Override
     public DtoAction updateNewCommentsOnAction(List<ActionComment> comments, Long usrId) {
         Action action = trackerActionMediumRepo.findTopByTrackerIdAndActionStatus(usrId, ActionStatus.ACTIVE).orElse(null).getAction();

@@ -61,10 +61,10 @@ public class TrackerController {
         Long usrId = authorize(session.getAttribute("id"));
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
-        if (trackerService.getTrackerInfo(usrId) != null) {
-            return ResponseEntity.ok(trackerService.getTrackerInfo(usrId));         //jel vraca i name i surname?
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        try {
+            return ResponseEntity.ok(trackerService.getTrackerInfo(usrId));
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
@@ -74,11 +74,12 @@ public class TrackerController {
         Long usrId = authorize(session.getAttribute("id"));
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
-        if (trackerService.getAllTrackersOnAction(usrId) != null) {
+        try {
             return ResponseEntity.ok(trackerService.getAllTrackersOnAction(usrId));
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
+
     }
 
     @GetMapping("/individuals")
@@ -86,10 +87,11 @@ public class TrackerController {
         Long usrId = authorize(session.getAttribute("id"));
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
-        if (trackerService.getAllAnimals(usrId) != null) {
+
+        try {
             return ResponseEntity.ok(trackerService.getAllAnimals(usrId));
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
@@ -98,10 +100,11 @@ public class TrackerController {
         Long usrId = authorize(session.getAttribute("id"));
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
-        if (trackerService.getAllSpecies(usrId) != null) {
+
+        try {
             return ResponseEntity.ok(trackerService.getAllSpecies(usrId));
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
@@ -110,10 +113,11 @@ public class TrackerController {
         Long usrId = authorize(session.getAttribute("id"));
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
-        if (trackerService.getAllHabitats(usrId) != null) {
+
+        try {
             return ResponseEntity.ok(trackerService.getAllHabitats(usrId));
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
@@ -122,10 +126,11 @@ public class TrackerController {
         Long usrId = authorize(session.getAttribute("id"));
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
-        if (trackerService.getAllTasks(usrId) != null) {
+
+        try {
             return ResponseEntity.ok(trackerService.getAllTasks(usrId));
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
@@ -134,10 +139,11 @@ public class TrackerController {
         Long usrId = authorize(session.getAttribute("id"));
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
-        if (trackerService.updateAllDoneTasks(lista, usrId) != null) {
+
+        try {
             return ResponseEntity.ok(trackerService.updateAllDoneTasks(lista, usrId));
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
@@ -146,10 +152,11 @@ public class TrackerController {
         Long usrId = authorize(session.getAttribute("id"));
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
-        if (trackerService.updateNewComments(comments, usrId) != null) {
+
+        try {
             return ResponseEntity.ok(trackerService.updateNewComments(comments, usrId));
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
@@ -158,10 +165,11 @@ public class TrackerController {
         Long usrId = authorize(session.getAttribute("id"));
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
-        if (trackerService.updateNewCommentsOnAction(comments, usrId) != null) {
+
+        try {
             return ResponseEntity.ok(trackerService.updateNewCommentsOnAction(comments, usrId));
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 }
