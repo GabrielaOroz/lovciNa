@@ -10,12 +10,12 @@ import mockData from "../../mockData.jsx";
 export default function Tracker() {
   const [openTasks, setOpenTasks] = useState(false);
   const [openAnimals, setOpenAnimals] = useState(false);
-  const [tracker, setTracker] = useState(mockData.tracker);
-  const [trackers, setTrackers] = useState(mockData.trackers);
-  const [species, setSpecies] = useState(mockData.species);
-  const [individuals, setIndividuals] = useState(mockData.individuals);
-  const [habitats, setHabitats] = useState(mockData.habitats);
-  const [tasks, setTasks] = useState(mockData.tasks);
+  const [tracker, setTracker] = useState({});
+  const [trackers, setTrackers] = useState([]);
+  const [species, setSpecies] = useState([]);
+  const [individuals, setIndividuals] = useState([]);
+  const [habitats, setHabitats] = useState([]);
+  const [tasks, setTasks] = useState([]);
   const mapRef = useRef(null);
 
   /* TRACKER INFO */
@@ -155,6 +155,7 @@ export default function Tracker() {
   const [commentsAction, setCommentsAction] = useState(
     tracker && tracker.action && tracker.action.comments ? tracker.action.comments : []
   );
+  console.log(commentsAction)
   const handleKeyDownAction = (e) => {
     if (e.key === "Enter" && e.target.value) {
       e.preventDefault();
@@ -162,7 +163,7 @@ export default function Tracker() {
       putActionComments();
     }
   };
-  //console.log(commentsAction);
+  
   const putActionComments = () => {
     fetch("http://localhost:8000/tracker/actionComments", {
       method: "PUT",
