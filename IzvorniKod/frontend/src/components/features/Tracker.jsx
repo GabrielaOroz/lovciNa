@@ -164,13 +164,14 @@ export default function Tracker() {
   };
   //console.log(commentsAction);
   const putActionComments = () => {
+    let postData = {commentsAction: commentsAction};
     fetch("http://localhost:8000/tracker/actionComments", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
       credentials: "include",
-      body: JSON.stringify(commentsAction),
+      body: JSON.stringify(postData),
     }).then((res) => {
       if (res.ok) {
         window.location.reload();
