@@ -104,8 +104,9 @@ export default function Tracker() {
   //console.log(doneTasks);
   const handleDoneTasks = (id) => {
     setDoneTasks({ ...doneTasks, [id]: 2 });
+    putDoneTasks();
   };
-  useEffect(() => {
+  const putDoneTasks = () => {
     fetch("http://localhost:8000/tracker/doneTasks", {
       method: "PUT",
       headers: {
@@ -118,7 +119,7 @@ export default function Tracker() {
         window.location.reload();
       }
     });
-  }, [doneTasks]);
+  };
 
   /* NEW ANIMAL COMMENT */
   const [comments, setComments] = useState(() =>
@@ -129,12 +130,13 @@ export default function Tracker() {
   );
   //console.log(comments);
   const handleKeyDown = (e, id) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && e.target.value) {
       e.preventDefault();
       setComments({ ...comments, [id]: [...comments[id], e.target.value] });
+      putComments();
     }
   };
-  useEffect(() => {
+  const putComments = () => {
     fetch("http://localhost:8000/tracker/newComments", {
       method: "PUT",
       headers: {
@@ -147,20 +149,21 @@ export default function Tracker() {
         window.location.reload();
       }
     });
-  }, [comments]);
+  };
 
   /* NEW ACTION COMMENT */
   const [commentsAction, setCommentsAction] = useState(
     tracker && tracker.action && tracker.action.comments ? tracker.action.comments : []
   );
   const handleKeyDownAction = (e) => {
-    if (e.key === "Enter") {
+    if (e.key === "Enter" && e.target.value) {
       e.preventDefault();
       setCommentsAction([...commentsAction, e.target.value]);
+      putActionComments();
     }
   };
   //console.log(commentsAction);
-  useEffect(() => {
+  const putActionComments = () => {
     fetch("http://localhost:8000/tracker/actionComments", {
       method: "PUT",
       headers: {
@@ -173,7 +176,7 @@ export default function Tracker() {
         window.location.reload();
       }
     });
-  }, [commentsAction]);
+  };
 
   /* ROUTES */
   const RoutingMachine = ({ task }) => {
@@ -229,7 +232,7 @@ export default function Tracker() {
 
   return (
     <>
-    {(!tracker || !tracker.station || !tracker.action) && <Text>You don't have any actions yet</Text>}
+      {(!tracker || !tracker.station || !tracker.action) && <Text>You don't have any actions yet</Text>}
       {tracker && tracker.station && (
         <>
           <Text color="#306844" fontSize={{ base: "2xl", md: "4xl", lg: "5xl" }} alignSelf="center">
