@@ -13,7 +13,7 @@ import MissingPage from "./pages/MissingPage";
 import Fonts from "./styles/Fonts";
 import theme from "./styles/theme";
 import CreateActions from "./pages/CreateActions";
-import Requirments from "./pages/Requirments";
+import Requirements from "./pages/Requirements";
 
 export default function App() {
   return (
@@ -31,7 +31,7 @@ export default function App() {
           <Route path="/home" element={<Home />} />
           <Route path="/new-requirements" element={<CreateRequirements />} />
           <Route path="/new-actions" element={<CreateActions />} />
-          <Route path="/requirments" element={<Requirments />} />
+          <Route path="/requirements" element={<Requirements />} />
           <Route path="*" element={<MissingPage />} />
         </Routes>
       </BrowserRouter>

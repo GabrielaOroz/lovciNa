@@ -6,8 +6,8 @@ import { Box, Button, Card, Flex, Input, Select, Text, Modal, Checkbox,
     ModalCloseButton,
     ModalBody,
     ModalFooter,  Tabs, TabList, TabPanels, Tab, TabPanel,  } from "@chakra-ui/react";
-import GreenButton from "../components/shared/GreenButton";
-import YellowButton from "../components/shared/YellowButton";
+import GreenButton from "../components/shared/GreenButton.jsx";
+import YellowButton from "../components/shared/YellowButton.jsx";
 import podaci from "../pomoc.jsx";
 import trackersData from "../trackersData.jsx";
 import { useNavigate } from "react-router-dom";

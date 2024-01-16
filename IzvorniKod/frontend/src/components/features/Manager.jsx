@@ -28,6 +28,7 @@ export default function Manager() {
   const [isAbilitiesModalOpen, setIsAbilitiesModalOpen] = useState(false);
   const [currentSelectedTracker, setCurrentSelectedTracker] = useState(null); // u prozoru
   const [selectedAll, setSelectedAll] = useState(false);
+  const [selected, setSelected] = useState(false);
 
   //slobodni trackeri
   const [availableTrackers, setAvailableTrackers] = useState(podaci);
@@ -43,6 +44,26 @@ export default function Manager() {
   const [selectedAbilities, setSelectedAbilities] = useState({}); //rijecnik - tracker i abilities
 
   const mapRef = useRef(null);
+
+  const sendEmptyMediaList = () => {
+    fetch("http://localhost:8000/saveMedia", {
+      method: "POST",
+      credentials: "include",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        mediaList: [], // Sending an empty list
+      }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Response from /saveMedia:", data);
+      })
+      .catch((error) => {
+        console.error("Error sending empty media list:", error);
+      });
+  };
 
   const fetchExistingStationData = () => {
     fetch("http://localhost:8000/manager/station", {
@@ -85,7 +106,7 @@ export default function Manager() {
     })
       .then((res) => res.json())
       .then((data) => {
-        setSelectedAll(data.length > 0); // Set selectedAll to true if there are trackers
+        setSelected(true); //za gumb requirements
       })
       .catch((error) => {
         console.error("Error fetching trackers:", error);
@@ -111,6 +132,7 @@ export default function Manager() {
     fetchExistingStationData();
     fetchMyTrackers();
     fetchTrackers();
+    sendEmptyMediaList()
   }, []);
 
   const handleMapClick = (e) => {
@@ -245,6 +267,7 @@ export default function Manager() {
     console.log("Selected Abilities:", selectedAbilities);
     setIsAbilitiesModalOpen(false);
     setSelectedAll(true);
+    selected(true);
   };
 
   return (
@@ -438,10 +461,10 @@ export default function Manager() {
             </ModalFooter>
           </ModalContent>
         </Modal>
-        {selectedAll && (
-          <Link to="/requirments">
+        {selected && (
+          <Link to="/requirements">
             <GreenButton margin="14px" onClick={handleToggleRequests}>
-              Requirments
+              Requirements
             </GreenButton>
           </Link>
         )}
