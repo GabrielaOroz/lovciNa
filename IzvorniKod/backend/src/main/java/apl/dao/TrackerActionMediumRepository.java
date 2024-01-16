@@ -12,5 +12,6 @@ import java.util.Optional;
 public interface TrackerActionMediumRepository extends JpaRepository<TrackerActionMedium, Long> {
 
     Optional<TrackerActionMedium> findTopByTrackerIdAndActionStatus(Long trackerId, ActionStatus actionStatus);
+    Optional<TrackerActionMedium> findByTrackerId(Long trackerId);
 
 }

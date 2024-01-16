@@ -11,6 +11,8 @@ import apl.service.ManagerService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.transaction.annotation.Propagation;
 
 import java.time.LocalDateTime;
 import java.util.LinkedList;
@@ -104,14 +106,16 @@ public class ManagerServiceJpa implements ManagerService {
         List<DtoTracker> trackers = new LinkedList<>();
 
         for (Tracker tracker : trackersFromStation){
-            if(!tracker.isTryingToHaveMultipleActiveActionsByMistake())
+            if(trackerActionMediumRepo.findByTrackerId(tracker.getId()).orElse(null) == null)
                 trackers.add(tracker.toTrackerDTO());
         }
 
         return trackers;
     }
 
+
     @Transactional
+            //(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     @Override
     public Action submitAction(RequestDTO requestDTO) {
         Request request = requestRepo.findById(requestDTO.getRequestId()).orElse(null);
@@ -126,26 +130,26 @@ public class ManagerServiceJpa implements ManagerService {
 
         Map<Long, MediumType> trackersForAction = requestDTO.getSelectedTrackers();
 
-        List<TrackerActionMedium> trackersInAction = new LinkedList<>();
-
         for (Long trackerId : trackersForAction.keySet()){
-            System.out.println(trackerId);
-                Medium medium = new Medium();
-                medium.setType(trackersForAction.get(trackerId));
-                Tracker tracker = trackerRepo.findById(trackerId).orElse(null);
-                TrackerActionMedium trackerActionMedium = new TrackerActionMedium(tracker, action, medium);
-            try{
-                System.out.println("tu sam 4");
+            //System.out.println(trackerId);
+
+            Tracker tracker = trackerRepo.findById(trackerId).orElse(null);
+            Medium medium = mediumRepo.findById(trackersForAction.get(trackerId)).orElse(null);
+            System.out.println(tracker.getName());
+            System.out.println(action.getTitle());
+            System.out.println(medium.getType());
+            TrackerActionMedium trackerActionMedium = new TrackerActionMedium(tracker, action, medium);
+
+            //try{
                 trackerActionMediumRepo.save(trackerActionMedium);
-                System.out.println("tu sam 5");
-            } catch (Exception e){
-                return null;
-            }
+            //} catch (Exception e){
+              //  return null;
+            //}
         }
         return action;
     }
 
-   @Transactional
+    @Transactional
     @Override
     public Station saveTrackerQualification(Long usrId, Map<Long, List<MediumType>> map) {
         Station station = stationRepo.findByManagerId(usrId);
@@ -154,19 +158,18 @@ public class ManagerServiceJpa implements ManagerService {
             Tracker tracker = trackerRepo.findById(trackerId).orElse(null);
             List<Medium> media = new LinkedList<>();
             for (MediumType mediumType : map.get(trackerId)) {
-                Medium medium = new Medium();
-                medium.setType(mediumType);
+                Medium medium = mediumRepo.findById(mediumType).orElse(null);
                 media.add(medium);
             }
             tracker.addMultipleMedia(media);
             tracker.assignStation(station);
             tracker.setLongitude(station.getLongitude());
             tracker.setLatitude(station.getLatitude());
-            try{
+            /*try{
                 trackerRepo.save(tracker);
             } catch (Exception e){
                 return null;
-            }
+            }*/
         }
 
 
