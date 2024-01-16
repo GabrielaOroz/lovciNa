@@ -106,12 +106,12 @@ public class ManagerController {
     }
 
     @PostMapping("/saveAbilities")
-    public ResponseEntity<Station> saveAbilities(@RequestBody Map<Long, List<MediumType>> selectedAbilities, HttpSession session) {
+    public ResponseEntity<String> saveAbilities(@RequestBody Map<Long, List<MediumType>> selectedAbilities, HttpSession session) {
         Long usrId = authorize2(session.getAttribute("id"));
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
         if (managerService.saveTrackerQualification(usrId, selectedAbilities) != null) {
-            return ResponseEntity.ok(managerService.saveTrackerQualification(usrId, selectedAbilities));
+            return ResponseEntity.ok("great");
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }

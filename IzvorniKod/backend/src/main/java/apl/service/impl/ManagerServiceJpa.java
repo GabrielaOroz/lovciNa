@@ -91,9 +91,13 @@ public class ManagerServiceJpa implements ManagerService {
         List<DtoAction> actions = new LinkedList<>();
 
         for(DtoRequest request : incomingRequests){
-            actions.add(request.getAction());
-        }
+            for(MediumType k : request.getAction().getRequirements().keySet()){
+                if(request.getAction().getRequirements().get(k) != 0){
+                    actions.add(request.getAction());
+                }
+            }
 
+        }
         return actions;
     }
 
@@ -153,12 +157,14 @@ public class ManagerServiceJpa implements ManagerService {
     @Override
     public Station saveTrackerQualification(Long usrId, Map<Long, List<MediumType>> map) {
         Station station = stationRepo.findByManagerId(usrId);
-
+        System.out.println("0. nepetlja");
         for (Long trackerId : map.keySet()){
             Tracker tracker = trackerRepo.findById(trackerId).orElse(null);
             List<Medium> media = new LinkedList<>();
+            System.out.println("1. petlja");
             for (MediumType mediumType : map.get(trackerId)) {
                 Medium medium = mediumRepo.findById(mediumType).orElse(null);
+                System.out.println(mediumType);
                 media.add(medium);
             }
             tracker.addMultipleMedia(media);
