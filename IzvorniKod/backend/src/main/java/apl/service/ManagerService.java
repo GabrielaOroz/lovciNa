@@ -29,4 +29,6 @@ public interface ManagerService {
 
     Station saveTrackerQualification(Long usrId, Map<Long, List<MediumType>>  map);
 
+    void saveMediaToDB();
+
 }
