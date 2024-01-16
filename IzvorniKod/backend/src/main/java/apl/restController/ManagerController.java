@@ -155,7 +155,6 @@ public class ManagerController {
 
 
     //fill db with media
-
     @PostMapping("/saveMedia")
     public ResponseEntity<String> saveMedia() {
         managerService.saveMediaToDB();
