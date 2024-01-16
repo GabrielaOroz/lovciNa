@@ -379,7 +379,7 @@ export default function Manager() {
              setCurrentSelectedTracker(selectedTrackerObject);
             }}
           >
-            {availableTrackers.map((tracker) => (
+            {selectedTrackers.map((tracker) => (
              <option key={tracker.id} value={tracker.name}>
               {`${tracker.name} ${tracker.surname}`} {/* Dodao sam prezime ovdje */}
              </option>
