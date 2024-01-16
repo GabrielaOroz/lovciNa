@@ -69,15 +69,26 @@ export default function Manager() {
           const lat = existingStation.latitude;
           const lng = existingStation.longitude;
           setMarkerPosition({ lat, lng });
-
-          console.log(lat)
-          console.log(lng)
           mapRef.current.setView([lat, lng], 16);
 
         }
       })
       .catch((error) => {
         console.error("Error fetching existing station data:", error);
+      });
+  };
+
+  const fetchMyTrackers = () => {
+    fetch("http://localhost:8000/manager/available-trackers", {
+      method: "GET",
+      credentials: "include",
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        setSelectedAll(data.length > 0); // Set selectedAll to true if there are trackers
+      })
+      .catch((error) => {
+        console.error("Error fetching trackers:", error);
       });
   };
 
@@ -95,22 +106,10 @@ export default function Manager() {
       });
   };
 
-  const fetchAbilities = () => {
-    return fetch("http://localhost:8000/abilities", {
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    })
-      .then((res) => res.json())
-      .then((abilities) => {
-        console.log("Abilities: ", abilities);
-        setAbilityOptions(abilities);
-      });
-  };
 
   useEffect(() => {
     fetchExistingStationData();
+    fetchMyTrackers();
     fetchTrackers();
   }, []);
 
@@ -163,8 +162,7 @@ export default function Manager() {
   };
 
   const handleToggleRequests = () => {
-    if (!selectedStation || selectedTrackers.length === 0 || 
-      Object.values(selectedAbilities).some((abilities) => abilities.length === 0)) {
+    if (!selectedAll) {
       alert("Please select a station, trackers, and abilities.");
     }
   };
@@ -252,7 +250,7 @@ export default function Manager() {
   return (
     <>
       <Text color="#306844" fontSize={{ base: "2xl", md: "4xl", lg: "5xl" }} alignSelf="center">
-        Manger
+        Manager
       </Text>
       {!selectedStation && (
         <Text
@@ -440,7 +438,7 @@ export default function Manager() {
             </ModalFooter>
           </ModalContent>
         </Modal>
-        {true && (
+        {selectedAll && (
           <Link to="/requirments">
             <GreenButton margin="14px" onClick={handleToggleRequests}>
               Requirments

@@ -179,9 +179,9 @@ export default function CreateAction() {
                 <tbody>
                   {incomingRequests.map((request) => (
                     <tr key={request.id}>
-                      <td style={{ padding: "8px" }}>{request.title}</td>
-                      <td style={{ padding: "8px" }}>{request.researcher.name}</td>
-                      <td style={{ padding: "8px" }}>
+                      <td style={{ padding: "8px", textAlign: "center" }}>{request.title}</td>
+                      <td style={{ padding: "8px", textAlign: "center" }}>{request.researcher.name} {request.researcher.surname}</td>
+                      <td style={{ padding: "8px", textAlign: "center" }}>
                         <YellowButton onClick={() => handleResponseButtonClick(request)}>Respond</YellowButton>
                       </td>
                     </tr>
