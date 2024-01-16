@@ -162,7 +162,7 @@ public class ManagerController {
     @PostMapping("/saveMedia")
     public ResponseEntity<String> saveMedia() {
         managerService.saveMediaToDB();
-        return ResponseEntity.ok("Successful");
+        return ResponseEntity.ok("Successful.");
     }
 
 

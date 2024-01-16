@@ -117,15 +117,15 @@ public class ResearcherController {
         }
     }
 
-    @GetMapping("/finished-actions")
-    public ResponseEntity<List<ActionDTO>> getFinishedActions(HttpSession session) {
+    @PostMapping("/finished-actions")
+    public ResponseEntity<DtoAction> getFinishedActions(@RequestBody ActionDTO actions, HttpSession session) {
         Long usrId = authorize2(session.getAttribute("id"));
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
-        if (researcherService.getAllFinishedActions(usrId) != null) {
-            return ResponseEntity.ok(researcherService.getAllFinishedActions(usrId));
+        if (researcherService.getAllFinishedActions(actions, usrId) != null) {
+            return ResponseEntity.ok(researcherService.getAllFinishedActions(actions, usrId));
         } else {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(researcherService.getAllFinishedActions(usrId));
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(researcherService.getAllFinishedActions(actions, usrId));
         }
     }
 

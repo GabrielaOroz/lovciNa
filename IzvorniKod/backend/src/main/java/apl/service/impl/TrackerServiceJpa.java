@@ -219,10 +219,20 @@ public class TrackerServiceJpa implements TrackerService {
 
     @Transactional
     @Override
-    public DtoAction updateNewCommentsOnAction(List<ActionComment> comments, Long usrId) {
-        Action action = trackerActionMediumRepo.findTopByTrackerIdAndActionStatus(usrId, ActionStatus.ACTIVE).orElse(null).getAction();
+    public DtoAction updateNewCommentsOnAction(List<String> comments, Long usrId) {
+        TrackerActionMedium medium = trackerActionMediumRepo.findTopByTrackerIdAndActionStatus(usrId, ActionStatus.ACTIVE).orElse(null);
 
-        action.addMultipleActionComments(comments);
+        Action action = medium.getAction();
+
+        List<ActionComment> newComments = new LinkedList<>();
+
+        for(String s : comments){
+            Tracker tracker = trackerRepo.findById(usrId).orElse(null);
+            ActionComment actionComment = new ActionComment(tracker, action, null, s);
+
+            newComments.add(actionComment);
+        }
+        action.addMultipleActionComments(newComments);
         try{
             actionRepo.save(action);
         } catch (Exception e){

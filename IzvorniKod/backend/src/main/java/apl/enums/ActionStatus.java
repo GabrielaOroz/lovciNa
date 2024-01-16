@@ -5,5 +5,5 @@ public enum ActionStatus {
     PENDING,
     ACTIVE,
     FINISHED,
-    ABORTED;
+    WAITING;
 }

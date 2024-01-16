@@ -141,6 +141,7 @@ public class TrackerController {
 
 
         try {
+
             return ResponseEntity.ok(trackerService.updateAllDoneTasks(lista, usrId));
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
@@ -152,7 +153,6 @@ public class TrackerController {
         Long usrId = authorize(session.getAttribute("id"));
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
-
         try {
             return ResponseEntity.ok(trackerService.updateNewComments(comments, usrId));
         } catch (Exception e){
@@ -161,13 +161,13 @@ public class TrackerController {
     }
 
     @PutMapping("/actionComments")
-    public ResponseEntity<DtoAction> addNewCommentsOnAction(@RequestBody List<ActionComment> comments , HttpSession session) {
+    public ResponseEntity<DtoAction> addNewCommentsOnAction(@RequestBody List<String> commentsAction , HttpSession session) {
         Long usrId = authorize(session.getAttribute("id"));
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-
-
+        System.out.println("controller:");
+        System.out.println(commentsAction);
         try {
-            return ResponseEntity.ok(trackerService.updateNewCommentsOnAction(comments, usrId));
+            return ResponseEntity.ok(trackerService.updateNewCommentsOnAction(commentsAction, usrId));
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }

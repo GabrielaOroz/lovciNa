@@ -124,8 +124,8 @@ public class ManagerServiceJpa implements ManagerService {
             return null;
         }
         Action action = actionRepo.findById(request.getAction().getId()).orElse(null);
-        action.setStartOfAction(LocalDateTime.now());
-        action.setStatus(ActionStatus.ACTIVE);
+        //action.setStartOfAction(LocalDateTime.now());
+        action.setStatus(ActionStatus.WAITING);
 
         Map<Long, MediumType> trackersForAction = requestDTO.getSelectedTrackers();
 
@@ -212,6 +212,7 @@ public class ManagerServiceJpa implements ManagerService {
         Medium medium8 = new Medium(MediumType.HELICOPTER, true, 500D, 0.3D, 60D);
         mediumRepo.save(medium8);
     }
+
 
 
 }

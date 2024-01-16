@@ -33,15 +33,13 @@ import java.util.stream.Collectors;
         generator = ObjectIdGenerators.PropertyGenerator.class,
         property = "id",
         scope = ActionComment.class)
-public class ActionComment implements ConvertibleToDTO<DtoActionComment>, ConvertibleToLocation {
+public class ActionComment implements ConvertibleToDTO<DtoActionComment> {
 
-    public ActionComment(User user, Action action, String title, String content, Double longitude, Double latitude) {
+    public ActionComment(User user, Action action, String title, String content) {
         assignUser(user);
         assignAction(action);
         setTitle(title);
         setContent(content);
-        setLongitude(longitude);
-        setLatitude(latitude);
     }
 
 
@@ -57,8 +55,6 @@ public class ActionComment implements ConvertibleToDTO<DtoActionComment>, Conver
         if (this.action!=null) actionComment.setAction(this.action.toDTO(entities));
         actionComment.setTitle(this.title);
         actionComment.setContent(this.content);
-        actionComment.setLongitude(this.longitude);
-        actionComment.setLatitude(this.latitude);
         actionComment.setCreationTime(this.creationTime);
         return actionComment;
     }
@@ -75,16 +71,10 @@ public class ActionComment implements ConvertibleToDTO<DtoActionComment>, Conver
         if (this.action!=null) actionComment.setAction(this.action.toDTO(localEntities));
         actionComment.setTitle(this.title);
         actionComment.setContent(this.content);
-        actionComment.setLongitude(this.longitude);
-        actionComment.setLatitude(this.latitude);
         actionComment.setCreationTime(this.creationTime);
         return actionComment;
     }
 
-    @Override
-    public Location toLocation() {
-        return new Location(this.longitude, this.latitude);
-    }
 
     @Id
     @GeneratedValue
@@ -122,9 +112,6 @@ public class ActionComment implements ConvertibleToDTO<DtoActionComment>, Conver
 
     private String content;
 
-    private Double longitude;
-
-    private Double latitude;
 
     @Column(nullable = false)
     private LocalDateTime creationTime = LocalDateTime.now();

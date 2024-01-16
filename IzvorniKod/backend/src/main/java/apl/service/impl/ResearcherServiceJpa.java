@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -37,6 +38,9 @@ public class ResearcherServiceJpa implements ResearcherService {
 
     @Autowired
     HabitatRepository habitatRepo;
+
+    @Autowired
+    private ActionRepository actionRepo;
 
     @Transactional
     public DtoUser createAction(Action action, Long usrId) {
@@ -91,28 +95,68 @@ public class ResearcherServiceJpa implements ResearcherService {
     }
 
     @Transactional
-    public List<ActionDTO> getAllFinishedActions(Long usrId) {
-        /*List<DtoAction> dtoActions = getAllActions(usrId);
-        List<ActionDTO> dtoFinishedActions = new LinkedList<>();
-        for (DtoAction dtoAction : dtoActions) {
-            if (ActionStatus.FINISHED.equals(dtoAction.getStatus())) {
-                dtoFinishedActions.add(dtoAction);
+    public DtoAction getAllFinishedActions(ActionDTO action, Long usrId) {
+
+        Action action1 = actionRepo.findById(action.getDtoAction().getId()).orElse(null);
+
+        action1.setStartOfAction(LocalDateTime.now());
+        action1.setStatus(ActionStatus.ACTIVE);
+
+        List<Animal> animalsForDB = new LinkedList<>();
+        for(DtoAnimal animal : action.getDtoAction().getAnimals()){
+            Species species = new Species(animal.getSpecies().getName(), animal.getSpecies().getDescription(), animal.getSpecies().getPhoto());
+            Animal a = new Animal(species, animal.getName(), animal.getDescription(), animal.getPhoto());
+            animalsForDB.add(a);
+        }
+
+        for(DtoAnimal animal : action.getExistingAnimals()){
+            Animal animal1 = animalRepo.findById(animal.getId()).orElse(null);
+            animalsForDB.add(animal1);
+        }
+
+        action1.addMultipleAnimals(animalsForDB);
+
+
+        List<Habitat> habitatsForDB = new LinkedList<>();
+        for(DtoHabitat habitat : action.getDtoAction().getHabitats()){
+            Habitat habitat1 = new Habitat(habitat.getLongitude(), habitat.getLatitude(), habitat.getRadius(), habitat.getName(), habitat.getDescription(), habitat.getPhoto());
+            habitatsForDB.add(habitat1);
+        }
+
+        for(DtoHabitat habitat : action.getExistingHabitats()){
+            Habitat habitat1 = habitatRepo.findById(habitat.getId()).orElse(null);
+            habitatsForDB.add(habitat1);
+        }
+
+        action1.addMultipleHabitats(habitatsForDB);
+        try{
+            actionRepo.save(action1);
+        }catch (Exception e){
+            return null;
+        }
+
+
+        for(DtoSpecies species : action.getDtoAction().getSpecies()){
+            Species species1 = new Species(species.getName(), species.getDescription(), species.getPhoto());
+            try{
+                speciesRepo.save(species1);
+            }catch (Exception e){
+                return null;
             }
         }
-        return dtoFinishedActions;*/
-        return null;
+
+        return action1.toDTO();
     }
 
     @Transactional
     public List<ActionDTO> getAllUnfinishedActions(Long usrId) {
-        List<DtoAction> dtoActions = getAllActions(usrId);
+        List<DtoAction> dtoActions = MyConverter.convertToDTOList(actionRepo.findByResearcherIdAndStatus(usrId, ActionStatus.WAITING));
         List<ActionDTO> dtoUnfinishedActions = new LinkedList<>();
         for (DtoAction dtoAction : dtoActions) {
-            if (dtoAction.getStartOfAction() == null) {
-                ActionDTO actionDTO = new ActionDTO();
-                actionDTO.setDtoAction(dtoAction);
-                dtoUnfinishedActions.add(actionDTO);
-            }
+            ActionDTO actionDTO = new ActionDTO();
+            actionDTO.setDtoAction(dtoAction);
+            dtoUnfinishedActions.add(actionDTO);
+
         }
         return dtoUnfinishedActions;
     }
