@@ -41,7 +41,7 @@ export default function Researcher() {
       });
   }, []);
 
-  useEffect(() => {
+  /*useEffect(() => {
     fetch("http://localhost:8000/researcher/coords", {
       method: "GET",
       credentials: "include",
@@ -51,7 +51,7 @@ export default function Researcher() {
         console.log("Coords: ", data);
         setCoords(data);
       });
-  }, []);
+  }, []);*/
 
   const [openActions, setOpenActions] = useState(false);
 
@@ -306,7 +306,7 @@ export default function Researcher() {
             </LayersControl.Overlay>
             <LayersControl.Overlay checked name="Pozicije tragača na akciji">
               <LayerGroup>
-                {formData.length > 0 &&
+                {/*{formData.length > 0 &&
                   formData.map((action, index) =>
                     action.trackers.map((tracker, index) => (
                       <Marker key={index} icon={greenIcon} position={[tracker.latitude, tracker.longitude]}>
@@ -315,19 +315,19 @@ export default function Researcher() {
                         </Popup>
                       </Marker>
                     ))
-                  )}
+                    )}*/}
               </LayerGroup>
             </LayersControl.Overlay>
             <LayersControl.Overlay checked name="Pozicije praćenih životinja">
               <LayerGroup>
-                {formData.length > 0 &&
+                {/*{formData.length > 0 &&
                   formData.map((action) =>
                     action.individuals.map((animal, index) => (
                       <Marker key={index} icon={redIcon} position={[animal.latitude, animal.longitude]}>
                         <Popup>{animal.name}</Popup>
                       </Marker>
                     ))
-                  )}
+                    )}*/}
               </LayerGroup>
             </LayersControl.Overlay>
           </LayersControl>

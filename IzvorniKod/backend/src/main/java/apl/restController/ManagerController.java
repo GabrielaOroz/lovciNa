@@ -106,12 +106,13 @@ public class ManagerController {
     }
 
     @PostMapping("/saveAbilities")
-    public ResponseEntity<String> saveAbilities(@RequestBody Map<Long, List<MediumType>> selectedAbilities, HttpSession session) {
+    public ResponseEntity<Station> saveAbilities(@RequestBody Map<Long, List<MediumType>> selectedAbilities, HttpSession session) {
         Long usrId = authorize2(session.getAttribute("id"));
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
-        if (managerService.saveTrackerQualification(usrId, selectedAbilities) != null) {
-            return ResponseEntity.ok("great");
+        Station station = managerService.saveTrackerQualification(usrId, selectedAbilities);
+        if (station != null) {
+            return ResponseEntity.ok(station);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
@@ -122,8 +123,10 @@ public class ManagerController {
         Long usrId = authorize2(session.getAttribute("id"));
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
-        if (managerService.getIncomingRequests(usrId) != null) {
-            return ResponseEntity.ok(managerService.getIncomingRequests(usrId));
+        List<DtoAction> actions = managerService.getIncomingRequests(usrId);
+        System.out.println(actions);
+        if (actions != null) {
+            return ResponseEntity.ok(actions);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
@@ -146,8 +149,9 @@ public class ManagerController {
         Long usrId = authorize2(session.getAttribute("id"));
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
-        if (managerService.submitAction(requestDTO) != null) {
-            return ResponseEntity.ok(managerService.submitAction(requestDTO));
+        Action action = managerService.submitAction(requestDTO);
+        if (action != null) {
+            return ResponseEntity.ok(action);
         } else {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }

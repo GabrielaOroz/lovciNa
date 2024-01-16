@@ -85,18 +85,13 @@ public class ManagerServiceJpa implements ManagerService {
     @Transactional
     @Override
     public List<DtoAction> getIncomingRequests(Long managerId) {
-
+        System.out.println("tu sam 1");
         List<DtoRequest> incomingRequests = MyConverter.convertToDTOList(requestRepo.findByActionManagerIdAndRequestStatus(managerId, RequestStatus.ACTIVE));
 
         List<DtoAction> actions = new LinkedList<>();
 
         for(DtoRequest request : incomingRequests){
-            for(MediumType k : request.getAction().getRequirements().keySet()){
-                if(request.getAction().getRequirements().get(k) != 0){
-                    actions.add(request.getAction());
-                }
-            }
-
+            actions.add(request.getAction());
         }
         return actions;
     }
