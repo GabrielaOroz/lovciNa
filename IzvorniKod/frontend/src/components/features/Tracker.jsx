@@ -242,7 +242,7 @@ export default function Tracker() {
             {tracker.name} {tracker.surname}
           </Text>
           <Text color="gray.400" fontSize={{ base: "md", md: "lg", lg: "xl" }} alignSelf="center">
-            {tracker.medium}
+            {tracker.medium.type}
           </Text>
 
           <Box h="600px" p="16px" id="mapSection">
@@ -329,7 +329,7 @@ export default function Tracker() {
               </Text>
 
               <List pl="16px">
-                {tracker.action.comments.length > 0 &&
+                {tracker.action.comments && tracker.action.comments.length > 0 &&
                   tracker.action.comments.map((comment, index) => (
                     <Text key={index}>
                       {"\t"} ○ {comment}
