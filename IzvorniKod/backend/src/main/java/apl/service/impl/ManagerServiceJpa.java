@@ -38,6 +38,10 @@ public class ManagerServiceJpa implements ManagerService {
     @Autowired
     private TrackerActionMediumRepository trackerActionMediumRepo;
 
+    @Autowired
+    private MediumRepository mediumRepo;
+
+
     @Transactional
     @Override
     public DtoStation getExistingStation(Long userId) {
@@ -168,4 +172,42 @@ public class ManagerServiceJpa implements ManagerService {
 
         return station;
     }
+
+    //fill db with media
+
+    public void saveMediaToDB() {
+        //ON_FOOT
+        Medium medium1 = new Medium(MediumType.ON_FOOT, false, 25D, 1D, 6D);
+        mediumRepo.save(medium1);
+
+        //CAR
+        Medium medium2 = new Medium(MediumType.CAR, false, 300D, 0.6D, 60D);
+        mediumRepo.save(medium2);
+
+        //BOAT
+        Medium medium3 = new Medium(MediumType.BOAT, false, 150D, 0.4D, 60D);
+        mediumRepo.save(medium3);
+
+        //AIRPLANE
+        Medium medium4 = new Medium(MediumType.AIRPLANE, true, 1000D, 0.2D, 300D);
+        mediumRepo.save(medium4);
+
+        //BICYCLE
+        Medium medium5 = new Medium(MediumType.BICYCLE, false, 60D, 0.8D, 25D);
+        mediumRepo.save(medium5);
+
+        //MOTORCYCLE
+        Medium medium6 = new Medium(MediumType.MOTORCYCLE, false, 200D, 0.7D, 50D);
+        mediumRepo.save(medium6);
+
+        //DRON
+        Medium medium7 = new Medium(MediumType.DRON, true, 20D, 0.3D, 55D);
+        mediumRepo.save(medium7);
+
+        //HELICOPTER
+        Medium medium8 = new Medium(MediumType.HELICOPTER, true, 500D, 0.3D, 60D);
+        mediumRepo.save(medium8);
+    }
+
+
 }
