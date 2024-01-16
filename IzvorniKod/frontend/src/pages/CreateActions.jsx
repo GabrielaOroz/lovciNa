@@ -39,11 +39,47 @@ export default function NewActions() {
   }, []);
   const hasAccess = session && session.role === "researcher" && session.approved === true;
 
+  const checkError = (actionId) => {
+    let shouldExit = false;
+    formData.forEach((ac) => {
+      if (ac.action.id == actionId) {
+        if (
+          !(
+            ac.existingHabitats.length != 0 ||
+            ac.existingIndividuals.length != 0 ||
+            ac.existingSpecies.length != 0 ||
+            ac.action.species.length != 0 ||
+            ac.action.habitats.length != 0 ||
+            ac.action.individuals.length != 0
+          ) &&
+          !ac.action.title
+        ) {
+          setError((prevError) => ({ ...prevError, [actionId]: true }));
+          shouldExit = true;
+          console.log("3", true);
+          return true;
+        } else if (ac.action.trackers.filter((tracker) => tracker.tasks.length == 0).length > 0) {
+          setError((prevError) => ({ ...prevError, [actionId]: true }));
+          shouldExit = true;
+          console.log("2", true);
+          return true;
+        } else {
+          setError((prevError) => ({ ...prevError, [actionId]: false }));
+          shouldExit = false;
+          return false;
+        }
+      }
+    });
+    return shouldExit;
+  };
+
   /* SUBMIT */
-  const handleSubmit = async (actionId) => {
+  const handleSubmit = (actionId) => {
+    setError((prevError) => ({ ...prevError, [actionId]: false }));
+    console.log(checkError(actionId));
     let postData;
     formData.map((ac) => {
-      if (ac.action.id == actionId) {
+      if (ac.action.id == actionId && !checkError(actionId)) {
         postData = {
           action: ac.action,
           existingSpecies: selectedSpeciesMap[actionId],
@@ -54,19 +90,20 @@ export default function NewActions() {
     });
 
     //console.log(postData);
-
-    fetch("http://localhost:8000/researcher/finished-action", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      credentials: "include",
-      body: JSON.stringify(postData),
-    }).then((res) => {
-      if (res.ok) {
-        window.location.reload();
-      }
-    });
+    if (!checkError(actionId)) {
+      fetch("http://localhost:8000/researcher/finished-action", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify(postData),
+      }).then((res) => {
+        if (res.ok) {
+          window.location.reload();
+        }
+      });
+    }
   };
 
   /* DATA */
@@ -82,6 +119,18 @@ export default function NewActions() {
         setFormData(data);
       });
   }, []);
+
+  const [error, setError] = useState(() => {
+    if (formData.length > 0) {
+      return formData.reduce((obj, ac) => {
+        obj[ac.action.id] = false;
+        return obj;
+      }, {});
+    } else {
+      return {};
+    }
+  });
+  console.log(error);
 
   const [existingSpecies, setExistingSpecies] = useState(mockData.mockSpecies);
   const [existingIndividuals, setExistingIndividuals] = useState(mockData.mockIndividuals);
@@ -214,7 +263,7 @@ export default function NewActions() {
       } else if (itemType === "habitats") {
         targetItem = actionToUpdate.action.habitats[itemIndex];
       } else if (itemType === "individuals") {
-        targetItem = actionToUpdate.action.individuals[itemIndex];
+        targetItem = actionToUpdate.action.animals[itemIndex];
       }
 
       if (targetItem) {
@@ -242,7 +291,7 @@ export default function NewActions() {
           photo: "",
         });
       } else if (itemType === "individuals") {
-        actionToUpdate.action.individuals.push({
+        actionToUpdate.action.animals.push({
           name: "",
           species: "",
           description: "",
@@ -264,8 +313,8 @@ export default function NewActions() {
         actionToUpdate.action.species.splice(itemIndex, 1);
       } else if (itemType === "habitats" && actionToUpdate.action.habitats.length >= itemIndex) {
         actionToUpdate.action.habitats.splice(itemIndex, 1);
-      } else if (itemType === "individuals" && actionToUpdate.action.individuals.length >= itemIndex) {
-        actionToUpdate.action.individuals.splice(itemIndex, 1);
+      } else if (itemType === "individuals" && actionToUpdate.action.animals.length >= itemIndex) {
+        actionToUpdate.action.animals.splice(itemIndex, 1);
       }
 
       setFormData(updatedFormData);
@@ -278,8 +327,8 @@ export default function NewActions() {
     const updatedFormData = [...formData];
     const actionToUpdate = updatedFormData.find((action) => action.action.id === actionId);
 
-    if (actionToUpdate && actionToUpdate.action.individuals[itemIndex]) {
-      actionToUpdate.action.individuals[itemIndex].comments[commentIndex] = value;
+    if (actionToUpdate && actionToUpdate.action.animals[itemIndex]) {
+      actionToUpdate.action.animals[itemIndex].comments[commentIndex] = value;
       setFormData(updatedFormData);
     }
   };
@@ -288,8 +337,8 @@ export default function NewActions() {
     const updatedFormData = [...formData];
     const actionToUpdate = updatedFormData.find((action) => action.action.id === actionId);
 
-    if (actionToUpdate && actionToUpdate.action.individuals[itemIndex]) {
-      actionToUpdate.action.individuals[itemIndex].comments.splice(commentIndex, 1);
+    if (actionToUpdate && actionToUpdate.action.animals[itemIndex]) {
+      actionToUpdate.action.animals[itemIndex].comments.splice(commentIndex, 1);
       setFormData(updatedFormData);
     }
   };
@@ -298,8 +347,8 @@ export default function NewActions() {
     const updatedFormData = [...formData];
     const actionToUpdate = updatedFormData.find((action) => action.action.id === actionId);
 
-    if (actionToUpdate && actionToUpdate.action.individuals[itemIndex]) {
-      actionToUpdate.action.individuals[itemIndex].comments.push("");
+    if (actionToUpdate && actionToUpdate.action.animals[itemIndex]) {
+      actionToUpdate.action.animals[itemIndex].comments.push("");
       setFormData(updatedFormData);
     }
   };
@@ -647,7 +696,7 @@ export default function NewActions() {
                       <Text fontSize="lg" color="#306844" as="b" mt="16px">
                         INDIVIDUALS
                       </Text>
-                      {action.action.individuals.map((indi, index) => (
+                      {action.action.animals.map((indi, index) => (
                         <Box
                           key={index}
                           position="relative"
@@ -1008,6 +1057,13 @@ export default function NewActions() {
                       <Divider borderColor="#306844" w="600px" mt="16px" mb="16px" />
                     </Box>
                   ))}
+
+                  {error[action.action.id] && (
+                    <Text color="red" align="center">
+                      Please fill out title, at least one species/individuals/habitats and at least one task per
+                      tracker.
+                    </Text>
+                  )}
 
                   <Flex justify="center">
                     <GreenButton w="200px" mt="16px" onClick={() => handleSubmit(action.action.id)}>
