@@ -64,7 +64,21 @@ export default function Manager() {
         console.error("Error sending empty media list:", error);
       });
   };*/
-
+  const validateSelectedTrackers = () => {
+    for (const tracker of selectedTrackers) {
+      const trackerId = tracker.id;
+      const trackerName = `${tracker.name} ${tracker.surname}`;
+  
+      if (!selectedAbilities[trackerId] || selectedAbilities[trackerId].length === 0) {
+        // Ako ključ nema vrijednost, obavijesti korisnika ili obavite željenu akciju
+        alert(`Please select abilities for tracker: ${trackerName}`);
+        return false;
+      }
+    }
+    return true;
+  };
+  
+  
   const fetchExistingStationData = () => {
     fetch("http://localhost:8000/manager/station", {
       method: "GET",
@@ -122,7 +136,7 @@ export default function Manager() {
     })
       .then((res) => res.json())
       .then((trackers) => {
-        console.log("Trackers: ", trackers);
+        //console.log("Trackers: ", trackers);
         setAvailableTrackers(trackers);
       });
   };
@@ -141,7 +155,7 @@ export default function Manager() {
       setMarkerPosition({ lat, lng });
       setIsNamingModalOpen(true);
       setMarkerName("");
-      console.log(`Latitude: ${lat}, Longitude: ${lng}`);
+      //console.log(`Latitude: ${lat}, Longitude: ${lng}`);
     }
   };
 
@@ -168,11 +182,11 @@ export default function Manager() {
     })
       .then((res) => res.json())
       .then((data) => {
-        console.log("Saved station data:", data);
+       // console.log("Saved station data:", data);
         setIsNamingModalOpen(false);
       })
       .catch((error) => {
-        console.error("Error saving station:", error);
+      - console.error("Error saving station:", error);
       });
   };
 
@@ -181,12 +195,6 @@ export default function Manager() {
       click: handleMapClick,
     });
     // return null;
-  };
-
-  const handleToggleRequests = () => {
-    if (!selectedAll) {
-      alert("Please select a station, trackers, and abilities.");
-    }
   };
 
   const handleCheckboxChangeTracker = (tracker) => {
@@ -234,11 +242,10 @@ export default function Manager() {
       }
     });
     // console.log(selectedAbilities)
-    console.log(selectedAbilities);
   };
 
   const handleSaveAbilities = () => {
-    const trackersWithoutAbilities = selectedTrackers.filter(
+    {/*const trackersWithoutAbilities = selectedTrackers.filter(
       (tracker) => !selectedAbilities[tracker.id] || selectedAbilities[tracker.id].length === 0
     );
 
@@ -246,29 +253,32 @@ export default function Manager() {
       const trackerNamesWithoutAbilities = trackersWithoutAbilities.map((tracker) => tracker.name);
       alert(`Please select abilities for tracker(s): ${trackerNamesWithoutAbilities.join(", ")}`);
       return;
-    }
+    }*/}
 
-    fetch("http://localhost:8000/manager/saveAbilities", {
-      method: "POST",
-      credentials: "include",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(selectedAbilities),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Response from server:", data);
-      })
-      .catch((error) => {
-        console.error("Error saving abilities:", error);
-      });
-
-    console.log("Selected Abilities:", selectedAbilities);
-    setIsAbilitiesModalOpen(false);
-    setSelectedAll(true);
-    setSelected(true);
-  };
+      if (validateSelectedTrackers()) {
+        fetch("http://localhost:8000/manager/saveAbilities", {
+          method: "POST",
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(selectedAbilities),
+        })
+          .then((res) => res.json())
+          .then((data) => {
+            console.log("Response from server:", data);
+          })
+          .catch((error) => {
+            console.error("Error saving abilities:", error);
+          });
+    
+        console.log("Selected Abilities:", selectedAbilities);
+        setIsAbilitiesModalOpen(false);
+        setSelectedAll(true);
+        setSelected(true);
+      }
+    };
+    
 
   return (
     <>
@@ -326,7 +336,6 @@ export default function Manager() {
           </ModalContent>
         </Modal>
       </Box>
-
       <Card
         w={{ base: "300px", md: "600px", lg: "800px" }}
         background="#f9f7e8"
@@ -336,6 +345,7 @@ export default function Manager() {
       >
         {selectedStation && !selectedAll && (
           <Box maxHeight="240px" overflowY="auto" padding="16px">
+            <Text style={{paddingBottom: "30px", color: "#306844", textTransform:"uppercase", fontWeight:"bold", fontSize:"24px"}}>Choose trackers for your station</Text>
             <Stack spacing={4} direction="column">
               {availableTrackers.map((tracker) => (
                 <Checkbox
@@ -463,7 +473,7 @@ export default function Manager() {
         </Modal>
         {selected && (
           <Link to="/requirements">
-            <GreenButton margin="14px" onClick={handleToggleRequests}>
+            <GreenButton margin="14px">
               Requirements
             </GreenButton>
           </Link>

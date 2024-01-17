@@ -26,6 +26,7 @@ export default function CreateAction() {
   const [selectedRequestAbilities, setSelectedRequestAbilities] = useState({}); //car : 5
 
   const [selectedTab, setSelectedTab] = useState(0)
+  const [currentAbility, setCurrentAbility] = useState(0);
 
   useEffect(() => {
     fetchCurrentUser();
@@ -53,11 +54,13 @@ export default function CreateAction() {
       .then((res) => res.json())
       .then((data) => {
         setIncomingRequests(data);
+        //console.log(data);
       })
     
       .catch((error) => {
         console.error("Error fetching incoming requests:", error);
       });
+      //console.log(incomingRequests);
 
   };
   const fetchTrackers = () => {
@@ -95,7 +98,11 @@ export default function CreateAction() {
       fetchTrackers(); //dohvacam slobodne trackere tj one koji nisu niti na jednoj akciji
       setModalOpen(true); 
       setSelectedRequestId(request.id);
-      setSelectedRequestAbilities(request.requirements);
+      const filteredAbilities = Object.fromEntries(
+        Object.entries(request.requirements).filter(([ability, count]) => count > 0)
+      );
+    
+      setSelectedRequestAbilities(filteredAbilities);
       
     };
   
@@ -119,12 +126,24 @@ export default function CreateAction() {
   };
 
   const handleDoneButtonClick = () => {
-    console.log("id"+selectedRequestId);
-    console.log("rjecnik");
-    console.log(selectedTrackers);
+   // console.log("id"+selectedRequestId);
+    //console.log("rjecnik");
+    //console.log(selectedTrackers);
+    if (Object.keys(selectedTrackers).length === 0) {
+      alert("Please select trackers for the action.");
+      return;
+    }
+    const isValidSelection = Object.entries(selectedRequestAbilities).every(
+      ([ability, count]) => count >= 0 && count >= Object.values(selectedTrackers).filter(trackerAbility => trackerAbility === ability).length
+    );
+  
+    if (!isValidSelection) {
+      alert("You have selected too many trackers for some ability.");
+      return;
+    }
 
     
-    // Ako je odabrano točno traženi broj tragača
+    // Ako je odabrano traženi broj ili < tragača
     // Šaljemo na backend listu tragača s njihovim id-ijem i imenom
 
     // slanje na back
@@ -152,6 +171,9 @@ export default function CreateAction() {
 
     setSelectedTrackers({});
     setModalOpen(false);
+   console.log("saaljem");
+    console.log(selectedTrackers);
+    
   };
 
   return (
@@ -208,11 +230,14 @@ export default function CreateAction() {
                 mx: "auto",
               }}
             >
-              <ModalHeader style={{ color: "#F1EDD4", fontSize: "24px" }}>
-                {incomingRequests.find((request) => request.id === selectedRequestId)?.title +
-                  " - " +
-                  incomingRequests.find((request) => request.id === selectedRequestId)?.researcher.name}
-              </ModalHeader>
+          <ModalHeader style={{ color: "#F1EDD4", fontSize: "24px" }}>
+            {incomingRequests.find((req) => req.id === selectedRequestId)?.title +
+              " - " +
+              incomingRequests.find((req) => req.id === selectedRequestId)?.researcher.name +
+              " " +
+              incomingRequests.find((req) => req.id === selectedRequestId)?.researcher.surname}
+          </ModalHeader>
+
               <ModalBody>
                 <Text
                   style={{
@@ -267,13 +292,14 @@ export default function CreateAction() {
                       <Tab
                         key={ability}
                         style={{
-                          color: selectedTab === index ? "#306844" : "#F1EDD4",
-                          backgroundColor: selectedTab === index ? "#F1EDD4" : "#306844",
+                          color: currentAbility === ability ? "#306844" : "#F1EDD4",
+                          backgroundColor: currentAbility === ability ? "#F1EDD4" : "#306844",
                           fontSize: "16px",
                         }}
                         css={{ _selected: { color: "black", backgroundColor: "green" } }}
                         onClick={() => {
                           setSelectedTab(index);
+                          setCurrentAbility(ability);
                           //setCurrentTab(index); // Postavi trenutni tab kada se klikne
                         }}
                       >
@@ -302,7 +328,7 @@ export default function CreateAction() {
                                 onChange={() => handleTrackerCheckboxChange(tracker.id)}
                                 colorScheme=""
                               >
-                                {tracker.name}
+                                {tracker.name} {tracker.surname}
                               </Checkbox>
                             </Text>
                           ))}
