@@ -17,7 +17,6 @@ import {
   ModalFooter,
 } from "@chakra-ui/react";
 import { MapContainer, Marker, Popup, TileLayer, useMapEvents } from "react-leaflet";
-import podaci from "../../pomoc2.jsx";
 import { Link } from "react-router-dom";
 import GreenButton from "../shared/GreenButton";
 import YellowButton from "../shared/YellowButton.jsx";
@@ -31,8 +30,7 @@ export default function Manager() {
   const [selected, setSelected] = useState(false);
 
   //slobodni trackeri
-  const [availableTrackers, setAvailableTrackers] = useState(podaci);
-  //const [availableTrackers, setAvailableTrackers] = useState();
+  const [availableTrackers, setAvailableTrackers] = useState([]);
 
   //selectana postaja
   const [markerPosition, setMarkerPosition] = useState(null);
