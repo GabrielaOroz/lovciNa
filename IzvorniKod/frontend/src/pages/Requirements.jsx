@@ -54,11 +54,13 @@ export default function CreateAction() {
       .then((res) => res.json())
       .then((data) => {
         setIncomingRequests(data);
+        //console.log(data);
       })
     
       .catch((error) => {
         console.error("Error fetching incoming requests:", error);
       });
+      //console.log(incomingRequests);
 
   };
   const fetchTrackers = () => {
@@ -77,6 +79,7 @@ export default function CreateAction() {
     };
 
     const getFilteredTrackers = (ability) => {
+      //console.log(trackers)
       return trackers.filter((tracker) => {
         return tracker.qualification.some((qualification) => qualification.type === ability);
       });
@@ -104,36 +107,29 @@ export default function CreateAction() {
       
     };
   
-    const handleTrackerCheckboxChange = (trackerId) => {
-      const selectedTracker = trackers.find((tracker) => tracker.id === trackerId);
-    
-      if (!selectedTracker) {
-        console.error("Tracker not found");
-        return;
-      }
-    
-      const ability = Object.keys(selectedRequestAbilities)[selectedTab];
-      const updatedTrackers = { ...selectedTrackers };
-    
-      if (updatedTrackers[trackerId]) {
-        delete updatedTrackers[trackerId];
-        setSelectedRequestAbilities((prevAbilities) => ({
-          ...prevAbilities,
-          [ability]: prevAbilities[ability] + 1,
-        }));
-      } else {
-        updatedTrackers[trackerId] = ability;
-        setSelectedRequestAbilities((prevAbilities) => ({
-          ...prevAbilities,
-          [ability]: prevAbilities[ability] - 1,
-        }));
-      }
-    
-      setSelectedTrackers(updatedTrackers);
-    };
-    
+  const handleTrackerCheckboxChange = (trackerId) => {
+    const selectedTracker = trackers.find((tracker) => tracker.id === trackerId);
+
+    if (!selectedTracker) {
+      console.error("Tracker not found");
+      return;
+    }
+  
+    const ability = Object.keys(selectedRequestAbilities)[selectedTab]; // Dobavi ability prema trenutnom tabu
+    const updatedTrackers = { ...selectedTrackers };
+
+    if (updatedTrackers[trackerId]) {
+      delete updatedTrackers[trackerId];
+    } else {
+      updatedTrackers[trackerId] = ability;
+    }
+    setSelectedTrackers(updatedTrackers);
+  };
 
   const handleDoneButtonClick = () => {
+   // console.log("id"+selectedRequestId);
+    //console.log("rjecnik");
+    //console.log(selectedTrackers);
     if (Object.keys(selectedTrackers).length === 0) {
       alert("Please select trackers for the action.");
       return;
@@ -146,6 +142,10 @@ export default function CreateAction() {
       alert("You have selected too many trackers for some ability.");
       return;
     }
+
+    
+    // Ako je odabrano traženi broj ili < tragača
+    // Šaljemo na backend listu tragača s njihovim id-ijem i imenom
 
     // slanje na back
     fetch("http://localhost:8000/manager/submit-action", {
@@ -167,11 +167,14 @@ export default function CreateAction() {
         console.error("Error submitting action:", error);
       });
 
-    // Uklanjamo zahtjev iz incomingRequests
+    // Uklanjamo zahtjev iz stanja incomingRequests
     setIncomingRequests((prevRequests) => prevRequests.filter((request) => request.id !== selectedRequestId));
+
     setSelectedTrackers({});
     setModalOpen(false);
-
+    console.log("saaljem");
+    console.log(selectedRequestId);
+    console.log(selectedTrackers);
     
   };
 
