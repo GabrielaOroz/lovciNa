@@ -66,18 +66,23 @@ export default function Manager() {
       });
   };*/
   const validateSelectedTrackers = () => {
-    for (const tracker of selectedTrackers) {
-      const trackerId = tracker.id;
-      const trackerName = `${tracker.name} ${tracker.surname}`;
+    const trackersWithoutAbilities = selectedTrackers.filter(
+      (tracker) => !selectedAbilities[tracker.id] || selectedAbilities[tracker.id].length === 0
+    );
   
-      if (!selectedAbilities[trackerId] || selectedAbilities[trackerId].length === 0) {
-        // Ako ključ nema vrijednost, obavijesti korisnika ili obavite željenu akciju
-        alert(`Please select abilities for tracker: ${trackerName}`);
-        return false;
-      }
+    if (trackersWithoutAbilities.length > 0) {
+      const trackerNamesWithoutAbilities = trackersWithoutAbilities.map(
+        (tracker) => `${tracker.name} ${tracker.surname}`
+      );
+      
+      alert(`Please select abilities for the following tracker(s): ${trackerNamesWithoutAbilities.join(", ")}`);
+      
+      return false;
     }
+    
     return true;
   };
+  
   
   
   const fetchExistingStationData = () => {
@@ -121,7 +126,7 @@ export default function Manager() {
     })
       .then((res) => res.json())
       .then((data) => {
-        setSelected(true); //za gumb requirements
+        setSelected(true); //za gumb requirements, ne moze ic na zahtjeve ako nema koga poslat na akciju
       })
       .catch((error) => {
         console.error("Error fetching trackers:", error);
@@ -137,7 +142,6 @@ export default function Manager() {
     })
       .then((res) => res.json())
       .then((trackers) => {
-        //console.log("Trackers: ", trackers);
         setAvailableTrackers(trackers);
       });
   };
@@ -156,18 +160,16 @@ export default function Manager() {
       setMarkerPosition({ lat, lng });
       setIsNamingModalOpen(true);
       setMarkerName("");
-      //console.log(`Latitude: ${lat}, Longitude: ${lng}`);
+
     }
   };
 
   const handleConfirmName = () => {
-    //poziva se kad confirmam ime postaje
     setSelectedStation(true); //odabrano
     setIsNamingModalOpen(false);
     setSelectedAll(false);
 
     // šaljemo na back naziv postaje, lat i lon
-    console.log(markerName, markerPosition);
 
     fetch("http://localhost:8000/manager/selected-station", {
       method: "POST",
@@ -183,7 +185,6 @@ export default function Manager() {
     })
       .then((res) => res.json())
       .then((data) => {
-       // console.log("Saved station data:", data);
         setIsNamingModalOpen(false);
       })
       .catch((error) => {
@@ -228,21 +229,20 @@ export default function Manager() {
       const currentAbilities = prevAbilities[currentSelectedTracker.id] || [];
 
       if (currentAbilities.includes(ability)) {
-        // Ako je sposobnost već odabrana, uklonite je
+        //Ako je sposobnost već odabrana, ukloni je
         return {
           ...prevAbilities, //kopira sve prije
           //ureduje selectanog i njegove abilitiese taji da mice taj ability
           [selectedTracker.id]: currentAbilities.filter((a) => a !== ability),
         };
       } else {
-        // Inače, dodaj sposobnost
+        //dodaj sposobnost
         return {
           ...prevAbilities,
           [selectedTracker.id]: [...currentAbilities, ability],
         };
       }
     });
-    // console.log(selectedAbilities)
   };
 
   const handleSaveAbilities = () => {
@@ -273,10 +273,10 @@ export default function Manager() {
             console.error("Error saving abilities:", error);
           });
     
-        console.log("Selected Abilities:", selectedAbilities);
         setIsAbilitiesModalOpen(false);
         setSelectedAll(true);
         setSelected(true);
+
       }
     };
     
