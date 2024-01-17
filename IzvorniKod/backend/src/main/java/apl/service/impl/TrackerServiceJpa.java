@@ -61,6 +61,7 @@ public class TrackerServiceJpa implements TrackerService {
         trackerDTO.getAction().setHabitats(MyConverter.convertToDTOList(action.getHabitats()));
 
 
+
         if(tracker.getStation() != null){
             trackerDTO.setStation(tracker.getStation().toDTO());
         }

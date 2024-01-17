@@ -54,6 +54,9 @@ public class ResearcherServiceJpa implements ResearcherService {
     @Autowired
     private TrackerRepository trackerRepo;
 
+    @Autowired
+    private ActionCommentRepository actionCommentRepo;
+
     @Transactional
     public DtoUser createAction(Action action, Long usrId) {
         try {
@@ -92,19 +95,81 @@ public class ResearcherServiceJpa implements ResearcherService {
 
 
     @Transactional
-    public List<DtoAction> getAllActions(Long idResearcher) {
-        List<DtoAction> dtoActions = new LinkedList<>();
-        Researcher researcher = researcherRepo.findById(idResearcher).orElse(null);
-        List<Action> actions = researcher.getActions();
-        for (Action action : actions) {
-            if(action.getStartOfAction() != null){
-                DtoAction dtoAction = action.toDTO();
-                dtoAction.setSpecies(MyConverter.convertToDTOList(speciesRepo.findByAnimalsActionsId(action.getId())));
-                dtoActions.add(dtoAction);
+    public List<ActionDTO> getAllActions(Long idResearcher) {
+        List<DtoAction> dtoActions = MyConverter.convertToDTOList(actionRepo.findByResearcherIdAndStatus(idResearcher, ActionStatus.ACTIVE));
+        List<ActionDTO> allActions = new LinkedList<>();
+        for (DtoAction action : dtoActions) {
+
+            ActionDTO actionDTO = new ActionDTO();
+
+            List<DtoTracker> trackers = new LinkedList<>();
+            List<TrackerActionMedium> trackersDB = trackerActionMediumRepo.findByActionId(action.getId()).orElse(null);
+
+            Map<Long, MediumType> mediumForTrackers = new HashMap<>();
+
+            for(TrackerActionMedium trackerActionMedium : trackersDB){
+                DtoTracker tracker = new DtoTracker();
+                tracker.setId(trackerActionMedium.getTracker().getId());
+                tracker.setPhoto(trackerActionMedium.getTracker().getPhoto());
+                tracker.setName(trackerActionMedium.getTracker().getName());
+                tracker.setSurname(trackerActionMedium.getTracker().getSurname());
+                tracker.setLongitude(trackerActionMedium.getTracker().getLongitude());
+                tracker.setLatitude(trackerActionMedium.getTracker().getLatitude());
+
+                List<DtoTask> tasks = new LinkedList<>();
+                List<Task> tasksDB = taskRepo.findByActionIdAndTrackerId(action.getId(), tracker.getId());
+                for(Task t : tasksDB){
+                    tasks.add(t.toDTO());
+                }
+
+                tracker.setTasks(tasks);
+                trackers.add(tracker);
+
+                mediumForTrackers.put(trackerActionMedium.getTracker().getId(), trackerActionMedium.getMedium().getType());
+
+                List<DtoAnimal> animals = new LinkedList<>();
+                if(animalRepo.findByActionsId(action.getId()) != null){
+                    for(Animal a : animalRepo.findByActionsId(action.getId())){
+                        animals.add(a.toDTO());
+                    }
+                }
+                action.setAnimals(animals);
+
+                List<DtoHabitat> habitats = new LinkedList<>();
+                if(habitatRepo.findByActionsId(action.getId()) != null){
+                    for(Habitat h : habitatRepo.findByActionsId(action.getId())){
+                        habitats.add(h.toDTO());
+                    }
+                }
+                action.setHabitats(habitats);
+
+                List<DtoSpecies> species = new LinkedList<>();
+                if(speciesRepo.findByAnimalsActionsId(action.getId()) != null){
+                    for(Species s : speciesRepo.findByAnimalsActionsId(action.getId())){
+                        species.add(s.toDTO());
+                    }
+                }
+                action.setSpecies(species);
+
+                List<String> actionComments = new LinkedList<>();
+                if(actionCommentRepo.findByActionId(action.getId()).orElse(null) != null){
+                    for(ActionComment ac : actionCommentRepo.findByActionId(action.getId()).orElse(null)){
+                        actionComments.add(ac.getContent());
+                    }
+                }
+                action.setComments(actionComments);
             }
 
+
+
+            actionDTO.setTrackers(trackers);
+            actionDTO.setAction(action);
+            actionDTO.setMapOfTrackers(mediumForTrackers);
+            allActions.add(actionDTO);
+
         }
-        return dtoActions;
+        return allActions;
+
     }
 
     @Transactional

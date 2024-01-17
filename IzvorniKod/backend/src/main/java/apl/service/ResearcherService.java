@@ -12,7 +12,7 @@ public interface ResearcherService {
 
     List<DtoManager> listAllManagersDto();
 
-    List<DtoAction> getAllActions(Long idResearcher);
+    List<ActionDTO> getAllActions(Long idResearcher);
 
     DtoAction getAllFinishedActions(ActionDTO actions, Long usrId);
 
