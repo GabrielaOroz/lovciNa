@@ -27,7 +27,6 @@ export default function CreateAction() {
   useEffect(() => {
     fetchCurrentUser();
     fetchIncomingRequests();
-
   }, []);
   
 
