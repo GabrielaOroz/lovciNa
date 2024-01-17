@@ -189,7 +189,7 @@ export default function CreateAction() {
               borderRadius="12px 12px 0 0"
               style={{ height: "360px", overflow: "auto" }}
             >
-              <h1 style={{ paddingBottom: "24px", paddingTop: "8px" }}>Incoming Requests...</h1>
+              <Text style={{ paddingBottom: "24px", paddingTop: "8px", fontSize:"24px" }}>Incoming Requests...</Text>
               <table style={{ width: "100%" }}>
                 <thead>
                   <tr>
