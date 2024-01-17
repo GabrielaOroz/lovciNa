@@ -26,6 +26,10 @@ import java.util.List;
 @JsonSerialize(using = DtoSpeciesCustomSerializer.class)
 public class DtoSpecies {
 
+    public DtoSpecies(String name) {
+        this.name = name;
+    }
+
     private Long id;
 
     private String name;
@@ -37,5 +41,5 @@ public class DtoSpecies {
     private List<DtoAnimal> animals;
 
     @JsonIgnore
-    private transient boolean includePhoto = false;
+    private transient boolean includePhoto = true;
 }

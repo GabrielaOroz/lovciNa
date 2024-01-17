@@ -22,6 +22,10 @@ import java.time.LocalDateTime;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class DtoTaskComment {
 
+    public DtoTaskComment(String content) {
+        this.content = content;
+    }
+
     private Long id;
 
     private DtoTask task;

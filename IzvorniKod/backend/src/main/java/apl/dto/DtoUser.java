@@ -55,7 +55,7 @@ public class DtoUser {
 
 
     @JsonIgnore
-    private transient boolean includePhoto = false;
+    private transient boolean includePhoto = true;
 
     @JsonIgnore
     private transient boolean includePassword = false;

@@ -25,7 +25,6 @@ import java.util.stream.Collectors;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class DtoRoutePoint implements ConvertibleToLocation {
 
-
     @Override
     public Location toLocation() {
         return new Location(this.longitude, this.latitude);
