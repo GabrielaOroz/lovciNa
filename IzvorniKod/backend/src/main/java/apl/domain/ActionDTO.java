@@ -1,14 +1,17 @@
 package apl.domain;
 
 import apl.dto.*;
+import apl.enums.MediumType;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 import org.springframework.core.SpringVersion;
 
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 @Getter
 @Setter
@@ -25,4 +28,6 @@ public class ActionDTO {
     private List<DtoHabitat> existingHabitats = new LinkedList<>();
 
     private List<DtoTracker> trackers = new LinkedList<>();
+
+    private Map<Long, MediumType> mapOfTrackers = new HashMap<>();
 }

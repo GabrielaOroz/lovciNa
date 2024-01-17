@@ -6,6 +6,7 @@ import apl.domain.*;
 import apl.dto.*;
 import apl.enums.ActionStatus;
 import apl.enums.HandleRequest;
+import apl.enums.MediumType;
 import apl.service.ResearcherService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,10 @@ import org.springframework.data.jpa.repository.support.SimpleJpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class ResearcherServiceJpa implements ResearcherService {
@@ -44,6 +47,9 @@ public class ResearcherServiceJpa implements ResearcherService {
 
     @Autowired
     private TrackerActionMediumRepository trackerActionMediumRepo;
+
+    @Autowired
+    private TaskRepository taskRepo;
 
     @Transactional
     public DtoUser createAction(Action action, Long usrId) {
@@ -157,16 +163,38 @@ public class ResearcherServiceJpa implements ResearcherService {
         List<DtoAction> dtoActions = MyConverter.convertToDTOList(actionRepo.findByResearcherIdAndStatus(usrId, ActionStatus.WAITING));
         List<ActionDTO> dtoUnfinishedActions = new LinkedList<>();
         for (DtoAction action : dtoActions) {
+
             ActionDTO actionDTO = new ActionDTO();
 
             List<DtoTracker> trackers = new LinkedList<>();
             List<TrackerActionMedium> trackersDB = trackerActionMediumRepo.findByActionId(action.getId()).orElse(null);
+
+            Map<Long, MediumType> mediumForTrackers = new HashMap<>();
+
             for(TrackerActionMedium trackerActionMedium : trackersDB){
-                trackers.add(trackerActionMedium.getTracker().toTrackerDTO());
+                DtoTracker tracker = new DtoTracker();
+                tracker.setId(trackerActionMedium.getTracker().getId());
+                tracker.setPhoto(trackerActionMedium.getTracker().getPhoto());
+                tracker.setName(trackerActionMedium.getTracker().getName());
+                tracker.setSurname(trackerActionMedium.getTracker().getSurname());
+                tracker.setLongitude(trackerActionMedium.getTracker().getLongitude());
+                tracker.setLatitude(trackerActionMedium.getTracker().getLatitude());
+
+                List<DtoTask> tasks = new LinkedList<>();
+                List<Task> tasksDB = taskRepo.findByActionIdAndTrackerId(action.getId(), tracker.getId());
+                for(Task t : tasksDB){
+                    tasks.add(t.toDTO());
+                }
+
+                tracker.setTasks(tasks);
+                trackers.add(tracker);
+
+                mediumForTrackers.put(trackerActionMedium.getTracker().getId(), trackerActionMedium.getMedium().getType());
             }
 
             actionDTO.setTrackers(trackers);
             actionDTO.setAction(action);
+            actionDTO.setMapOfTrackers(mediumForTrackers);
             dtoUnfinishedActions.add(actionDTO);
 
         }
