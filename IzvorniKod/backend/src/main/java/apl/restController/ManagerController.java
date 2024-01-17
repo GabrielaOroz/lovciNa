@@ -74,11 +74,13 @@ public class ManagerController {
         Long usrId = authorize2(session.getAttribute("id"));
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
-        if (managerService.getExistingStation(usrId) != null) {
+        try {
             return ResponseEntity.ok(managerService.getExistingStation(usrId));
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception e){
+            System.out.println("uso u /station error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
+
     }
 
     @GetMapping("/trackers")
@@ -137,11 +139,13 @@ public class ManagerController {
         Long usrId = authorize2(session.getAttribute("id"));
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
-        if (managerService.getAvailableTrackersForManager(usrId) != null) {
+        try {
             return ResponseEntity.ok(managerService.getAvailableTrackersForManager(usrId));
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        } catch (Exception e){
+            System.out.println("uso u /available-trackers error");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
+
     }
 
     @PostMapping("/submit-action")

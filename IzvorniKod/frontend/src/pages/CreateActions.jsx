@@ -427,8 +427,10 @@ export default function NewActions() {
         title: "",
         content: "Set up a camera",
         comments: [],
-        coordinatesStart: [45, 15],
-        coordinatesFinish: [45.2, 15.2],
+        latStart: 45.0, 
+        lonStart: 15.0,
+        latFinish: 45.2,
+        lonFinish: 15.2,
       };
       actionToUpdate.trackers.find((tracker) => tracker.id === trackerId).tasks = [
         ...actionToUpdate.trackers.find((tracker) => tracker.id === trackerId).tasks,
@@ -483,10 +485,16 @@ export default function NewActions() {
     if (actionToUpdate && actionToUpdate.trackers.find((tracker) => tracker.id === trackerId)) {
       updatedActions
         .find((action) => action.action.id === actionId)
-        .trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].coordinatesStart = startCoords;
+        .trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].latStart = startCoords[0];
+        updatedActions
+        .find((action) => action.action.id === actionId)
+        .trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].lonStart = startCoords[1];
       updatedActions
         .find((action) => action.action.id === actionId)
-        .trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].coordinatesFinish = finishCoords;
+        .trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].latFinish = finishCoords[0];
+        updatedActions
+        .find((action) => action.action.id === actionId)
+        .trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].lonFinish = finishCoords[1];
       setFormData(updatedActions);
     }
   };
@@ -501,18 +509,18 @@ export default function NewActions() {
         L.latLng(
           [...formData]
             .find((action) => action.action.id === actionId)
-            .trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].coordinatesStart[0],
+            .trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].latStart,
           [...formData]
             .find((action) => action.action.id === actionId)
-            .trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].coordinatesStart[1]
+            .trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].lonStart
         ),
         L.latLng(
           [...formData]
             .find((action) => action.action.id === actionId)
-            .trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].coordinatesFinish[0],
+            .trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].latFinish,
           [...formData]
             .find((action) => action.action.id === actionId)
-            .trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].coordinatesFinish[1]
+            .trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].lonFinish
         ),
       ],
       router: new L.Routing.osrmv1({
@@ -997,12 +1005,12 @@ export default function NewActions() {
                               waypoints on the map.
                             </Text>
                             <Flex justify="center" color="gray.400" fontSize="sm">
-                              {task.coordinatesStart && (
-                                <Text>{"Start: " + task.coordinatesStart[0] + ", " + task.coordinatesStart[1]}</Text>
+                              {task.latStart && task.lonStart && (
+                                <Text>{"Start: " + task.latStart + ", " + task.lonStart}</Text>
                               )}
                               <Text>|</Text>
-                              {task.coordinatesFinish && (
-                                <Text>{"End: " + task.coordinatesFinish[0] + ", " + task.coordinatesFinish[1]}</Text>
+                              {task.latFinish && task.lonFinish &&(
+                                <Text>{"End: " + task.latFinish + ", " + task.lonFinish}</Text>
                               )}
                             </Flex>
                             <Box h="400px" p="16px" id="map">

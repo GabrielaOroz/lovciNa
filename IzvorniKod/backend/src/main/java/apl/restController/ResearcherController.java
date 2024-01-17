@@ -122,8 +122,9 @@ public class ResearcherController {
         Long usrId = authorize2(session.getAttribute("id"));
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
-        if (researcherService.getAllFinishedActions(actions, usrId) != null) {
-            return ResponseEntity.ok(researcherService.getAllFinishedActions(actions, usrId));
+        DtoAction action = researcherService.getAllFinishedActions(actions, usrId);
+        if (action != null) {
+            return ResponseEntity.ok(action);
         } else {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(researcherService.getAllFinishedActions(actions, usrId));
         }
@@ -133,6 +134,7 @@ public class ResearcherController {
     public ResponseEntity<List<ActionDTO>> getUnfinishedActions(HttpSession session) {
         Long usrId = authorize2(session.getAttribute("id"));
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+
 
         if (researcherService.getAllUnfinishedActions(usrId) != null) {
             return ResponseEntity.ok(researcherService.getAllUnfinishedActions(usrId));

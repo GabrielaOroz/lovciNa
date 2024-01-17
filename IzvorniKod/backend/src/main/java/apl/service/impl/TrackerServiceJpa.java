@@ -44,14 +44,23 @@ public class TrackerServiceJpa implements TrackerService {
     @Override
     public TrackerDTO getTrackerInfo(Long id) {
         Tracker tracker = trackerRepo.findById(id).orElse(null);
-        TrackerActionMedium actionMedium = trackerActionMediumRepo.findTopByTrackerIdAndActionStatus(id, ActionStatus.ACTIVE).orElse(null);
-
         TrackerDTO trackerDTO = new TrackerDTO(tracker.getId(), tracker.getName(), tracker.getSurname());
 
-        if(actionMedium != null){
-            trackerDTO.setMedium(actionMedium.getMedium().toDTO());
-            trackerDTO.setAction(actionMedium.getAction().toDTO());
+        TrackerActionMedium actionMedium = trackerActionMediumRepo.findTopByTrackerIdAndActionStatus(id, ActionStatus.ACTIVE).orElse(null);
+        if (actionMedium == null) {
+            return trackerDTO;
         }
+
+        Action action = actionMedium.getAction();
+
+        trackerDTO.setMedium(actionMedium.getMedium().toDTO());
+        trackerDTO.setAction(actionMedium.getAction().toDTO());
+        //trackerDTO.getAction().setSpecies();
+        trackerDTO.getAction().setTasks(MyConverter.convertToDTOList(action.getTasks()));
+        trackerDTO.getAction().setAnimals(MyConverter.convertToDTOList(action.getAnimals()));
+        trackerDTO.getAction().setHabitats(MyConverter.convertToDTOList(action.getHabitats()));
+
+
         if(tracker.getStation() != null){
             trackerDTO.setStation(tracker.getStation().toDTO());
         }

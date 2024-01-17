@@ -55,6 +55,6 @@ public class DtoAnimal implements ConvertibleToLocation {
     private List<DtoTask> tasks;
 
     @JsonIgnore
-    private transient boolean includePhoto = false;
+    private transient boolean includePhoto = true;
 
 }

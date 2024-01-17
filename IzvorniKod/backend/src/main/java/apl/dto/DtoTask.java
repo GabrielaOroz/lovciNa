@@ -24,15 +24,11 @@ public class DtoTask {
 
     private Long id;
 
-
     private DtoTracker tracker;
-
 
     private DtoAction action;
 
-
     private DtoRoute route;
-
 
     private List<DtoAnimal> animals;
 
@@ -58,5 +54,5 @@ public class DtoTask {
 
     private TaskStatus status;
 
-    private List<DtoTaskComment> comments;
+    private List<String> comments;
 }

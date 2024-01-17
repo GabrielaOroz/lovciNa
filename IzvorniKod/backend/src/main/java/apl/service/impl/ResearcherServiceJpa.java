@@ -51,6 +51,9 @@ public class ResearcherServiceJpa implements ResearcherService {
     @Autowired
     private TaskRepository taskRepo;
 
+    @Autowired
+    private TrackerRepository trackerRepo;
+
     @Transactional
     public DtoUser createAction(Action action, Long usrId) {
         try {
@@ -71,6 +74,7 @@ public class ResearcherServiceJpa implements ResearcherService {
             return null;
         }
     }
+
     @Transactional
     public List<DtoManager> listAllManagersDto() {
         List<DtoManager> dtoManagers = new LinkedList<>();
@@ -111,20 +115,25 @@ public class ResearcherServiceJpa implements ResearcherService {
         action1.setStartOfAction(LocalDateTime.now());
         action1.setStatus(ActionStatus.ACTIVE);
 
+        for(DtoSpecies s : action.getAction().getSpecies()){
+            Species species1 = speciesRepo.findByName(s.getName().toUpperCase()).orElse(null);
+            if(species1 == null){
+                species1 = new Species(s.getName().toUpperCase(), s.getDescription(), s.getPhoto());
+                speciesRepo.save(species1);
+            }
+
+        }
+
         List<Animal> animalsForDB = new LinkedList<>();
         for(DtoAnimal animal : action.getAction().getAnimals()){
 
-            Species speciesForAnimal = new Species();
-
-            Species speciesDB = speciesRepo.findByName(animal.getSpecies().getName()).orElse(null);
-            speciesForAnimal = speciesDB;
-            if(speciesDB == null){  //ako taj species od te zivotinje ne postoji vec u bazi
-                Species species = new Species(animal.getSpecies().getName(), animal.getSpecies().getDescription(), animal.getSpecies().getPhoto());
-                speciesRepo.save(species); //???
-                speciesForAnimal = species;
+            Species species = speciesRepo.findByName(animal.getSpecies().getName().toUpperCase()).orElse(null);
+            if(species == null){
+                species = new Species(animal.getSpecies().getName().toUpperCase(), animal.getSpecies().getDescription(), animal.getSpecies().getPhoto());
+                speciesRepo.save(species);
             }
 
-            Animal a = new Animal(speciesForAnimal, animal.getName(), animal.getDescription(), animal.getPhoto());
+            Animal a = new Animal(species, animal.getName(), animal.getDescription(), animal.getPhoto());
 
             List<String> commentsOnAnimal = animal.getComments();
             List<AnimalComment> newComments = new LinkedList<>();
@@ -171,7 +180,72 @@ public class ResearcherServiceJpa implements ResearcherService {
             newComments.add(newActionComment);
         }
 
-        //zadaci
+        //zadaci i komentari
+
+
+        for(DtoTracker t : action.getTrackers()){
+            List<Task> tasksForTracker = new LinkedList<>();
+
+            Tracker tracker = trackerRepo.findById(t.getId()).orElse(null);
+
+            for(DtoTask task : t.getTasks()){
+
+                Task taskDB = new Task();
+                taskDB.assignAction(action1);
+                taskDB.assignTracker(tracker);
+
+
+                //List<RoutePoint> routePoints = new LinkedList<>();
+                //for(DtoRoutePoint rp : task.getRoute().getPoints()){
+                    //RoutePoint routePoint = new RoutePoint();
+                    //routePoint.setOrderPoint(rp.getOrderPoint());
+                    //routePoint.setLatitude(rp.getLatitude());
+                    //routePoint.setLongitude(rp.getLongitude());
+
+                    //routePoints.add(routePoint);
+                //}
+
+                //Route route = new Route(task.getRoute().getName(), task.getRoute().getDescription(), routePoints);
+                //taskDB.assignRoute(route);
+
+                taskDB.setContent(task.getContent());   //ok
+                taskDB.setLatStart(task.getLatStart());
+                taskDB.setLonStart(task.getLonStart());
+                taskDB.setLatFinish(task.getLatFinish());
+                taskDB.setLonFinish(task.getLonFinish());
+                taskDB.setTitle(task.getTitle());       //ok
+
+
+
+                if(task.getComments() != null) {
+                    List<TaskComment> newCommentsForTask = new LinkedList<>();
+                    for (String s : task.getComments()) {
+                        TaskComment comment = new TaskComment(taskDB, s);
+                        newCommentsForTask.add(comment);
+                    }
+                    taskDB.addMultipleComments(newCommentsForTask);
+                }
+
+                if(task.getAnimals() != null) {
+                    List<Animal> animalsForTask = new LinkedList<>();
+                    for (DtoAnimal animal : task.getAnimals()) {
+
+                        Species species = speciesRepo.findByName(animal.getSpecies().getName()).orElse(null);
+                        if (species == null) {
+                            species = new Species(animal.getSpecies().getName(), animal.getSpecies().getDescription(), animal.getSpecies().getPhoto());
+                            speciesRepo.save(species);
+                        }
+                        Animal animal1 = new Animal(species, animal.getName(), animal.getDescription(), animal.getPhoto());
+                        animalsForTask.add(animal1);
+                    }
+                    taskDB.addMultipleAnimals(animalsForTask);
+                }
+
+                tasksForTracker.add(taskDB);
+            }
+
+            tracker.addMultipleTasks(tasksForTracker);
+        }
 
 
 
@@ -183,14 +257,9 @@ public class ResearcherServiceJpa implements ResearcherService {
             return null;
         }
 
-        for(DtoSpecies species : action.getAction().getSpecies()){
-            Species species1 = new Species(species.getName(), species.getDescription(), species.getPhoto());
-            try{
-                speciesRepo.save(species1);
-            }catch (Exception e){
-                return null;
-            }
-        }
+
+
+
 
         return action1.toDTO();
     }

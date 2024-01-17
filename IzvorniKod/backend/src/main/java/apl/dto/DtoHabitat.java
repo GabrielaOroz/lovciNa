@@ -45,5 +45,5 @@ public class DtoHabitat {
     private List<DtoAction> actions;
 
     @JsonIgnore
-    private transient boolean includePhoto = false;
+    private transient boolean includePhoto = true;
 }

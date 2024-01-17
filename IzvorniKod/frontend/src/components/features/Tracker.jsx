@@ -242,9 +242,9 @@ export default function Tracker() {
           <Text color="#306844" fontSize={{ base: "xl", md: "2xl", lg: "3xl" }} alignSelf="center">
             {tracker.name} {tracker.surname}
           </Text>
-          <Text color="gray.400" fontSize={{ base: "md", md: "lg", lg: "xl" }} alignSelf="center">
+          {tracker.action && <Text color="gray.400" fontSize={{ base: "md", md: "lg", lg: "xl" }} alignSelf="center">
             {tracker.medium.type}
-          </Text>
+          </Text>}
 
           <Box h="600px" p="16px" id="mapSection">
             <MapContainer

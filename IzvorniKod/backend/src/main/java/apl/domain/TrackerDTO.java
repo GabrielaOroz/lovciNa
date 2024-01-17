@@ -36,4 +36,6 @@ public class TrackerDTO {
 
     private DtoStation station;
 
+    //dodaj lista taskova
+
 }

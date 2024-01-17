@@ -41,7 +41,7 @@ export default function Researcher() {
       });
   }, []);
 
-  /*useEffect(() => {
+  useEffect(() => {
     fetch("http://localhost:8000/researcher/coords", {
       method: "GET",
       credentials: "include",
@@ -51,7 +51,7 @@ export default function Researcher() {
         console.log("Coords: ", data);
         setCoords(data);
       });
-  }, []);*/
+  }, []);
 
   const [openActions, setOpenActions] = useState(false);
 
@@ -399,9 +399,9 @@ export default function Researcher() {
                     <Text color="gray" fontSize="sm" align="center">
                       {(action.status == 0 ? "not started" : action.status == 1 ? "in progress" : "completed") +
                         ", " +
-                        action.start +
+                        action.startOfAction +
                         " - " +
-                        action.end}
+                        action.endOfAction}
                     </Text>
                     {action.comments &&
                       action.comments.length > 0 &&
@@ -615,7 +615,7 @@ export default function Researcher() {
                               {tracker.name + " " + tracker.surname}
                             </Text>
                             <Text color="gray" fontSize="sm" align="center">
-                              medium - {tracker.medium}
+                              medium - {tracker.qualification.type}
                             </Text>
                             {tracker.tasks.map((task, index) => (
                               <Box key={index}>
