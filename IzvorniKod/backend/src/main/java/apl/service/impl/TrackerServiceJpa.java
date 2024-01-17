@@ -101,6 +101,7 @@ public class TrackerServiceJpa implements TrackerService {
 
 
 
+
         if(tracker.getStation() != null){
             trackerDTO.setStation(tracker.getStation().toDTO());
         }

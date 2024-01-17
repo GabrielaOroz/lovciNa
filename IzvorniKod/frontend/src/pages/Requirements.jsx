@@ -8,16 +8,12 @@ import { Box, Button, Card, Flex, Input, Select, Text, Modal, Checkbox,
     ModalFooter,  Tabs, TabList, TabPanels, Tab, TabPanel,  } from "@chakra-ui/react";
 import GreenButton from "../components/shared/GreenButton.jsx";
 import YellowButton from "../components/shared/YellowButton.jsx";
-import podaci from "../pomoc.jsx";
-import trackersData from "../trackersData.jsx";
 import { useNavigate } from "react-router-dom";
 
 export default function CreateAction() {
   const [session, setSession] = useState(null);
-  //const [incomingRequests, setIncomingRequests] = useState(podaci); // kasnije []
   const [incomingRequests, setIncomingRequests] = useState([]); 
   const [isModalOpen, setModalOpen] = useState(false);
-  //const [trackers, setTrackers] = useState(trackersData);
   const [trackers, setTrackers] = useState([]); 
  
   const [selectedRequestId, setSelectedRequestId] = useState(null); //trenutni odabrani
