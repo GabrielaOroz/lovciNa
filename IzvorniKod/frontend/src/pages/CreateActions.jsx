@@ -367,7 +367,8 @@ export default function NewActions() {
     reader.readAsDataURL(blob);
 
     reader.onloadend = () => {
-      const base64data = reader.result;
+      let base64data = reader.result;
+      base64data = base64data.split(",")[1]
 
       const updatedFormData = formData.map((ac) => {
         if (ac.action.id === actionId) {
@@ -658,7 +659,7 @@ export default function NewActions() {
                                   Upload photo
                                 </GreenButton>
                               </label>
-                              {spec.photo && <img style={{ width: "264px" }} src={spec.photo} alt={spec.name} />}
+                              {spec.photo && <img style={{ width: "264px" }} src={`data:image/jpeg;base64,${spec.photo}`} alt={spec.name} />}
                               <Input
                                 id={`file-upload-${action.action.id}-${index}`}
                                 display="none"
@@ -793,7 +794,7 @@ export default function NewActions() {
                                   Upload photo
                                 </GreenButton>
                               </label>
-                              {indi.photo && <img style={{ width: "264px" }} src={indi.photo} alt={indi.name} />}
+                              {indi.photo && <img style={{ width: "264px" }} src={`data:image/jpeg;base64,${indi.photo}`} alt={indi.name} />}
                               <Input
                                 id={`file-upload-individual-${action.action.id}-${index}`}
                                 display="none"
@@ -886,7 +887,7 @@ export default function NewActions() {
                                 </GreenButton>
                               </label>
                               {habitat.photo && (
-                                <img style={{ width: "264px" }} src={habitat.photo} alt={habitat.name} />
+                                <img style={{ width: "264px" }} src={`data:image/jpeg;base64,${habitat.photo}`} alt={habitat.name} />
                               )}
                               <Input
                                 id={`file-upload-habitat-${action.action.id}-${index}`}

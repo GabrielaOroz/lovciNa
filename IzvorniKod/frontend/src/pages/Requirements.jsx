@@ -79,6 +79,7 @@ export default function CreateAction() {
     };
 
     const getFilteredTrackers = (ability) => {
+      console.log(trackers)
       return trackers.filter((tracker) => {
         return tracker.qualification.some((qualification) => qualification.type === ability);
       });
