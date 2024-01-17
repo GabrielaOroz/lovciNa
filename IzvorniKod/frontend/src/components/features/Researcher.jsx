@@ -25,8 +25,10 @@ import "leaflet.heat";
 
 export default function Researcher() {
   const mapRef = useRef(null);
-  const [formData, setFormData] = useState(mockData.mockActions);
+  const [formData, setFormData] = useState({});
   const [coords, setCoords] = useState(mockData.mockCoords);
+
+  const [managers, setManagers] = useState();
 
   /* GET DATA */
   useEffect(() => {
@@ -41,6 +43,7 @@ export default function Researcher() {
       });
   }, []);
 
+  /*
   useEffect(() => {
     fetch("http://localhost:8000/researcher/coords", {
       method: "GET",
@@ -51,7 +54,7 @@ export default function Researcher() {
         console.log("Coords: ", data);
         setCoords(data);
       });
-  }, []);
+  }, []);*/
 
   const [openActions, setOpenActions] = useState(false);
 
@@ -203,8 +206,8 @@ export default function Researcher() {
           >
             {formData.map(
               (action) =>
-                action.species.length > 0 &&
-                action.species.map((species, index) => <option value={species.name}>{species.name}</option>)
+                action.action.species.length > 0 &&
+                action.action.species.map((species, index) => <option value={species.name}>{species.name}</option>)
             )}
           </Select>
         )}
@@ -228,8 +231,8 @@ export default function Researcher() {
           >
             {formData.map(
               (action) =>
-                action.animals.length > 0 &&
-                action.animals.map((animal, index) => <option value={animal.id}>{animal.name}</option>)
+                action.action.animals.length > 0 &&
+                action.action.animals.map((animal, index) => <option value={animal.id}>{animal.name}</option>)
             )}
           </Select>
         )}
@@ -303,16 +306,16 @@ export default function Researcher() {
                     <Marker
                       key={index}
                       icon={blackIcon}
-                      position={[action.manager.station.latitude, action.manager.station.longitude]}
+                      position={[action.action.manager.station.latitude, action.action.manager.station.longitude]}
                     >
-                      <Popup>{action.manager.station.name}</Popup>
+                      <Popup>{action.action.manager.station.name}</Popup>
                     </Marker>
                   ))}
               </LayerGroup>
             </LayersControl.Overlay>
             <LayersControl.Overlay checked name="Pozicije tragača na akciji">
               <LayerGroup>
-                {/*formData.length > 0 &&
+                {formData.length > 0 &&
                   formData.map((action, index) =>
                     action.trackers.map((tracker, index) => (
                       <Marker key={index} icon={greenIcon} position={[tracker.latitude, tracker.longitude]}>
@@ -321,19 +324,19 @@ export default function Researcher() {
                         </Popup>
                       </Marker>
                     ))
-                    )*/}
+                  )}
               </LayerGroup>
             </LayersControl.Overlay>
             <LayersControl.Overlay checked name="Pozicije praćenih životinja">
               <LayerGroup>
-                {/*formData.length > 0 &&
+                {formData.length > 0 &&
                   formData.map((action) =>
-                    action.animals.map((animal, index) => (
+                    action.action.animals.map((animal, index) => (
                       <Marker key={index} icon={redIcon} position={[animal.latitude, animal.longitude]}>
                         <Popup>{animal.name}</Popup>
                       </Marker>
                     ))
-                    )*/}
+                  )}
               </LayerGroup>
             </LayersControl.Overlay>
           </LayersControl>
@@ -372,17 +375,17 @@ export default function Researcher() {
           {formData.length > 0 &&
             formData.map(
               (action) =>
-                action.id && (
+                action.action.id && (
                   <Flex
                     border="solid 1px #306844"
                     borderRadius="8px"
                     p="16px"
                     direction="column"
                     justify="space-between"
-                    key={action.id}
+                    key={action.action.id}
                   >
                     <Text color="#306844" fontSize="3xl" align="center">
-                      {action.title}
+                      {action.action.title}
                     </Text>
                     <Text
                       fontSize="lg"
@@ -390,22 +393,25 @@ export default function Researcher() {
                       _hover={{ cursor: "pointer", color: "#306844" }}
                       onClick={() => {
                         if (mapRef.current)
-                          mapRef.current.flyTo([action.manager.station.latitude, action.manager.station.longitude], 18);
+                          mapRef.current.flyTo(
+                            [action.action.manager.station.latitude, action.action.manager.station.longitude],
+                            18
+                          );
                         scrollToMap();
                       }}
                     >
-                      {action.manager.name + " " + action.manager.surname + ", " + action.manager.station.name}
+                      {action.action.manager.name +
+                        " " +
+                        action.action.manager.surname +
+                        ", " +
+                        action.action.manager.station.name}
                     </Text>
                     <Text color="gray" fontSize="sm" align="center">
-                      {(action.status == 0 ? "not started" : action.status == 1 ? "in progress" : "completed") +
-                        ", " +
-                        action.startOfAction +
-                        " - " +
-                        action.endOfAction}
+                      {"Start: " + Date(action.action.startOfAction).split("GMT")[0]}
                     </Text>
-                    {action.comments &&
-                      action.comments.length > 0 &&
-                      action.comments.map((comment) => (
+                    {action.action.comments &&
+                      action.action.comments.length > 0 &&
+                      action.action.comments.map((comment) => (
                         <Text mt="8px" align="center">
                           ○ {comment}
                         </Text>
@@ -418,14 +424,14 @@ export default function Researcher() {
                           _hover={{ cursor: "pointer" }}
                           align="center"
                           gap="8px"
-                          onClick={() => handleToggleAnimals(action.id)}
+                          onClick={() => handleToggleAnimals(action.action.id)}
                         >
-                          {showAnimals && !showAnimals[action.id] && (
+                          {showAnimals && !showAnimals[action.action.id] && (
                             <>
                               <IoIosArrowDown /> show species, individuals and habitats
                             </>
                           )}
-                          {showAnimals && showAnimals[action.id] && (
+                          {showAnimals && showAnimals[action.action.id] && (
                             <>
                               <IoIosArrowUp />
                               hide species, individuals and habitats
@@ -435,15 +441,15 @@ export default function Researcher() {
                       </AbsoluteCenter>
                     </Box>
 
-                    {showAnimals[action.id] && (
+                    {showAnimals[action.action.id] && (
                       <>
-                        {action.species.length > 0 && (
+                        {action.action.species.length > 0 && (
                           <>
                             <Text mt="16px" color="#306844" fontSize="3xl" align="center">
                               SPECIES
                             </Text>
                             <Flex p="16px" gap="16px" wrap="wrap" justify="center">
-                              {action.species.map((species, index) => (
+                              {action.action.species.map((species, index) => (
                                 <Flex
                                   border="solid 1px #306844"
                                   borderRadius="8px"
@@ -456,7 +462,12 @@ export default function Researcher() {
                                     <Text color="#306844" fontSize="3xl">
                                       {species.name}
                                     </Text>
-                                    <Avatar size="2xl" src={species.photo} alt={species.name} borderRadius="8px" />
+                                    <Avatar
+                                      size="2xl"
+                                      src={`data:image/jpeg;base64,${species.photo}`}
+                                      alt={species.name}
+                                      borderRadius="8px"
+                                    />
                                     <Text pt="8px">{species.description}</Text>
                                   </Flex>
                                 </Flex>
@@ -465,13 +476,13 @@ export default function Researcher() {
                           </>
                         )}
 
-                        {action.animals.length > 0 && (
+                        {action.action.animals.length > 0 && (
                           <>
                             <Text mt="16px" color="#306844" fontSize="3xl" align="center">
                               INDIVIDUALS
                             </Text>
                             <Flex p="16px" gap="16px" wrap="wrap" justify="center">
-                              {action.animals.map((individual, index) => (
+                              {action.action.animals.map((individual, index) => (
                                 <Flex
                                   border="solid 1px #306844"
                                   borderRadius="8px"
@@ -495,7 +506,7 @@ export default function Researcher() {
                                     </Text>
                                     <Avatar
                                       size="2xl"
-                                      src={individual.photo}
+                                      src={`data:image/jpeg;base64,${individual.photo}`}
                                       alt={individual.species}
                                       borderRadius="8px"
                                       _hover={{ cursor: "pointer" }}
@@ -525,13 +536,13 @@ export default function Researcher() {
                           </>
                         )}
 
-                        {action.habitats.length > 0 && (
+                        {action.action.habitats.length > 0 && (
                           <>
                             <Text mt="16px" color="#306844" fontSize="3xl" align="center">
                               HABITATS
                             </Text>
                             <Flex p="16px" gap="16px" wrap="wrap" justify="center">
-                              {action.habitats.map((habitat, index) => (
+                              {action.action.habitats.map((habitat, index) => (
                                 <Flex
                                   border="solid 1px #306844"
                                   borderRadius="8px"
@@ -555,7 +566,7 @@ export default function Researcher() {
                                     </Text>
                                     <Avatar
                                       size="2xl"
-                                      src={habitat.photo}
+                                      src={`data:image/jpeg;base64,${habitat.photo}`}
                                       alt={habitat.name}
                                       borderRadius="8px"
                                       _hover={{ cursor: "pointer" }}
@@ -582,14 +593,14 @@ export default function Researcher() {
                           _hover={{ cursor: "pointer" }}
                           align="center"
                           gap="8px"
-                          onClick={() => handleToggleTracker(action.id)}
+                          onClick={() => handleToggleTracker(action.action.id)}
                         >
-                          {!showTrackers[action.id] && (
+                          {!showTrackers[action.action.id] && (
                             <>
                               <IoIosArrowDown /> show trackers
                             </>
                           )}
-                          {showTrackers[action.id] && (
+                          {showTrackers[action.action.id] && (
                             <>
                               <IoIosArrowUp /> hide trackers
                             </>
@@ -598,11 +609,11 @@ export default function Researcher() {
                       </AbsoluteCenter>
                     </Box>
 
-                    {showTrackers[action.id] && (
+                    {showTrackers[action.action.id] && (
                       <>
                         {action.trackers.map((tracker, index) => (
                           <Box align="center" key={index} mb="32px">
-                            <Avatar size="xl" url="tracker.photo" />
+                            <Avatar size="xl" url={`data:image/jpeg;base64,${tracker.photo}`} />
                             <Text
                               fontSize="2xl"
                               align="center"
@@ -615,7 +626,7 @@ export default function Researcher() {
                               {tracker.name + " " + tracker.surname}
                             </Text>
                             <Text color="gray" fontSize="sm" align="center">
-                              medium - {tracker.qualification.type}
+                              medium - {action.mapOfTrackers[tracker.id]}
                             </Text>
                             {tracker.tasks.map((task, index) => (
                               <Box key={index}>
@@ -624,22 +635,19 @@ export default function Researcher() {
                                 </Text>
 
                                 <Text color="gray" fontSize="sm" align="center">
-                                  {(task.status == 0 ? "not started" : task.status == 1 ? "in progress" : "completed") +
-                                    ", " +
-                                    task.start +
-                                    " - " +
-                                    task.end}
+                                  {"Start: " + Date(action.action.startOfAction).split("GMT")[0]}
                                 </Text>
                                 <Text mt="8px" align="center">
                                   {task.content}
                                 </Text>
-                                {task.comments.map((comment, index) => (
-                                  <Box key={index}>
-                                    <Text mt="8px" align="center" fontSize="sm">
-                                      ○ {comment}
-                                    </Text>
-                                  </Box>
-                                ))}
+                                {task.comments &&
+                                  task.comments.map((comment, index) => (
+                                    <Box key={index}>
+                                      <Text mt="8px" align="center" fontSize="sm">
+                                        ○ {comment}
+                                      </Text>
+                                    </Box>
+                                  ))}
                               </Box>
                             ))}
                           </Box>

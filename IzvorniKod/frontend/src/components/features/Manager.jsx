@@ -43,7 +43,7 @@ export default function Manager() {
 
   const mapRef = useRef(null);
 
-  /*
+  
   const sendEmptyMediaList = () => {
     fetch("http://localhost:8000/manager/saveMedia", {
       method: "POST",
@@ -62,7 +62,7 @@ export default function Manager() {
       .catch((error) => {
         console.error("Error sending empty media list:", error);
       });
-  };*/
+  };
   const validateSelectedTrackers = () => {
     const trackersWithoutAbilities = selectedTrackers.filter(
       (tracker) => !selectedAbilities[tracker.id] || selectedAbilities[tracker.id].length === 0
@@ -146,10 +146,10 @@ export default function Manager() {
 
 
   useEffect(() => {
+    //sendEmptyMediaList()
     fetchExistingStationData();
     fetchMyTrackers();
     fetchTrackers();
-    // sendEmptyMediaList()
   }, []);
 
   const handleMapClick = (e) => {
