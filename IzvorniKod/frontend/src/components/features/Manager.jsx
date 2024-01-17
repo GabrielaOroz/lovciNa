@@ -45,8 +45,9 @@ export default function Manager() {
 
   const mapRef = useRef(null);
 
-  /*const sendEmptyMediaList = () => {
-    fetch("http://localhost:8000/saveMedia", {
+  /*
+  const sendEmptyMediaList = () => {
+    fetch("http://localhost:8000/manager/saveMedia", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -132,7 +133,7 @@ export default function Manager() {
     fetchExistingStationData();
     fetchMyTrackers();
     fetchTrackers();
-   // sendEmptyMediaList()
+    // sendEmptyMediaList()
   }, []);
 
   const handleMapClick = (e) => {
