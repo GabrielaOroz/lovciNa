@@ -23,7 +23,7 @@ public interface TrackerService {
 
     DtoAction updateAllDoneTasks(Map<Long, Long> lista, Long usrId);
 
-    List<DtoAnimal> updateNewComments(Map<Long, List<AnimalComment>> comments, Long usrId);
+    List<DtoAnimal> updateNewComments(Map<Long, List<String>> comments, Long usrId);
 
     DtoAction updateNewCommentsOnAction(List<String> comments, Long usrId);
 }
