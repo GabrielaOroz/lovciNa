@@ -149,7 +149,7 @@ public class TrackerController {
     }
 
     @PutMapping("/newComments")
-    public ResponseEntity<List<DtoAnimal>> addNewComments(@RequestBody Map<Long, List<AnimalComment>> comments , HttpSession session) {
+    public ResponseEntity<List<DtoAnimal>> addNewComments(@RequestBody Map<Long, List<String>> comments , HttpSession session) {
         Long usrId = authorize(session.getAttribute("id"));
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 

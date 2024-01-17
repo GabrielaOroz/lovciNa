@@ -216,6 +216,14 @@ public class TrackerServiceJpa implements TrackerService {
 
         List<Task> allTasksOfTracker = taskRepo.findByActionIdAndTrackerId(action.getId(), usrId);
 
+
+
+
+
+
+
+
+
         for(Task task : allTasksOfTracker){
             if(lista.containsKey(task.getId())){
                 if(lista.get(task.getId()) == 2){
@@ -252,12 +260,18 @@ public class TrackerServiceJpa implements TrackerService {
 
     @Transactional
     @Override
-    public List<DtoAnimal> updateNewComments(Map<Long, List<AnimalComment>> comments, Long usrId) {
-        List<Animal> animalsOnAction = animalRepo.findByActionsId(trackerActionMediumRepo.findTopByTrackerIdAndActionStatus(usrId, ActionStatus.ACTIVE).orElse(null).getAction().getId());
+    public List<DtoAnimal> updateNewComments(Map<Long, List<String>> comments, Long usrId) {
+
+        Action action = trackerActionMediumRepo.findTopByTrackerIdAndActionStatus(usrId, ActionStatus.ACTIVE).orElse(null).getAction();
+        List<Animal> animalsOnAction = animalRepo.findByActionsId(action.getId());
 
         for(Long id : comments.keySet()){
             Animal animal = animalRepo.findById(id).orElse(null);
-            animal.addMultipleComments(comments.get(id));
+            Tracker tracker = trackerRepo.findById(usrId).orElse(null);
+            for (String s : comments.get(id)) {
+                AnimalComment animalComment = new AnimalComment(animal, tracker, action, null, s);
+                animal.addComment(animalComment);
+            }
             try{
                 animalRepo.save(animal);
             } catch (Exception e){
