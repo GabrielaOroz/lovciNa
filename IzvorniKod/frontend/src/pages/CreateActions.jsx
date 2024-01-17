@@ -46,19 +46,19 @@ export default function NewActions() {
         if (
           !(
             ac.existingHabitats.length != 0 ||
-            ac.existingIndividuals.length != 0 ||
+            ac.existingAnimals.length != 0 ||
             ac.existingSpecies.length != 0 ||
             ac.action.species.length != 0 ||
             ac.action.habitats.length != 0 ||
-            ac.action.individuals.length != 0
-          ) &&
+            ac.action.animals.length != 0
+          ) ||
           !ac.action.title
         ) {
           setError((prevError) => ({ ...prevError, [actionId]: true }));
           shouldExit = true;
           console.log("3", true);
           return true;
-        } else if (ac.action.trackers.filter((tracker) => tracker.tasks.length == 0).length > 0) {
+        } else if (ac.trackers.filter((tracker) => tracker.tasks.length == 0).length > 0) {
           setError((prevError) => ({ ...prevError, [actionId]: true }));
           shouldExit = true;
           console.log("2", true);
@@ -82,14 +82,14 @@ export default function NewActions() {
       if (ac.action.id == actionId && !checkError(actionId)) {
         postData = {
           action: ac.action,
-          existingSpecies: selectedSpeciesMap[actionId],
-          existingIndividuals: selectedIndividualsMap[actionId],
-          existingHabitats: selectedHabitatsMap[actionId],
+          existingSpecies: selectedSpeciesMap[actionId] || [],
+          existingIndividuals: selectedIndividualsMap[actionId] || [],
+          existingHabitats: selectedHabitatsMap[actionId] || [],
         };
       }
     });
 
-    //console.log(postData);
+    console.log(postData);
     if (!checkError(actionId)) {
       fetch("http://localhost:8000/researcher/finished-action", {
         method: "PUT",
@@ -107,7 +107,8 @@ export default function NewActions() {
   };
 
   /* DATA */
-  const [formData, setFormData] = useState(mockData.mockNewActions);
+  const [itemType, setItemType] = useState({});
+  const [formData, setFormData] = useState({});
   useEffect(() => {
     fetch("http://localhost:8000/researcher/unfinished-actions", {
       method: "GET",
@@ -117,8 +118,19 @@ export default function NewActions() {
       .then((data) => {
         console.log("Unfinished-actions: ", data);
         setFormData(data);
+        setItemType(() => {
+          if (data.length > 0) {
+            return data.reduce((obj, action) => {
+              obj[action.action.id] = "species"; //every action gets species as a default
+              return obj;
+            }, {});
+          } else {
+            return {};
+          }
+        });
       });
   }, []);
+  console.log(itemType)
 
   const [error, setError] = useState(() => {
     if (formData.length > 0) {
@@ -132,9 +144,9 @@ export default function NewActions() {
   });
   console.log(error);
 
-  const [existingSpecies, setExistingSpecies] = useState(mockData.mockSpecies);
-  const [existingIndividuals, setExistingIndividuals] = useState(mockData.mockIndividuals);
-  const [existingHabitats, setExistingHabitats] = useState(mockData.mockHabitats);
+  const [existingSpecies, setExistingSpecies] = useState([]);
+  const [existingIndividuals, setExistingIndividuals] = useState([]);
+  const [existingHabitats, setExistingHabitats] = useState([]);
   useEffect(() => {
     fetch("http://localhost:8000/researcher/species", {
       method: "GET",
@@ -232,17 +244,6 @@ export default function NewActions() {
   };
 
   /* CHOOSING SPECIES/INDIVIDUALS/HABITATS AND THEIR DATA*/
-  const [itemType, setItemType] = useState(() => {
-    if (formData.length > 0) {
-      return formData.reduce((obj, action) => {
-        obj[action.action.id] = "species"; //every action gets species as a default
-        return obj;
-      }, {});
-    } else {
-      return {};
-    }
-  });
-
   const handleItemTypeChange = (actionId, value) => {
     setItemType((prevItemTypes) => ({
       ...prevItemTypes,
@@ -398,8 +399,8 @@ export default function NewActions() {
     const updatedFormData = [...formData];
     const actionToUpdate = updatedFormData.find((action) => action.action.id === actionId);
 
-    if (actionToUpdate && actionToUpdate.action.trackers.find((tracker) => tracker.id === trackerId)) {
-      actionToUpdate.action.trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex][property] = value;
+    if (actionToUpdate && actionToUpdate.trackers.find((tracker) => tracker.id === trackerId)) {
+      actionToUpdate.trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex][property] = value;
       setFormData(updatedFormData);
     }
   };
@@ -408,8 +409,8 @@ export default function NewActions() {
     const updatedFormData = [...formData];
     const actionToUpdate = updatedFormData.find((action) => action.action.id === actionId);
 
-    if (actionToUpdate && actionToUpdate.action.trackers.find((tracker) => tracker.id === trackerId)) {
-      actionToUpdate.action.trackers.find((tracker) => tracker.id === trackerId).tasks.splice(taskIndex, 1);
+    if (actionToUpdate && actionToUpdate.trackers.find((tracker) => tracker.id === trackerId)) {
+      actionToUpdate.trackers.find((tracker) => tracker.id === trackerId).tasks.splice(taskIndex, 1);
       setFormData(updatedFormData);
     }
   };
@@ -418,7 +419,7 @@ export default function NewActions() {
     const updatedFormData = [...formData];
     const actionToUpdate = updatedFormData.find((action) => action.action.id === actionId);
 
-    if (actionToUpdate && actionToUpdate.action.trackers.find((tracker) => tracker.id === trackerId)) {
+    if (actionToUpdate && actionToUpdate.trackers.find((tracker) => tracker.id === trackerId)) {
       const newTask = {
         title: "",
         content: "Set up a camera",
@@ -426,8 +427,8 @@ export default function NewActions() {
         coordinatesStart: [45, 15],
         coordinatesFinish: [45.2, 15.2],
       };
-      actionToUpdate.action.trackers.find((tracker) => tracker.id === trackerId).tasks = [
-        ...actionToUpdate.action.trackers.find((tracker) => tracker.id === trackerId).tasks,
+      actionToUpdate.trackers.find((tracker) => tracker.id === trackerId).tasks = [
+        ...actionToUpdate.trackers.find((tracker) => tracker.id === trackerId).tasks,
         newTask,
       ];
       setFormData(updatedFormData);
@@ -439,12 +440,11 @@ export default function NewActions() {
     const { value } = e.target;
     const updatedFormData = [...formData];
     const actionToUpdate = updatedFormData.find((action) => action.action.id === actionId);
-    const trackerToUpdate = actionToUpdate.action.trackers.find((tracker) => tracker.id === trackerId);
+    const trackerToUpdate = actionToUpdate.trackers.find((tracker) => tracker.id === trackerId);
 
     if (trackerToUpdate && trackerToUpdate.tasks[taskIndex]) {
-      actionToUpdate.action.trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].comments[
-        commentIndex
-      ] = value;
+      actionToUpdate.trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].comments[commentIndex] =
+        value;
       setFormData(updatedFormData);
     }
   };
@@ -452,10 +452,10 @@ export default function NewActions() {
   const removeTaskComment = (actionId, taskIndex, trackerId, commentIndex) => {
     const updatedFormData = [...formData];
     const actionToUpdate = updatedFormData.find((action) => action.action.id === actionId);
-    const trackerToUpdate = actionToUpdate.action.trackers.find((tracker) => tracker.id === trackerId);
+    const trackerToUpdate = actionToUpdate.trackers.find((tracker) => tracker.id === trackerId);
 
     if (trackerToUpdate && trackerToUpdate.tasks[taskIndex]) {
-      actionToUpdate.action.trackers
+      actionToUpdate.trackers
         .find((tracker) => tracker.id === trackerId)
         .tasks[taskIndex].comments.splice(commentIndex, 1);
       setFormData(updatedFormData);
@@ -465,10 +465,10 @@ export default function NewActions() {
   const addTaskComment = (actionId, trackerId, taskIndex) => {
     const updatedFormData = [...formData];
     const actionToUpdate = updatedFormData.find((action) => action.action.id === actionId);
-    const trackerToUpdate = actionToUpdate.action.trackers.find((tracker) => tracker.id === trackerId);
+    const trackerToUpdate = actionToUpdate.trackers.find((tracker) => tracker.id === trackerId);
 
     if (trackerToUpdate && trackerToUpdate.tasks[taskIndex]) {
-      actionToUpdate.action.trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].comments.push("");
+      actionToUpdate.trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].comments.push("");
       setFormData(updatedFormData);
     }
   };
@@ -477,13 +477,13 @@ export default function NewActions() {
   const updateTaskCoordinates = (actionId, trackerId, taskIndex, startCoords, finishCoords) => {
     const updatedActions = [...formData];
     const actionToUpdate = updatedActions.find((action) => action.action.id === actionId);
-    if (actionToUpdate && actionToUpdate.action.trackers.find((tracker) => tracker.id === trackerId)) {
+    if (actionToUpdate && actionToUpdate.trackers.find((tracker) => tracker.id === trackerId)) {
       updatedActions
         .find((action) => action.action.id === actionId)
-        .action.trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].coordinatesStart = startCoords;
+        .trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].coordinatesStart = startCoords;
       updatedActions
         .find((action) => action.action.id === actionId)
-        .action.trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].coordinatesFinish = finishCoords;
+        .trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].coordinatesFinish = finishCoords;
       setFormData(updatedActions);
     }
   };
@@ -498,23 +498,23 @@ export default function NewActions() {
         L.latLng(
           [...formData]
             .find((action) => action.action.id === actionId)
-            .action.trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].coordinatesStart[0],
+            .trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].coordinatesStart[0],
           [...formData]
             .find((action) => action.action.id === actionId)
-            .action.trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].coordinatesStart[1]
+            .trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].coordinatesStart[1]
         ),
         L.latLng(
           [...formData]
             .find((action) => action.action.id === actionId)
-            .action.trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].coordinatesFinish[0],
+            .trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].coordinatesFinish[0],
           [...formData]
             .find((action) => action.action.id === actionId)
-            .action.trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].coordinatesFinish[1]
+            .trackers.find((tracker) => tracker.id === trackerId).tasks[taskIndex].coordinatesFinish[1]
         ),
       ],
       router: new L.Routing.osrmv1({
         serviceUrl: "https://router.project-osrm.org/route/v1",
-        profile: medium,
+        //profile: medium,
       }),
       show: false,
     });
@@ -925,138 +925,144 @@ export default function NewActions() {
                   <Text fontSize="lg" color="#306844" as="b">
                     TRACKERS
                   </Text>
-                  {action.action.trackers.map((tracker) => (
-                    <Box align="center" key={tracker.id}>
-                      <Avatar size="xl" url="tracker.photo" />
-                      <Text fontSize="2xl" align="center">
-                        {tracker.name + " " + tracker.surname}
-                      </Text>
-                      <Text color="gray" fontSize="sm" align="center">
-                        medium - {tracker.medium}
-                      </Text>
-                      {tracker.tasks.map((task, taskIndex) => (
-                        <Box
-                          key={taskIndex}
-                          position="relative"
-                          border="solid 1px #306844"
-                          borderRadius="8px"
-                          p="16px"
-                          mt="16px"
-                        >
-                          <Button
-                            position="absolute"
-                            top="0px"
-                            right="0px"
-                            variant="unstyled"
-                            onClick={() => removeTask(action.action.id, tracker.id, taskIndex)}
+                  {console.log(formData.filter((a) => a.action.id == action.action.id)[0])}
+                  {formData
+                    .filter((a) => a.action.id == action.action.id)[0]
+                    .trackers.map((tracker) => (
+                      <Box align="center" key={tracker.id}>
+                        <Avatar size="xl" url="tracker.photo" />
+                        <Text fontSize="2xl" align="center">
+                          {tracker.name + " " + tracker.surname}
+                        </Text>
+                        <Text color="gray" fontSize="sm" align="center">
+                          medium -{" "}
+                          {formData.filter((a) => a.action.id == action.action.id)[0].mapOfTrackers[tracker.id]}
+                        </Text>
+                        {tracker.tasks.map((task, taskIndex) => (
+                          <Box
+                            key={taskIndex}
+                            position="relative"
+                            border="solid 1px #306844"
+                            borderRadius="8px"
+                            p="16px"
+                            mt="16px"
                           >
-                            ✖
-                          </Button>
-
-                          <Text fontSize="lg" textAlign="center">
-                            Title
-                          </Text>
-                          <Input
-                            id="title"
-                            value={task.title}
-                            _hover={{ borderColor: "#97B3A1" }}
-                            focusBorderColor="#306844"
-                            onChange={(e) => handleTaskChange(e, action.action.id, tracker.id, taskIndex, "title")}
-                          />
-
-                          <Text mt="16px" fontSize="lg" textAlign="center">
-                            Content
-                          </Text>
-                          <Select
-                            id="content"
-                            mb="16px"
-                            value={task.content}
-                            borderColor="#306844"
-                            _hover={{ borderColor: "#97B3A1" }}
-                            focusBorderColor="#306844"
-                            sx={{
-                              "& option": {
-                                background: "#97B3A1",
-                                color: "white",
-                              },
-                            }}
-                            onChange={(e) => handleTaskChange(e, action.action.id, tracker.id, taskIndex, "content")}
-                          >
-                            <chakra.option value="Set up a camera">Set up a camera</chakra.option>
-                            <chakra.option value="Set up a gps tracker">Set up a gps tracker</chakra.option>
-                          </Select>
-                          <Text align="center" w="500px" fontSize="lg" color="#306844">
-                            Designate the starting and finishing points of the route for the task by dragging waypoints
-                            on the map.
-                          </Text>
-                          <Flex justify="center" color="gray.400" fontSize="sm">
-                            {task.coordinatesStart && (
-                              <Text>{"Start: " + task.coordinatesStart[0] + ", " + task.coordinatesStart[1]}</Text>
-                            )}
-                            <Text>|</Text>
-                            {task.coordinatesFinish && (
-                              <Text>{"End: " + task.coordinatesFinish[0] + ", " + task.coordinatesFinish[1]}</Text>
-                            )}
-                          </Flex>
-                          <Box h="400px" p="16px" id="map">
-                            <MapContainer style={{ height: "100%", width: "100%" }} center={[45, 15]} zoom={10}>
-                              <TileLayer
-                                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                              />
-                              <RoutingMachine
-                                profile={tracker.medium}
-                                actionId={action.action.id}
-                                trackerId={tracker.id}
-                                taskIndex={taskIndex}
-                              />
-                            </MapContainer>
-                          </Box>
-
-                          <Flex direction="column" align="center">
-                            <Text fontSize="lg" mt="16px">
-                              Comments
-                            </Text>
-                            {task.comments.map((comment, commentIndex) => (
-                              <Flex direction="column" align="center" key={commentIndex}>
-                                <Textarea
-                                  w="500px"
-                                  value={comment}
-                                  onChange={(e) =>
-                                    handleTaskCommentChange(e, action.action.id, tracker.id, taskIndex, commentIndex)
-                                  }
-                                />
-                                <YellowButton
-                                  size="sm"
-                                  w="200px"
-                                  onClick={() =>
-                                    removeTaskComment(action.action.id, taskIndex, tracker.id, commentIndex)
-                                  }
-                                  mt="8px"
-                                  mb="16px"
-                                >
-                                  Remove
-                                </YellowButton>
-                              </Flex>
-                            ))}
-                            <GreenButton
-                              size="sm"
-                              w="200px"
-                              mt="16px"
-                              onClick={() => addTaskComment(action.action.id, tracker.id, taskIndex)}
+                            <Button
+                              position="absolute"
+                              top="0px"
+                              right="0px"
+                              variant="unstyled"
+                              onClick={() => removeTask(action.action.id, tracker.id, taskIndex)}
                             >
-                              Add Comment
-                            </GreenButton>
-                          </Flex>
-                        </Box>
-                      ))}
-                      <YellowButton mt="16px" onClick={() => addTask(action.action.id, tracker.id)}>
-                        Add task
-                      </YellowButton>
+                              ✖
+                            </Button>
 
-                      <Divider borderColor="#306844" w="600px" mt="16px" mb="16px" />
-                    </Box>
-                  ))}
+                            <Text fontSize="lg" textAlign="center">
+                              Title
+                            </Text>
+                            <Input
+                              id="title"
+                              value={task.title}
+                              _hover={{ borderColor: "#97B3A1" }}
+                              focusBorderColor="#306844"
+                              onChange={(e) => handleTaskChange(e, action.action.id, tracker.id, taskIndex, "title")}
+                            />
+
+                            <Text mt="16px" fontSize="lg" textAlign="center">
+                              Content
+                            </Text>
+                            <Select
+                              id="content"
+                              mb="16px"
+                              value={task.content}
+                              borderColor="#306844"
+                              _hover={{ borderColor: "#97B3A1" }}
+                              focusBorderColor="#306844"
+                              sx={{
+                                "& option": {
+                                  background: "#97B3A1",
+                                  color: "white",
+                                },
+                              }}
+                              onChange={(e) => handleTaskChange(e, action.action.id, tracker.id, taskIndex, "content")}
+                            >
+                              <chakra.option value="Set up a camera">Set up a camera</chakra.option>
+                              <chakra.option value="Set up a gps tracker">Set up a gps tracker</chakra.option>
+                            </Select>
+                            <Text align="center" w="500px" fontSize="lg" color="#306844">
+                              Designate the starting and finishing points of the route for the task by dragging
+                              waypoints on the map.
+                            </Text>
+                            <Flex justify="center" color="gray.400" fontSize="sm">
+                              {task.coordinatesStart && (
+                                <Text>{"Start: " + task.coordinatesStart[0] + ", " + task.coordinatesStart[1]}</Text>
+                              )}
+                              <Text>|</Text>
+                              {task.coordinatesFinish && (
+                                <Text>{"End: " + task.coordinatesFinish[0] + ", " + task.coordinatesFinish[1]}</Text>
+                              )}
+                            </Flex>
+                            <Box h="400px" p="16px" id="map">
+                              <MapContainer style={{ height: "100%", width: "100%" }} center={[45, 15]} zoom={10}>
+                                <TileLayer
+                                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                />
+                                <RoutingMachine
+                                  profile={
+                                    formData.filter((a) => a.action.id == action.action.id)[0].mapOfTrackers[tracker.id]
+                                  }
+                                  actionId={action.action.id}
+                                  trackerId={tracker.id}
+                                  taskIndex={taskIndex}
+                                />
+                              </MapContainer>
+                            </Box>
+
+                            <Flex direction="column" align="center">
+                              <Text fontSize="lg" mt="16px">
+                                Comments
+                              </Text>
+                              {task.comments.map((comment, commentIndex) => (
+                                <Flex direction="column" align="center" key={commentIndex}>
+                                  <Textarea
+                                    w="500px"
+                                    value={comment}
+                                    onChange={(e) =>
+                                      handleTaskCommentChange(e, action.action.id, tracker.id, taskIndex, commentIndex)
+                                    }
+                                  />
+                                  <YellowButton
+                                    size="sm"
+                                    w="200px"
+                                    onClick={() =>
+                                      removeTaskComment(action.action.id, taskIndex, tracker.id, commentIndex)
+                                    }
+                                    mt="8px"
+                                    mb="16px"
+                                  >
+                                    Remove
+                                  </YellowButton>
+                                </Flex>
+                              ))}
+                              <GreenButton
+                                size="sm"
+                                w="200px"
+                                mt="16px"
+                                onClick={() => addTaskComment(action.action.id, tracker.id, taskIndex)}
+                              >
+                                Add Comment
+                              </GreenButton>
+                            </Flex>
+                          </Box>
+                        ))}
+                        <YellowButton mt="16px" onClick={() => addTask(action.action.id, tracker.id)}>
+                          Add task
+                        </YellowButton>
+
+                        <Divider borderColor="#306844" w="600px" mt="16px" mb="16px" />
+                      </Box>
+                    ))}
 
                   {error[action.action.id] && (
                     <Text color="red" align="center">
