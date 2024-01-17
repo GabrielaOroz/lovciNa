@@ -114,7 +114,6 @@ public class ManagerServiceJpa implements ManagerService {
 
 
     @Transactional
-            //(propagation = Propagation.REQUIRED, rollbackFor = Exception.class)
     @Override
     public Action submitAction(RequestDTO requestDTO) {
         Request request = requestRepo.findById(requestDTO.getRequestId()).orElse(null);
@@ -134,9 +133,9 @@ public class ManagerServiceJpa implements ManagerService {
 
             Tracker tracker = trackerRepo.findById(trackerId).orElse(null);
             Medium medium = mediumRepo.findById(trackersForAction.get(trackerId)).orElse(null);
-            System.out.println(tracker.getName());
-            System.out.println(action.getTitle());
-            System.out.println(medium.getType());
+            //System.out.println(tracker.getName());
+            //System.out.println(action.getTitle());
+            //System.out.println(medium.getType());
             TrackerActionMedium trackerActionMedium = new TrackerActionMedium(tracker, action, medium);
 
             //try{

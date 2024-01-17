@@ -5,6 +5,7 @@ import apl.enums.ActionStatus;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -13,5 +14,7 @@ public interface TrackerActionMediumRepository extends JpaRepository<TrackerActi
 
     Optional<TrackerActionMedium> findTopByTrackerIdAndActionStatus(Long trackerId, ActionStatus actionStatus);
     Optional<TrackerActionMedium> findByTrackerId(Long trackerId);
+
+    Optional<List<TrackerActionMedium>> findByActionId(Long actionId);
 
 }

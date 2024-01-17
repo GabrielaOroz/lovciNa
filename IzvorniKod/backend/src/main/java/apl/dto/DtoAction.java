@@ -12,6 +12,7 @@ import lombok.Setter;
 import lombok.ToString;
 
 import java.time.LocalDateTime;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -39,21 +40,21 @@ public class DtoAction {
 
     private Map<MediumType, Long> requirements;
 
-    private List<DtoTask> tasks;
+    private List<DtoTask> tasks = new LinkedList<>();
 
-    private List<DtoActionComment> comments;
+    private List<DtoActionComment> comments = new LinkedList<>();
 
-    private List<DtoAnimalComment> animalComments;
+    private List<DtoAnimalComment> animalComments = new LinkedList<>();
 
-    private List<DtoRequest> requests;
+    private List<DtoRequest> requests = new LinkedList<>();
 
-    private List<DtoAnimal> animals;
+    private List<DtoAnimal> animals = new LinkedList<>();
 
-    private List<DtoHabitat> habitats;
+    private List<DtoHabitat> habitats = new LinkedList<>();
 
-    private List<DtoTrackerActionMedium> trackerActionMedia;
+    private List<DtoTrackerActionMedium> trackerActionMedia = new LinkedList<>();
 
-    private List<DtoSpecies> species; //not in class action
+    private List<DtoSpecies> species = new LinkedList<>(); //not in class action
 
 
 }

@@ -42,6 +42,9 @@ public class ResearcherServiceJpa implements ResearcherService {
     @Autowired
     private ActionRepository actionRepo;
 
+    @Autowired
+    private TrackerActionMediumRepository trackerActionMediumRepo;
+
     @Transactional
     public DtoUser createAction(Action action, Long usrId) {
         try {
@@ -97,13 +100,13 @@ public class ResearcherServiceJpa implements ResearcherService {
     @Transactional
     public DtoAction getAllFinishedActions(ActionDTO action, Long usrId) {
 
-        Action action1 = actionRepo.findById(action.getDtoAction().getId()).orElse(null);
+        Action action1 = actionRepo.findById(action.getAction().getId()).orElse(null);
 
         action1.setStartOfAction(LocalDateTime.now());
         action1.setStatus(ActionStatus.ACTIVE);
 
         List<Animal> animalsForDB = new LinkedList<>();
-        for(DtoAnimal animal : action.getDtoAction().getAnimals()){
+        for(DtoAnimal animal : action.getAction().getAnimals()){
             Species species = new Species(animal.getSpecies().getName(), animal.getSpecies().getDescription(), animal.getSpecies().getPhoto());
             Animal a = new Animal(species, animal.getName(), animal.getDescription(), animal.getPhoto());
             animalsForDB.add(a);
@@ -118,7 +121,7 @@ public class ResearcherServiceJpa implements ResearcherService {
 
 
         List<Habitat> habitatsForDB = new LinkedList<>();
-        for(DtoHabitat habitat : action.getDtoAction().getHabitats()){
+        for(DtoHabitat habitat : action.getAction().getHabitats()){
             Habitat habitat1 = new Habitat(habitat.getLongitude(), habitat.getLatitude(), habitat.getRadius(), habitat.getName(), habitat.getDescription(), habitat.getPhoto());
             habitatsForDB.add(habitat1);
         }
@@ -136,7 +139,7 @@ public class ResearcherServiceJpa implements ResearcherService {
         }
 
 
-        for(DtoSpecies species : action.getDtoAction().getSpecies()){
+        for(DtoSpecies species : action.getAction().getSpecies()){
             Species species1 = new Species(species.getName(), species.getDescription(), species.getPhoto());
             try{
                 speciesRepo.save(species1);
@@ -145,6 +148,7 @@ public class ResearcherServiceJpa implements ResearcherService {
             }
         }
 
+
         return action1.toDTO();
     }
 
@@ -152,9 +156,17 @@ public class ResearcherServiceJpa implements ResearcherService {
     public List<ActionDTO> getAllUnfinishedActions(Long usrId) {
         List<DtoAction> dtoActions = MyConverter.convertToDTOList(actionRepo.findByResearcherIdAndStatus(usrId, ActionStatus.WAITING));
         List<ActionDTO> dtoUnfinishedActions = new LinkedList<>();
-        for (DtoAction dtoAction : dtoActions) {
+        for (DtoAction action : dtoActions) {
             ActionDTO actionDTO = new ActionDTO();
-            actionDTO.setDtoAction(dtoAction);
+
+            List<DtoTracker> trackers = new LinkedList<>();
+            List<TrackerActionMedium> trackersDB = trackerActionMediumRepo.findByActionId(action.getId()).orElse(null);
+            for(TrackerActionMedium trackerActionMedium : trackersDB){
+                trackers.add(trackerActionMedium.getTracker().toTrackerDTO());
+            }
+
+            actionDTO.setTrackers(trackers);
+            actionDTO.setAction(action);
             dtoUnfinishedActions.add(actionDTO);
 
         }

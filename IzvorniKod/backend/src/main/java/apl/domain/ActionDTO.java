@@ -1,9 +1,6 @@
 package apl.domain;
 
-import apl.dto.DtoAction;
-import apl.dto.DtoAnimal;
-import apl.dto.DtoHabitat;
-import apl.dto.DtoSpecies;
+import apl.dto.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -19,11 +16,13 @@ import java.util.List;
 @NoArgsConstructor
 public class ActionDTO {
 
-    private DtoAction dtoAction;
+    private DtoAction action;
 
     private List<DtoAnimal> existingAnimals = new LinkedList<>();
 
     private List<DtoSpecies> existingSpecies = new LinkedList<>();
 
     private List<DtoHabitat> existingHabitats = new LinkedList<>();
+
+    private List<DtoTracker> trackers = new LinkedList<>();
 }
