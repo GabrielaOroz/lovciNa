@@ -21,6 +21,7 @@ import { Link } from "react-router-dom";
 import GreenButton from "../shared/GreenButton";
 import YellowButton from "../shared/YellowButton.jsx";
 
+
 export default function Manager() {
   const [selectedStation, setSelectedStation] = useState(null); //je li ili nije selectana -- nema mijenjanja
   const [selectedTracker, setSelectedTracker] = useState(null); //trenutni selectan
@@ -39,7 +40,7 @@ export default function Manager() {
 
   //selectani trackeri
   const [selectedTrackers, setSelectedTrackers] = useState([])
-  const [selectedAbilities, setSelectedAbilities] = useState({}); //rijecnik - tracker i abilities
+  const [selectedAbilities, setSelectedAbilities] = useState({}); //rjecnik - tracker i abilities
 
   const mapRef = useRef(null);
 
@@ -244,15 +245,6 @@ export default function Manager() {
   };
 
   const handleSaveAbilities = () => {
-    {/*const trackersWithoutAbilities = selectedTrackers.filter(
-      (tracker) => !selectedAbilities[tracker.id] || selectedAbilities[tracker.id].length === 0
-    );
-
-    if (trackersWithoutAbilities.length > 0) {
-      const trackerNamesWithoutAbilities = trackersWithoutAbilities.map((tracker) => tracker.name);
-      alert(`Please select abilities for tracker(s): ${trackerNamesWithoutAbilities.join(", ")}`);
-      return;
-    }*/}
 
       if (validateSelectedTrackers()) {
         fetch("http://localhost:8000/manager/saveAbilities", {
@@ -344,7 +336,11 @@ export default function Manager() {
       >
         {selectedStation && !selectedAll && (
           <Box maxHeight="240px" overflowY="auto" padding="16px">
-            <Text style={{paddingBottom: "30px", color: "#306844", textTransform:"uppercase", fontWeight:"bold", fontSize:"24px"}}>Choose trackers for your station</Text>
+            {availableTrackers.length > 0 && (
+               <Text style={{paddingBottom: "30px", color: "#306844", textTransform:"uppercase", fontWeight:"bold", fontSize:"24px"}}>Choose trackers for your station</Text>
+            )
+            }
+           
             <Stack spacing={4} direction="column">
               {availableTrackers.map((tracker) => (
                 <Checkbox
@@ -456,7 +452,6 @@ export default function Manager() {
               )}
             </ModalBody>
             <ModalFooter>
-              {/* UREDI - NE SMIJE SE ZATVARAT AKO NIJE ZA SVAKOG ODABRAO*/}
               <Button
                 mr={3}
                 onClick={() => {

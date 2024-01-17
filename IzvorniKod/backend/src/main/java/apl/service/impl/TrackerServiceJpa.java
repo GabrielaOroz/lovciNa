@@ -60,6 +60,46 @@ public class TrackerServiceJpa implements TrackerService {
         trackerDTO.getAction().setAnimals(MyConverter.convertToDTOList(action.getAnimals()));
         trackerDTO.getAction().setHabitats(MyConverter.convertToDTOList(action.getHabitats()));
 
+        List<String> actionComments = new LinkedList<>();
+        for (ActionComment actionComment : action.getActionComments()) {
+            actionComments.add(actionComment.getContent());
+        }
+        trackerDTO.getAction().setComments(actionComments);
+
+        trackerDTO.getAction().setSpecies(MyConverter.convertToDTOList(speciesRepo.findByAnimalsActionsId(action.getId())));
+
+        for (DtoAnimal dtoAnimal : trackerDTO.getAction().getAnimals()) {
+            Animal animal = animalRepo.findById(dtoAnimal.getId()).orElse(null);
+            if (animal.getComments() != null) {
+                List<String> animalComments = new LinkedList<>();
+                for (AnimalComment animalComment : animal.getComments()) {
+                    animalComments.add(animalComment.getContent());
+                }
+                dtoAnimal.setComments(animalComments);
+            }
+        }
+
+        for (DtoTask dtoTask : trackerDTO.getAction().getTasks()) {
+            Task task = taskRepo.findById(dtoTask.getId()).orElse(null);
+            if (task.getComments() != null) {
+                List<String> taskComments = new LinkedList<>();
+                for (TaskComment taskComment : task.getComments()) {
+                    taskComments.add(taskComment.getContent());
+                }
+                dtoTask.setComments(taskComments);
+            }
+        }
+
+
+
+
+
+
+
+
+
+
+
 
 
         if(tracker.getStation() != null){
