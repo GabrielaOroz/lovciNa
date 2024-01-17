@@ -42,7 +42,7 @@ public class DtoAction {
 
     private List<DtoTask> tasks = new LinkedList<>();
 
-    private List<DtoActionComment> comments = new LinkedList<>();
+    private List<String> comments = new LinkedList<>();
 
     private List<DtoAnimalComment> animalComments = new LinkedList<>();
 

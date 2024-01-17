@@ -46,8 +46,7 @@ public class DtoAnimal implements ConvertibleToLocation {
 
     private Double latitude;
 
-
-    private List<DtoAnimalComment> comments;
+    private List<String> comments;
 
     private List<DtoAnimalHistory> history;
 

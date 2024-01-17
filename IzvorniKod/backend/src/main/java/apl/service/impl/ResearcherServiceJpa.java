@@ -113,8 +113,29 @@ public class ResearcherServiceJpa implements ResearcherService {
 
         List<Animal> animalsForDB = new LinkedList<>();
         for(DtoAnimal animal : action.getAction().getAnimals()){
-            Species species = new Species(animal.getSpecies().getName(), animal.getSpecies().getDescription(), animal.getSpecies().getPhoto());
-            Animal a = new Animal(species, animal.getName(), animal.getDescription(), animal.getPhoto());
+
+            Species speciesForAnimal = new Species();
+
+            Species speciesDB = speciesRepo.findByName(animal.getSpecies().getName()).orElse(null);
+            speciesForAnimal = speciesDB;
+            if(speciesDB == null){  //ako taj species od te zivotinje ne postoji vec u bazi
+                Species species = new Species(animal.getSpecies().getName(), animal.getSpecies().getDescription(), animal.getSpecies().getPhoto());
+                speciesRepo.save(species); //???
+                speciesForAnimal = species;
+            }
+
+            Animal a = new Animal(speciesForAnimal, animal.getName(), animal.getDescription(), animal.getPhoto());
+
+            List<String> commentsOnAnimal = animal.getComments();
+            List<AnimalComment> newComments = new LinkedList<>();
+
+            for(String s : commentsOnAnimal){
+                Researcher researcher = researcherRepo.findById(action.getAction().getResearcher().getId()).orElse(null);
+                AnimalComment newAnimalComment = new AnimalComment(a, researcher, action1, null, s);
+                newComments.add(newAnimalComment);
+            }
+
+            a.addMultipleComments(newComments);
             animalsForDB.add(a);
         }
 
@@ -124,6 +145,7 @@ public class ResearcherServiceJpa implements ResearcherService {
         }
 
         action1.addMultipleAnimals(animalsForDB);
+
 
 
         List<Habitat> habitatsForDB = new LinkedList<>();
@@ -138,12 +160,28 @@ public class ResearcherServiceJpa implements ResearcherService {
         }
 
         action1.addMultipleHabitats(habitatsForDB);
+
+        //komentari
+        List<String> commentsOnAction = action.getAction().getComments();
+        List<ActionComment> newComments = new LinkedList<>();
+
+        for(String s : commentsOnAction){
+            Researcher researcher = researcherRepo.findById(action.getAction().getResearcher().getId()).orElse(null);
+            ActionComment newActionComment = new ActionComment(researcher, action1, null, s);
+            newComments.add(newActionComment);
+        }
+
+        //zadaci
+
+
+
+
+        action1.addMultipleActionComments(newComments);
         try{
             actionRepo.save(action1);
         }catch (Exception e){
             return null;
         }
-
 
         for(DtoSpecies species : action.getAction().getSpecies()){
             Species species1 = new Species(species.getName(), species.getDescription(), species.getPhoto());
@@ -153,7 +191,6 @@ public class ResearcherServiceJpa implements ResearcherService {
                 return null;
             }
         }
-
 
         return action1.toDTO();
     }

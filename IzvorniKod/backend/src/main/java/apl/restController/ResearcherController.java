@@ -117,7 +117,7 @@ public class ResearcherController {
         }
     }
 
-    @PostMapping("/finished-actions")
+    @PostMapping("/finished-action")
     public ResponseEntity<DtoAction> getFinishedActions(@RequestBody ActionDTO actions, HttpSession session) {
         Long usrId = authorize2(session.getAttribute("id"));
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
