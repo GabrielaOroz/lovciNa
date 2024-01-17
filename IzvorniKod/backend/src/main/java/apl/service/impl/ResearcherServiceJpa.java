@@ -160,8 +160,6 @@ public class ResearcherServiceJpa implements ResearcherService {
                 action.setComments(actionComments);
             }
 
-
-
             actionDTO.setTrackers(trackers);
             actionDTO.setAction(action);
             actionDTO.setMapOfTrackers(mediumForTrackers);
