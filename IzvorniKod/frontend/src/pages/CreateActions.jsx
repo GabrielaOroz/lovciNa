@@ -85,6 +85,7 @@ export default function NewActions() {
           existingSpecies: selectedSpeciesMap[actionId] || [],
           existingIndividuals: selectedIndividualsMap[actionId] || [],
           existingHabitats: selectedHabitatsMap[actionId] || [],
+          trackers: formData.filter((action) => action.action.id == actionId)[0].trackers
         };
       }
     });
