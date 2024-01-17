@@ -14,7 +14,7 @@ public interface ResearcherService {
 
     List<DtoAction> getAllActions(Long idResearcher);
 
-    List<ActionDTO> getAllFinishedActions(Long usrId);
+    DtoAction getAllFinishedActions(ActionDTO actions, Long usrId);
 
     List<ActionDTO> getAllUnfinishedActions(Long usrId);
 

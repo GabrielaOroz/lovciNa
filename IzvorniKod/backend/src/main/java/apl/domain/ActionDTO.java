@@ -18,8 +18,12 @@ import java.util.List;
 @ToString
 @NoArgsConstructor
 public class ActionDTO {
+
     private DtoAction dtoAction;
+
     private List<DtoAnimal> existingAnimals = new LinkedList<>();
+
     private List<DtoSpecies> existingSpecies = new LinkedList<>();
+
     private List<DtoHabitat> existingHabitats = new LinkedList<>();
 }

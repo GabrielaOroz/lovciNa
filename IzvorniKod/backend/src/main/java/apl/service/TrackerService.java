@@ -25,5 +25,5 @@ public interface TrackerService {
 
     List<DtoAnimal> updateNewComments(Map<Long, List<AnimalComment>> comments, Long usrId);
 
-    DtoAction updateNewCommentsOnAction(List<ActionComment> comments, Long usrId);
+    DtoAction updateNewCommentsOnAction(List<String> comments, Long usrId);
 }

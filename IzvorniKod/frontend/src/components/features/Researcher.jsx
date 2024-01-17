@@ -201,8 +201,10 @@ export default function Researcher() {
             }}
             onChange={(e) => setSpeciesFilter(e.target.value)}
           >
-            {formData.map((action) =>
-              action.species.length > 0 && action.species.map((species, index) => <option value={species.name}>{species.name}</option>)
+            {formData.map(
+              (action) =>
+                action.species.length > 0 &&
+                action.species.map((species, index) => <option value={species.name}>{species.name}</option>)
             )}
           </Select>
         )}
@@ -224,8 +226,10 @@ export default function Researcher() {
               setIndividualFilter(e.target.value);
             }}
           >
-            {formData.map((action) =>
-              action.individuals.length > 0 && action.individuals.map((animal, index) => <option value={animal.id}>{animal.name}</option>)
+            {formData.map(
+              (action) =>
+                action.animals.length > 0 &&
+                action.animals.map((animal, index) => <option value={animal.id}>{animal.name}</option>)
             )}
           </Select>
         )}
@@ -271,12 +275,14 @@ export default function Researcher() {
             }}
             onChange={(e) => setTrackerFilter(e.target.value)}
           >
-            {formData.map((action) =>
-              action.trackers.length > 0 && action.trackers.map((tracker, index) => (
-                <option value={tracker.id}>
-                  {tracker.name} {tracker.surname}
-                </option>
-              ))
+            {formData.map(
+              (action) =>
+                action.trackers.length > 0 &&
+                action.trackers.map((tracker, index) => (
+                  <option value={tracker.id}>
+                    {tracker.name} {tracker.surname}
+                  </option>
+                ))
             )}
           </Select>
         )}
@@ -306,7 +312,7 @@ export default function Researcher() {
             </LayersControl.Overlay>
             <LayersControl.Overlay checked name="Pozicije tragača na akciji">
               <LayerGroup>
-                {/*{formData.length > 0 &&
+                {/*formData.length > 0 &&
                   formData.map((action, index) =>
                     action.trackers.map((tracker, index) => (
                       <Marker key={index} icon={greenIcon} position={[tracker.latitude, tracker.longitude]}>
@@ -315,19 +321,19 @@ export default function Researcher() {
                         </Popup>
                       </Marker>
                     ))
-                    )}*/}
+                    )*/}
               </LayerGroup>
             </LayersControl.Overlay>
             <LayersControl.Overlay checked name="Pozicije praćenih životinja">
               <LayerGroup>
-                {/*{formData.length > 0 &&
+                {/*formData.length > 0 &&
                   formData.map((action) =>
-                    action.individuals.map((animal, index) => (
+                    action.animals.map((animal, index) => (
                       <Marker key={index} icon={redIcon} position={[animal.latitude, animal.longitude]}>
                         <Popup>{animal.name}</Popup>
                       </Marker>
                     ))
-                    )}*/}
+                    )*/}
               </LayerGroup>
             </LayersControl.Overlay>
           </LayersControl>
@@ -397,7 +403,8 @@ export default function Researcher() {
                         " - " +
                         action.end}
                     </Text>
-                    {action.comments && action.comments.length > 0 &&
+                    {action.comments &&
+                      action.comments.length > 0 &&
                       action.comments.map((comment) => (
                         <Text mt="8px" align="center">
                           ○ {comment}
@@ -458,13 +465,13 @@ export default function Researcher() {
                           </>
                         )}
 
-                        {action.individuals.length > 0 && (
+                        {action.animals.length > 0 && (
                           <>
                             <Text mt="16px" color="#306844" fontSize="3xl" align="center">
                               INDIVIDUALS
                             </Text>
                             <Flex p="16px" gap="16px" wrap="wrap" justify="center">
-                              {action.individuals.map((individual, index) => (
+                              {action.animals.map((individual, index) => (
                                 <Flex
                                   border="solid 1px #306844"
                                   borderRadius="8px"
