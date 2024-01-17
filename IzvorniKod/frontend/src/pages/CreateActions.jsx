@@ -92,7 +92,7 @@ export default function NewActions() {
     console.log(postData);
     if (!checkError(actionId)) {
       fetch("http://localhost:8000/researcher/finished-action", {
-        method: "PUT",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
@@ -356,6 +356,7 @@ export default function NewActions() {
 
   /* PHOTOS */
   const handlePhotoChange = async (event, actionId, itemIndex, itemType) => {
+    if (itemType == "individuals") {itemType = "animals"}
     const file = event.target.files[0];
     const imageURL = URL.createObjectURL(file);
 
