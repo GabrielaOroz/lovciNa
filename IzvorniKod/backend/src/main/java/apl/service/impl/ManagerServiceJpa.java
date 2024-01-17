@@ -51,6 +51,7 @@ public class ManagerServiceJpa implements ManagerService {
         if(station != null){
             return station.toDTO();
         }
+        System.out.println("stanica je null");
         return null;
     }
 
@@ -101,6 +102,10 @@ public class ManagerServiceJpa implements ManagerService {
     public List<DtoTracker> getAvailableTrackersForManager(Long managerId) {
         Manager manager = managerRepo.findById(managerId).orElse(null);
 
+        if (manager.getStation() == null) {
+            System.out.println("stanica je null za slanje trackera");
+            return null;
+        }
         List<Tracker> trackersFromStation = manager.getStation().getTrackers();
         List<DtoTracker> trackers = new LinkedList<>();
 
