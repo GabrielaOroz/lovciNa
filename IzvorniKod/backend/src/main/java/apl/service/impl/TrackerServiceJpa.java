@@ -27,6 +27,8 @@ public class TrackerServiceJpa implements TrackerService {
     @Autowired
     private AnimalRepository animalRepo;
 
+    @Autowired TrackerHistoryRepository trackerHistoryRepo;
+
     @Autowired
     private SpeciesRepository speciesRepo;
 
@@ -211,6 +213,20 @@ public class TrackerServiceJpa implements TrackerService {
                 if(lista.get(task.getId()) == 2){
                     task.setStatus(TaskStatus.SOLVED);
                     task.setEndOfTask(LocalDateTime.now());
+
+                    /*double n = Math.round(1 + Math.random() * (20 - (1)));
+
+                    for(int i = 1; i <= n; i++) {
+
+                        TrackerHistory trackerHistory = new TrackerHistory();
+                        Double randomLatitude = -0.008 + Math.random() * (0.008 - (-0.008));
+                        Double randomLongitude = -0.008 + Math.random() * (0.008 - (-0.008));
+                        trackerHistory.assignTracker(task.getTracker());
+                        trackerHistory.setLatitude(task.getLatFinish() + randomLatitude);
+                        trackerHistory.setLongitude(task.getLonFinish() + randomLongitude);
+                        trackerHistoryRepo.save(trackerHistory);
+                    }*/
+
                     try{
                         taskRepo.save(task);
                     } catch (Exception e){

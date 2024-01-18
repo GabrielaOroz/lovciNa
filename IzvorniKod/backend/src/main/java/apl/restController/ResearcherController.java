@@ -180,7 +180,7 @@ public class ResearcherController {
         }
     }
 
-    @PostMapping("/coords")
+    @GetMapping("/coords")
     public ResponseEntity<CoordsDTO> getCoords(HttpSession session) {
         Long usrId = authorize2(session.getAttribute("id"));
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);

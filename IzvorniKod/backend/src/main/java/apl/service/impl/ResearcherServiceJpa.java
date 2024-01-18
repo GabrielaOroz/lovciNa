@@ -57,6 +57,8 @@ public class ResearcherServiceJpa implements ResearcherService {
     @Autowired
     private ActionCommentRepository actionCommentRepo;
 
+    @Autowired
+    private TrackerHistoryRepository trackerHistoryRepo;
     @Transactional
     public DtoUser createAction(Action action, Long usrId) {
         try {
@@ -119,7 +121,13 @@ public class ResearcherServiceJpa implements ResearcherService {
                 List<DtoTask> tasks = new LinkedList<>();
                 List<Task> tasksDB = taskRepo.findByActionIdAndTrackerId(action.getId(), tracker.getId());
                 for(Task t : tasksDB){
-                    tasks.add(t.toDTO());
+                    List<String> taskComments = new LinkedList<>();
+                    DtoTask dtoTask = t.toDTO();
+                    for (TaskComment tc : t.getComments()) {
+                        taskComments.add(tc.getContent());
+                    }
+                    dtoTask.setComments(taskComments);
+                    tasks.add(dtoTask);
                 }
 
                 tracker.setTasks(tasks);
@@ -130,7 +138,13 @@ public class ResearcherServiceJpa implements ResearcherService {
                 List<DtoAnimal> animals = new LinkedList<>();
                 if(animalRepo.findByActionsId(action.getId()) != null){
                     for(Animal a : animalRepo.findByActionsId(action.getId())){
-                        animals.add(a.toDTO());
+                        List<String> animalComments = new LinkedList<>();
+                        DtoAnimal dtoAnimal = a.toDTO();
+                        for (AnimalComment ac : a.getComments()) {
+                            animalComments.add(ac.getContent());
+                        }
+                        dtoAnimal.setComments(animalComments);
+                        animals.add(dtoAnimal);
                     }
                 }
                 action.setAnimals(animals);
@@ -197,7 +211,11 @@ public class ResearcherServiceJpa implements ResearcherService {
             }
 
             Animal a = new Animal(species, animal.getName(), animal.getDescription(), animal.getPhoto());
-            a.updateLocation(action1.getManager().getStation().getLongitude()+0.05D, action1.getManager().getStation().getLatitude()+0.06D);
+
+            double randNum = -0.005 + Math.random() * (0.005 - (-0.005));
+            double randNum2 = -0.005 + Math.random() * (0.005 - (-0.005));
+
+            a.updateLocation(action1.getManager().getStation().getLongitude()+randNum, action1.getManager().getStation().getLatitude()+randNum2);
 
             List<String> commentsOnAnimal = animal.getComments();
             List<AnimalComment> newComments = new LinkedList<>();
@@ -410,20 +428,16 @@ public class ResearcherServiceJpa implements ResearcherService {
         CoordsDTO coords = new CoordsDTO();
 
         List<Animal> animalsDB = animalRepo.findAllAnimalsByResearcherId(usrId);
-
         List<AnimalCoordsDTO> animalsCoords = new LinkedList<>();
         //double n = Math.round(1 + Math.random() * (20 - (1)));
         for(Animal a : animalsDB){
             AnimalCoordsDTO animal = new AnimalCoordsDTO();
             animal.setId(a.getId());
             animal.setSpecies(a.getSpecies().getName());
-
             double n = Math.round(1 + Math.random() * (20 - (1)));
             System.out.println(n);
             List<List<Double>> coordsList = new LinkedList<>();
             for(int i = 1; i <= n; i++) {
-
-
                 List<Double> coord = new LinkedList<>();
                 Double randomLatitude = -90 + Math.random() * (90 - (-90));
                 Double randomLongitude = -180 + Math.random() * (180 - (-180));
@@ -433,12 +447,29 @@ public class ResearcherServiceJpa implements ResearcherService {
                 coord.add(randomIntensity);
                 coordsList.add(coord);
             }
-
             animal.setCoords(coordsList);
-
             animalsCoords.add(animal);
         }
         coords.setAnimals(animalsCoords);
+
+
+
+        List<Tracker> trackersDB = trackerRepo.findByTrackerActionMediaActionResearcherId(usrId);
+
+        /*for(Tracker t : trackersDB){
+            double n = Math.round(1 + Math.random() * (20 - (1)));
+
+            for(int i = 1; i <= n; i++) {
+
+                TrackerHistory trackerHistory = new TrackerHistory();
+                Double randomLatitude = -0.008 + Math.random() * (0.008 - (-0.008));
+                Double randomLongitude = -0.008 + Math.random() * (0.008 - (-0.008));
+                trackerHistory.assignTracker(t);
+                trackerHistory.setLatitude(t.getStation().getLatitude() + randomLatitude);
+                trackerHistory.setLongitude(t.getStation().getLongitude() + randomLongitude);
+                trackerHistoryRepo.save(trackerHistory);
+            }
+        }*/
 
         
 

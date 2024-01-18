@@ -168,8 +168,11 @@ public class ManagerServiceJpa implements ManagerService {
             }
             tracker.addMultipleMedia(media);
             tracker.assignStation(station);
-            tracker.setLongitude(station.getLongitude());
-            tracker.setLatitude(station.getLatitude());
+
+            double randNum = -0.005 + Math.random() * (0.005 - (-0.005));
+            tracker.setLongitude(station.getLongitude() + randNum);
+            double randNum2 = -0.005 + Math.random() * (0.005 - (-0.005));
+            tracker.setLatitude(station.getLatitude() + randNum2);
             /*try{
                 trackerRepo.save(tracker);
             } catch (Exception e){

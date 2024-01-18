@@ -42,7 +42,7 @@ public interface TrackerRepository extends JpaRepository<Tracker, Long> {
 
     List<Tracker> findByStationIdIsNullAndRegisteredIsTrue();
 
-
+    List<Tracker> findByTrackerActionMediaActionResearcherId(Long researcherId);
     int countByUsername(String username);
     int countByEmail(String email);
 
