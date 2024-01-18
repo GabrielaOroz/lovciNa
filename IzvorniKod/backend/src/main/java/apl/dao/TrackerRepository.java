@@ -27,7 +27,9 @@ public interface TrackerRepository extends JpaRepository<Tracker, Long> {
 
     List<Tracker> findByStationIdAndTrackerActionMediaActionStatus(Long stationId, ActionStatus actionStatus);
 
-    @Query("SELECT t FROM Tracker t WHERE t.station.id = :stationId AND NOT EXISTS (SELECT tam FROM TrackerActionMedium tam WHERE tam.tracker = t AND tam.action.status = apl.enums.ActionStatus.ACTIVE)")
+    @Query("SELECT t FROM Tracker t WHERE t.station.id = :stationId " +
+            "AND NOT EXISTS (SELECT tam FROM TrackerActionMedium tam WHERE tam.tracker = t " +
+            "AND tam.action.status = apl.enums.ActionStatus.ACTIVE)")
     List<Tracker> findTrackersWithoutActiveActionsInStation(@Param("stationId") Long stationId); // all available trackers in some station
 
 

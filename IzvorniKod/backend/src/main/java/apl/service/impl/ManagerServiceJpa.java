@@ -51,7 +51,6 @@ public class ManagerServiceJpa implements ManagerService {
         if(station != null){
             return station.toDTO();
         }
-        System.out.println("stanica je null");
         return null;
     }
 
@@ -74,6 +73,7 @@ public class ManagerServiceJpa implements ManagerService {
     public Station addNewStation(Long managerId, Station station) {
         Manager manager = managerRepo.findById(managerId).orElse(null);
 
+
         try{
             stationRepo.save(station);
             manager.assignStation(station);
@@ -86,7 +86,6 @@ public class ManagerServiceJpa implements ManagerService {
     @Transactional
     @Override
     public List<DtoAction> getIncomingRequests(Long managerId) {
-        System.out.println("tu sam 1");
         List<DtoRequest> incomingRequests = MyConverter.convertToDTOList(requestRepo.findByActionManagerIdAndRequestStatus(managerId, RequestStatus.ACTIVE));
 
         List<DtoAction> actions = new LinkedList<>();
@@ -103,16 +102,10 @@ public class ManagerServiceJpa implements ManagerService {
         Manager manager = managerRepo.findById(managerId).orElse(null);
 
         if (manager.getStation() == null) {
-            System.out.println("stanica je null za slanje trackera");
             return null;
         }
-        List<Tracker> trackersFromStation = manager.getStation().getTrackers();
-        List<DtoTracker> trackers = new LinkedList<>();
 
-        for (Tracker tracker : trackersFromStation){
-            if(trackerActionMediumRepo.findByTrackerId(tracker.getId()).orElse(null) == null)
-                trackers.add(tracker.toTrackerDTO());
-        }
+       List<DtoTracker> trackers = Tracker.convertToTrackerDTOList(trackerRepo.findTrackersWithoutActiveActionsInStation(manager.getStation().getId()));
 
         return trackers;
     }

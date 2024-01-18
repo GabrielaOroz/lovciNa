@@ -77,7 +77,6 @@ public class ManagerController {
         try {
             return ResponseEntity.ok(managerService.getExistingStation(usrId));
         } catch (Exception e){
-            System.out.println("uso u /station error");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
 
@@ -88,10 +87,11 @@ public class ManagerController {
         Long usrId = authorize2(session.getAttribute("id"));
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
-        if (managerService.getAvailableTrackers() != null) {
-            return ResponseEntity.ok(managerService.getAvailableTrackers());
+        List<DtoTracker> dtoTrackers = managerService.getAvailableTrackers();
+        if (dtoTrackers != null) {
+            return ResponseEntity.ok(dtoTrackers);
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
@@ -100,10 +100,11 @@ public class ManagerController {
         Long usrId = authorize2(session.getAttribute("id"));
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
-        if (managerService.addNewStation(usrId, station) != null) {
-            return ResponseEntity.ok(managerService.addNewStation(usrId, station));
+        Station station1 = managerService.addNewStation(usrId, station);
+        if (station1 != null) {
+            return ResponseEntity.ok(station1);
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
 
@@ -126,7 +127,6 @@ public class ManagerController {
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
         List<DtoAction> actions = managerService.getIncomingRequests(usrId);
-        System.out.println(actions);
         if (actions != null) {
             return ResponseEntity.ok(actions);
         } else {
@@ -142,7 +142,6 @@ public class ManagerController {
         try {
             return ResponseEntity.ok(managerService.getAvailableTrackersForManager(usrId));
         } catch (Exception e){
-            System.out.println("uso u /available-trackers error");
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
 
