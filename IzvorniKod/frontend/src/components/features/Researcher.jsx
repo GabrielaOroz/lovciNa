@@ -341,6 +341,22 @@ export default function Researcher() {
                     )}
                 </LayerGroup>
               </LayersControl.Overlay>
+              <LayersControl.Overlay checked name="Pozicije praćenih staništa">
+                <LayerGroup>
+                  {formData.length > 0 &&
+                    formData.map((action) =>
+                      action.action.habitats.map((habitat, index) => (
+                        <>
+                          {habitat.latitude && habitat.longitude && (
+                            <Marker key={index} icon={redIcon} position={[habitat.latitude, habitat.longitude]}>
+                              <Popup>{habitat.name}</Popup>
+                            </Marker>
+                          )}
+                        </>
+                      ))
+                    )}
+                </LayerGroup>
+              </LayersControl.Overlay>
             </LayersControl>
           </MapContainer>
         </Box>

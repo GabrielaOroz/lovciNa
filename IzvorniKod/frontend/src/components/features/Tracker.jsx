@@ -27,7 +27,29 @@ export default function Tracker() {
       .then((res) => res.json())
       .then((data) => {
         console.log("currentTrackerInfo: ", data);
-        setTracker(data);
+        const updatedTasks = data.action.tasks.filter((task) => task.status !== "SOLVED");
+        let formData = {
+          id: data.id,
+          medium: data.medium,
+          name: data.name,
+          surname: data.surname,
+          station: data.station,
+          action: {
+            animals: data.action.animals,
+            habitats: data.action.habitats,
+            species: data.action.species,
+            comments: data.action.comments,
+            startOfAction: data.action.startOfAction,
+            id: data.action.id,
+            manager: data.action.manager,
+            status: data.action.status,
+            title: data.action.title,
+            trackerActionMedia: data.action.trackerActionMedia,
+            tasks: updatedTasks
+          },
+        };
+        console.log(formData)
+        setTracker(formData);
         setComments(
           data.action.animals &&
             data.action.animals.reduce((obj, individual) => {
@@ -81,7 +103,7 @@ export default function Tracker() {
         "Content-Type": "application/json",
       },
       credentials: "include",
-      body: JSON.stringify({[id]: [comment]}),
+      body: JSON.stringify({ [id]: [comment] }),
     }).then((res) => {
       if (res.ok) {
         window.location.reload();

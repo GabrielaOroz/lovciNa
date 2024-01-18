@@ -44,9 +44,9 @@ export default function NewActions() {
       if (ac.action.id == actionId) {
         if (
           !(
-            selectedSpeciesMap[actionId].length != 0 ||
-            selectedIndividualsMap[actionId].length != 0 ||
-            selectedHabitatsMap[actionId].length != 0 ||
+            ([] || selectedSpeciesMap[actionId]).length != 0 ||
+            ([] || selectedIndividualsMap[actionId]).length != 0 ||
+            ([] || selectedHabitatsMap[actionId]).length != 0 ||
             ac.action.species.length != 0 ||
             ac.action.habitats.length != 0 ||
             ac.action.animals.length != 0
