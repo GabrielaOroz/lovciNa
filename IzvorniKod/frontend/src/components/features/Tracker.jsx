@@ -44,25 +44,15 @@ export default function Tracker() {
   }, []);
 
   /* DONE */
-  const [doneTasks, setDoneTasks] = useState(() =>
-    tasks.reduce((obj, task) => {
-      obj[task.id] = 0;
-      return obj;
-    }, {})
-  );
-  //console.log(doneTasks);
-  const handleDoneTasks = (id) => {
-    setDoneTasks({ ...doneTasks, [id]: 2 });
-    putDoneTasks();
-  };
-  const putDoneTasks = () => {
+  
+  const putDoneTasks = (id) => {
     fetch("http://localhost:8000/tracker/doneTasks", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
       credentials: "include",
-      body: JSON.stringify(doneTasks),
+      body: JSON.stringify({[id]:2 }),
     }).then((res) => {
       if (res.ok) {
         window.location.reload();
@@ -382,7 +372,7 @@ export default function Tracker() {
                               </Text>
                             ))}
                         </List>
-                        <GreenButton mt="8px" onClick={() => handleDoneTasks(task.id)}>
+                        <GreenButton mt="8px" onClick={() => putDoneTasks(task.id)}>
                           Done
                         </GreenButton>
                       </Box>

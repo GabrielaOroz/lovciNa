@@ -25,9 +25,9 @@ import "leaflet.heat";
 export default function Researcher() {
   const mapRef = useRef(null);
   const [formData, setFormData] = useState({});
-  const [coords, setCoords] = useState(mockData.mockCoords);
+  const [coords, setCoords] = useState({});
 
-  const [managers, setManagers] = useState();
+  const [photos, setPhotos] = useState([]);
 
   /* GET DATA */
   useEffect(() => {
@@ -39,8 +39,20 @@ export default function Researcher() {
       .then((data) => {
         console.log("Actions: ", data);
         setFormData(data);
+        const actionsData = data.map((action) => {
+          const trackersData = action.trackers.map((tracker) => ({
+            id: tracker.id,
+            photo: "data:image/jpeg;base64," + tracker.photo,
+          }));
+          return {
+            actionId: action.action.id,
+            trackers: trackersData,
+          };
+        });
+        setPhotos(actionsData);
       });
   }, []);
+  console.log(photos);
 
   /*
   useEffect(() => {
@@ -619,9 +631,8 @@ export default function Researcher() {
                       <>
                         {action.trackers.map((tracker, index) => (
                           <Box align="center" key={index} mb="32px">
-                            <Avatar size="xl" url={`data:image/jpeg;base64,${tracker.photo}`} />
                             <Text
-                              fontSize="2xl"
+                              fontSize="4xl"
                               align="center"
                               _hover={{ cursor: "pointer", color: "#306844" }}
                               onClick={() => {
