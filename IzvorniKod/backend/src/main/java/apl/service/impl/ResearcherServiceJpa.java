@@ -218,7 +218,7 @@ public class ResearcherServiceJpa implements ResearcherService {
             double randNum = -0.005 + Math.random() * (0.005 - (-0.005));
             double randNum2 = -0.005 + Math.random() * (0.005 - (-0.005));
 
-            a.updateLocation(action1.getManager().getStation().getLongitude()+randNum, action1.getManager().getStation().getLatitude()+randNum2);
+            //a.updateLocation(action1.getManager().getStation().getLongitude()+randNum, action1.getManager().getStation().getLatitude()+randNum2);
 
             for(DtoTracker t : action.getTrackers()){
                 List<Task> tasksForTracker = new LinkedList<>();
@@ -242,6 +242,10 @@ public class ResearcherServiceJpa implements ResearcherService {
                         System.out.println("hihi evo me");
                         animalHistoryRepo.save(animalHistory);
                     }
+
+                    a.updateLocation(t.getLongitude()+randNum, t.getLatitude()+randNum+randNum2);
+                    break;
+
                 }
             }
 
@@ -300,7 +304,7 @@ public class ResearcherServiceJpa implements ResearcherService {
 
                 List<Habitat> habitatsForDB = new LinkedList<>();
                 for(DtoHabitat habitat : action.getAction().getHabitats()){
-                    Habitat habitat1 = new Habitat(taskDB.getLonFinish()+0.05D, taskDB.getLatStart()+0.06D, 20D, habitat.getName(), habitat.getDescription(), habitat.getPhoto());
+                    Habitat habitat1 = new Habitat(taskDB.getLonFinish()+0.005D, taskDB.getLatStart()+0.006D, 20D, habitat.getName(), habitat.getDescription(), habitat.getPhoto());
                     habitatsForDB.add(habitat1);
                 }
 
@@ -329,27 +333,11 @@ public class ResearcherServiceJpa implements ResearcherService {
 
                         Species species = speciesRepo.findByName(animal.getSpecies().getName()).orElse(null);
                         if (species == null) {
-                            species = new Species(animal.getSpecies().getName(), animal.getSpecies().getDescription(), animal.getSpecies().getPhoto());
+                            species = new Species(animal.getSpecies().getName(), animal.getSpecies().getDescription(), animal.getPhoto());
                             speciesRepo.save(species);
                         }
                         Animal animal1 = new Animal(species, animal.getName(), animal.getDescription(), animal.getPhoto());
 
-                        double n = Math.round(10 + Math.random() * (20 - (10)));
-                        System.out.println(n);
-                        for(int i = 1; i <= n; i++) {
-
-                            AnimalHistory animalHistory = new AnimalHistory();
-
-                            Double randomLatitude = task.getLatStart() + Math.random() * (task.getLatFinish() - (task.getLatStart()));
-                            Double randomLongitude = task.getLonStart() + Math.random() * (task.getLonFinish() - (task.getLonStart()));
-                            //Double randomTime = Double.valueOf(task.getStartOfTask().getSecond()) + Math.random() * (Double.valueOf(task.getEndOfTask().getSecond()) - Double.valueOf(task.getStartOfTask().getSecond()));
-
-                            animalHistory.assignAnimal(animal1);
-                            animalHistory.setLatitude(randomLatitude);
-                            animalHistory.setLongitude(randomLongitude);
-                            System.out.println("hihi evo me");
-                            animalHistoryRepo.save(animalHistory);
-                        }
 
                         animalsForTask.add(animal1);
                     }
