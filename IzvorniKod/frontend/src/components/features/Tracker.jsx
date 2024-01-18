@@ -12,9 +12,7 @@ export default function Tracker() {
   const [openAnimals, setOpenAnimals] = useState(false);
   const [tracker, setTracker] = useState({});
   const [trackers, setTrackers] = useState([]);
-  const [species, setSpecies] = useState([]);
   const [individuals, setIndividuals] = useState([]);
-  const [habitats, setHabitats] = useState([]);
   const [tasks, setTasks] = useState([]);
   const mapRef = useRef(null);
 
@@ -44,55 +42,7 @@ export default function Tracker() {
       });
   }, []);
 
-  /* ANIMALS */
-  useEffect(() => {
-    fetch("http://localhost:8000/tracker/individuals", {
-      method: "GET",
-      credentials: "include",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("IndividualsOnAction: ", data);
-        setIndividuals(data);
-      });
-  }, []);
-
-  useEffect(() => {
-    fetch("http://localhost:8000/tracker/species", {
-      method: "GET",
-      credentials: "include",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("SpeciesOnAction: ", data);
-        setSpecies(data);
-      });
-  }, []);
-
-  useEffect(() => {
-    fetch("http://localhost:8000/tracker/habitats", {
-      method: "GET",
-      credentials: "include",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("HabitatsOnAction: ", data);
-        setHabitats(data);
-      });
-  }, []);
-
-  /* TASKS */
-  useEffect(() => {
-    fetch("http://localhost:8000/tracker/tasks", {
-      method: "GET",
-      credentials: "include",
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        console.log("Tasks: ", data);
-        setTasks(data);
-      });
-  }, []);
+  
 
   /* DONE */
   const [doneTasks, setDoneTasks] = useState(() =>
@@ -186,8 +136,8 @@ export default function Tracker() {
     const createRoutingMachineLayer = () => {
       const instance = L.Routing.control({
         waypoints: [
-          L.latLng(task.coordinatesStart[0], task.coordinatesStart[1]),
-          L.latLng(task.coordinatesFinish[0], task.coordinatesFinish[1]),
+          L.latLng(task.latStart, task.lonStart),
+          L.latLng(task.latFinish, task.lonFinish),
         ],
         router: new L.Routing.osrmv1({
           serviceUrl: "https://router.project-osrm.org/route/v1",
@@ -257,7 +207,7 @@ export default function Tracker() {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
-              {tasks.length > 0 && tasks.map((task) => <RoutingMachine key={task.id} task={task} />)}
+              {tracker.action.tasks && tracker.action.tasks.length > 0 && tracker.action.tasks.map((task) => <RoutingMachine key={task.id} task={task} />)}
               <LayersControl position="topright">
                 <LayersControl.Overlay checked name="Postaja">
                   <Marker icon={blackIcon} position={[tracker.station.latitude, tracker.station.longitude]}>
@@ -278,8 +228,8 @@ export default function Tracker() {
                 </LayersControl.Overlay>
                 <LayersControl.Overlay checked name="Pozicije praćenih životinja">
                   <LayerGroup>
-                    {individuals.length > 0 &&
-                      individuals.map((animal, index) => (
+                    {tracker.action.animals.length > 0 &&
+                      tracker.action.animals.map((animal, index) => (
                         <Marker key={index} icon={redIcon} position={[animal.latitude, animal.longitude]}>
                           <Popup>{animal.name}</Popup>
                         </Marker>
@@ -288,8 +238,8 @@ export default function Tracker() {
                 </LayersControl.Overlay>
                 <LayersControl.Overlay checked name="Pozicije staništa">
                   <LayerGroup>
-                    {habitats.length > 0 &&
-                      habitats.map((habitat, index) => (
+                    {tracker.action.habitats.length > 0 &&
+                      tracker.action.habitats.map((habitat, index) => (
                         <Marker key={index} icon={redIcon} position={[habitat.latitude, habitat.longitude]}>
                           <Popup>{habitat.name}</Popup>
                         </Marker>
@@ -388,10 +338,10 @@ export default function Tracker() {
 
           {openTasks && (
             <Flex direction="column" p="16px" gap="16px">
-              {tasks.length > 0 &&
-                tasks.map(
+              {tracker.action.tasks.length > 0 &&
+                tracker.action.tasks.map(
                   (task) =>
-                    task.status == 0 && (
+                    task.status == "ACTIVE" && (
                       <Box align="center" border="solid 1px #306844" borderRadius="8px" p="8px" key={task.id}>
                         <Flex gap="4px" direction="column">
                           <Text
@@ -400,7 +350,7 @@ export default function Tracker() {
                             fontSize="xl"
                             onClick={() => {
                               const map = mapRef.current;
-                              if (map && task.coordinatesFinish) map.flyTo(task.coordinatesFinish, 15);
+                              if (map && task.latFinish && task.lonFinish) map.flyTo([task.latFinish, task.lonFinish], 15);
                             }}
                             style={{ cursor: "pointer" }}
                           >
@@ -428,13 +378,13 @@ export default function Tracker() {
           )}
           {openAnimals && (
             <Flex justify="center" direction="column">
-              {species.length > 0 && (
+              {tracker.action.species.length > 0 && (
                 <Text mt="32px" color="#306844" fontSize="3xl" align="center">
                   SPECIES
                 </Text>
               )}
               <Flex wrap="wrap" gap="16px" justify="center" align="flex-start">
-                {species.map((spec) => (
+                {tracker.action.species.map((spec) => (
                   <Flex
                     border="solid 1px #306844"
                     borderRadius="8px"
@@ -447,20 +397,20 @@ export default function Tracker() {
                       <Text color="#306844" fontSize="3xl">
                         {spec.name}
                       </Text>
-                      <Avatar size="2xl" src={spec.photo} alt={spec.name} borderRadius="8px" />
+                      <Avatar size="2xl" src={`data:image/jpeg;base64,${spec.photo}`} alt={spec.name} borderRadius="8px" />
                       <Text pt="8px">{spec.description}</Text>
                     </Flex>
                   </Flex>
                 ))}
               </Flex>
 
-              {individuals.length > 0 && (
+              {tracker.action.animals.length > 0 && (
                 <Text mt="32px" color="#306844" fontSize="3xl" align="center">
                   INDIVIDUALS
                 </Text>
               )}
               <Flex wrap="wrap" gap="16px" justify="center" align="flex-start">
-                {individuals.map((individual) => (
+                {tracker.action.animals.map((individual) => (
                   <Flex border="solid 1px #306844" borderRadius="8px" p="16px" direction="column" key={individual.id}>
                     <Flex direction="column" align="center">
                       <Text
@@ -479,7 +429,7 @@ export default function Tracker() {
                       </Text>
                       <Avatar
                         size="2xl"
-                        src={individual.photo}
+                        src={`data:image/jpeg;base64,${individual.photo}`}
                         alt={individual.name}
                         borderRadius="8px"
                         _hover={{ cursor: "pointer" }}
@@ -514,13 +464,13 @@ export default function Tracker() {
                 ))}
               </Flex>
 
-              {habitats.length > 0 && (
+              {tracker.action.habitats.length > 0 && (
                 <Text mt="32px" color="#306844" fontSize="3xl" align="center">
                   HABITATS
                 </Text>
               )}
               <Flex wrap="wrap" gap="16px" justify="center" align="flex-start">
-                {habitats.map((habitat) => (
+                {tracker.action.habitats.map((habitat) => (
                   <Flex
                     border="solid 1px #306844"
                     borderRadius="8px"
@@ -543,7 +493,7 @@ export default function Tracker() {
                       </Text>
                       <Avatar
                         size="2xl"
-                        src={habitat.photo}
+                        src={`data:image/jpeg;base64,${habitat.photo}`}
                         alt={habitat.name}
                         borderRadius="8px"
                         _hover={{ cursor: "pointer" }}
