@@ -27,7 +27,7 @@ export default function Tracker() {
       .then((res) => res.json())
       .then((data) => {
         console.log("currentTrackerInfo: ", data);
-        const updatedTasks = data.action.tasks.filter((task) => task.status !== "SOLVED");
+        const updatedTasks = data.action.tasks ? data.action.tasks.filter((task) => task.status !== "SOLVED") : [];
         let formData = {
           id: data.id,
           medium: data.medium,
@@ -45,7 +45,7 @@ export default function Tracker() {
             status: data.action.status,
             title: data.action.title,
             trackerActionMedia: data.action.trackerActionMedia,
-            tasks: updatedTasks
+            tasks: updatedTasks || []
           },
         };
         console.log(formData)
