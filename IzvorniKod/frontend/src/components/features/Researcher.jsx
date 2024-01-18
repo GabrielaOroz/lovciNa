@@ -20,7 +20,6 @@ import { IoIosArrowDown } from "react-icons/io";
 import { IoIosArrowUp } from "react-icons/io";
 import { redIcon, greenIcon, blackIcon } from "../shared/mapIcons.jsx";
 import { Link } from "react-router-dom";
-import L from "leaflet";
 import "leaflet.heat";
 
 export default function Researcher() {
@@ -291,57 +290,63 @@ export default function Researcher() {
         )}
       </Flex>
 
-      <Box h="600px" p="16px" id="mapSection">
-        <MapContainer ref={mapRef} style={{ height: "100%", width: "100%" }} center={[45.8634, 15.9772]} zoom={14}>
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
+      {
+        <Box h="600px" p="16px" id="mapSection">
+          <MapContainer ref={mapRef} style={{ height: "100%", width: "100%" }} center={[45.8634, 15.9772]} zoom={14}>
+            <TileLayer
+              attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+              url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            />
 
-          <LayersControl position="topright">
-            <LayersControl.Overlay checked name="Postaje">
-              <LayerGroup>
-                {formData.length > 0 &&
-                  formData.map((action, index) => (
-                    <Marker
-                      key={index}
-                      icon={blackIcon}
-                      position={[action.action.manager.station.latitude, action.action.manager.station.longitude]}
-                    >
-                      <Popup>{action.action.manager.station.name}</Popup>
-                    </Marker>
-                  ))}
-              </LayerGroup>
-            </LayersControl.Overlay>
-            <LayersControl.Overlay checked name="Pozicije tragača na akciji">
-              <LayerGroup>
-                {formData.length > 0 &&
-                  formData.map((action, index) =>
-                    action.trackers.map((tracker, index) => (
-                      <Marker key={index} icon={greenIcon} position={[tracker.latitude, tracker.longitude]}>
-                        <Popup>
-                          {tracker.name} {tracker.surname}
-                        </Popup>
+            <LayersControl position="topright">
+              <LayersControl.Overlay checked name="Postaje">
+                <LayerGroup>
+                  {formData.length > 0 &&
+                    formData.map((action, index) => (
+                      <Marker
+                        key={index}
+                        icon={blackIcon}
+                        position={[action.action.manager.station.latitude, action.action.manager.station.longitude]}
+                      >
+                        <Popup>{action.action.manager.station.name}</Popup>
                       </Marker>
-                    ))
-                  )}
-              </LayerGroup>
-            </LayersControl.Overlay>
-            <LayersControl.Overlay checked name="Pozicije praćenih životinja">
-              <LayerGroup>
-                {formData.length > 0 &&
-                  formData.map((action) =>
-                    action.action.animals.map((animal, index) => (
-                      <Marker key={index} icon={redIcon} position={[animal.latitude, animal.longitude]}>
-                        <Popup>{animal.name}</Popup>
-                      </Marker>
-                    ))
-                  )}
-              </LayerGroup>
-            </LayersControl.Overlay>
-          </LayersControl>
-        </MapContainer>
-      </Box>
+                    ))}
+                </LayerGroup>
+              </LayersControl.Overlay>
+              <LayersControl.Overlay checked name="Pozicije tragača na akciji">
+                <LayerGroup>
+                  {formData.length > 0 &&
+                    formData.map((action, index) =>
+                      action.trackers.map((tracker, index) => (
+                        <Marker key={index} icon={greenIcon} position={[tracker.latitude, tracker.longitude]}>
+                          <Popup>
+                            {tracker.name} {tracker.surname}
+                          </Popup>
+                        </Marker>
+                      ))
+                    )}
+                </LayerGroup>
+              </LayersControl.Overlay>
+              <LayersControl.Overlay checked name="Pozicije praćenih životinja">
+                <LayerGroup>
+                  {formData.length > 0 &&
+                    formData.map((action) =>
+                      action.action.animals.map((animal, index) => (
+                        <>
+                          {animal.latitude && animal.longitude && (
+                            <Marker key={index} icon={redIcon} position={[animal.latitude, animal.longitude]}>
+                              <Popup>{animal.name}</Popup>
+                            </Marker>
+                          )}
+                        </>
+                      ))
+                    )}
+                </LayerGroup>
+              </LayersControl.Overlay>
+            </LayersControl>
+          </MapContainer>
+        </Box>
+      }
 
       <Flex pl="16px" pr="16px" justify="space-between">
         <Flex gap="8px">
@@ -502,12 +507,12 @@ export default function Researcher() {
                                         scrollToMap();
                                       }}
                                     >
-                                      {individual.species}
+                                      {individual.species.name}
                                     </Text>
                                     <Avatar
                                       size="2xl"
                                       src={`data:image/jpeg;base64,${individual.photo}`}
-                                      alt={individual.species}
+                                      alt={individual.species.name}
                                       borderRadius="8px"
                                       _hover={{ cursor: "pointer" }}
                                       onClick={() => {
@@ -518,15 +523,16 @@ export default function Researcher() {
                                     />
                                     <Text pt="8px">{individual.description}</Text>
                                   </Flex>
-                                  {individual.comments.length == 0 ? (
+                                  {individual.comments && individual.comments.length == 0 ? (
                                     ""
                                   ) : (
                                     <Flex direction="column">
                                       <Divider borderColor="#306844" mt="8px" mb="8px" />
                                       <List mb="8px">
-                                        {individual.comments.map((comment, index) => (
-                                          <Text key={index}>○ {comment}</Text>
-                                        ))}
+                                        {individual.comments &&
+                                          individual.comments.map((comment, index) => (
+                                            <Text key={index}>○ {comment}</Text>
+                                          ))}
                                       </List>
                                     </Flex>
                                   )}

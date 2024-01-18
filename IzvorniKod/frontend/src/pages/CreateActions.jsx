@@ -91,6 +91,7 @@ export default function NewActions() {
     });
 
     console.log(postData);
+    
     if (!checkError(actionId)) {
       fetch("http://localhost:8000/researcher/finished-action", {
         method: "POST",

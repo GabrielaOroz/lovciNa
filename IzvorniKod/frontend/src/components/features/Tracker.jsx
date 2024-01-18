@@ -6,6 +6,7 @@ import YellowButton from "../shared/YellowButton";
 import { FaLocationCrosshairs } from "react-icons/fa6";
 import { redIcon, greenIcon, blackIcon } from "../shared/mapIcons.jsx";
 import mockData from "../../mockData.jsx";
+import { color } from "framer-motion";
 
 export default function Tracker() {
   const [openTasks, setOpenTasks] = useState(false);
@@ -41,8 +42,6 @@ export default function Tracker() {
         setTrackers(data);
       });
   }, []);
-
-  
 
   /* DONE */
   const [doneTasks, setDoneTasks] = useState(() =>
@@ -105,23 +104,20 @@ export default function Tracker() {
   const [commentsAction, setCommentsAction] = useState(
     tracker && tracker.action && tracker.action.comments ? tracker.action.comments : []
   );
-  console.log(commentsAction)
-  const handleKeyDownAction = (e) => {
-    if (e.key === "Enter" && e.target.value) {
-      e.preventDefault();
-      setCommentsAction([...commentsAction, e.target.value]);
-      putActionComments();
-    }
+
+  const handleChange = (e) => {
+    setCommentsAction((prevComments) => [...prevComments, e.target.value]);
   };
-  
+
   const putActionComments = () => {
+    let comment = commentsAction.slice(-1)[0]
     fetch("http://localhost:8000/tracker/actionComments", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
       credentials: "include",
-      body: JSON.stringify(commentsAction),
+      body: JSON.stringify([comment]),
     }).then((res) => {
       if (res.ok) {
         window.location.reload();
@@ -135,10 +131,7 @@ export default function Tracker() {
 
     const createRoutingMachineLayer = () => {
       const instance = L.Routing.control({
-        waypoints: [
-          L.latLng(task.latStart, task.lonStart),
-          L.latLng(task.latFinish, task.lonFinish),
-        ],
+        waypoints: [L.latLng(task.latStart, task.lonStart), L.latLng(task.latFinish, task.lonFinish)],
         router: new L.Routing.osrmv1({
           serviceUrl: "https://router.project-osrm.org/route/v1",
         }),
@@ -183,7 +176,11 @@ export default function Tracker() {
 
   return (
     <>
-      {(!tracker || !tracker.station || !tracker.action) && <Text align="center"><strong>You don't have any actions yet</strong></Text>}
+      {(!tracker || !tracker.station || !tracker.action) && (
+        <Text align="center">
+          <strong>You don't have any actions yet</strong>
+        </Text>
+      )}
       {tracker && tracker.station && (
         <>
           <Text color="#306844" fontSize={{ base: "2xl", md: "4xl", lg: "5xl" }} alignSelf="center">
@@ -192,9 +189,11 @@ export default function Tracker() {
           <Text color="#306844" fontSize={{ base: "xl", md: "2xl", lg: "3xl" }} alignSelf="center">
             {tracker.name} {tracker.surname}
           </Text>
-          {tracker.action && <Text color="gray.400" fontSize={{ base: "md", md: "lg", lg: "xl" }} alignSelf="center">
-            {tracker.medium.type}
-          </Text>}
+          {tracker.action && (
+            <Text color="gray.400" fontSize={{ base: "md", md: "lg", lg: "xl" }} alignSelf="center">
+              {tracker.medium.type}
+            </Text>
+          )}
 
           <Box h="600px" p="16px" id="mapSection">
             <MapContainer
@@ -207,7 +206,9 @@ export default function Tracker() {
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
-              {tracker.action.tasks && tracker.action.tasks.length > 0 && tracker.action.tasks.map((task) => <RoutingMachine key={task.id} task={task} />)}
+              {tracker.action.tasks &&
+                tracker.action.tasks.length > 0 &&
+                tracker.action.tasks.map((task) => <RoutingMachine key={task.id} task={task} />)}
               <LayersControl position="topright">
                 <LayersControl.Overlay checked name="Postaja">
                   <Marker icon={blackIcon} position={[tracker.station.latitude, tracker.station.longitude]}>
@@ -230,9 +231,13 @@ export default function Tracker() {
                   <LayerGroup>
                     {tracker.action.animals.length > 0 &&
                       tracker.action.animals.map((animal, index) => (
-                        <Marker key={index} icon={redIcon} position={[animal.latitude, animal.longitude]}>
-                          <Popup>{animal.name}</Popup>
-                        </Marker>
+                        <>
+                          {animal.latitude && animal.longitude && (
+                            <Marker key={index} icon={redIcon} position={[animal.latitude, animal.longitude]}>
+                              <Popup>{animal.name}</Popup>
+                            </Marker>
+                          )}
+                        </>
                       ))}
                   </LayerGroup>
                 </LayersControl.Overlay>
@@ -280,7 +285,8 @@ export default function Tracker() {
               </Text>
 
               <List pl="16px">
-                {tracker.action.comments && tracker.action.comments.length > 0 &&
+                {tracker.action.comments &&
+                  tracker.action.comments.length > 0 &&
                   tracker.action.comments.map((comment, index) => (
                     <Text key={index}>
                       {"\t"} ○ {comment}
@@ -290,51 +296,58 @@ export default function Tracker() {
             </>
           )}
 
-          {tracker.action && <Input
-            ml="16px"
-            mt="8px"
-            mb="16px"
-            w="200px"
-            type="text"
-            _hover={{ borderColor: "#97B3A1" }}
-            focusBorderColor="#306844"
-            borderColor="#306844"
-            onKeyDown={(e) => {
-              handleKeyDownAction(e);
-            }}
-            placeholder="Add a comment..."
-          />}
-
-         {tracker.action && <Flex pl="16px" pr="16px" justify="space-between">
-            <Flex gap="8px">
-              <GreenButton
-                onClick={() => {
-                  setOpenTasks(true);
-                  setOpenAnimals(false);
-                }}
-              >
-                Tasks
-              </GreenButton>
-              <GreenButton
-                onClick={() => {
-                  setOpenTasks(false);
-                  setOpenAnimals(true);
-                }}
-              >
-                Animals
+          {tracker.action && (
+            <Flex gap="4px">
+              <Input
+                ml="16px"
+                mt="8px"
+                mb="16px"
+                w="200px"
+                type="text"
+                _hover={{ borderColor: "#97B3A1" }}
+                focusBorderColor="#306844"
+                borderColor="#306844"
+                onChange={(e) => handleChange(e)}
+                placeholder="Add a comment..."
+              />
+              <GreenButton onClick={putActionComments} alignSelf="center" mt="8px" mb="16px" w="64px">
+                Add
               </GreenButton>
             </Flex>
-            {(openTasks || openAnimals) && (
-              <YellowButton
-                onClick={() => {
-                  setOpenTasks(false);
-                  setOpenAnimals(false);
-                }}
-              >
-                Close
-              </YellowButton>
-            )}
-          </Flex>}
+          )}
+
+          {tracker.action && (
+            <Flex pl="16px" pr="16px" justify="space-between">
+              <Flex gap="8px">
+                <GreenButton
+                  onClick={() => {
+                    setOpenTasks(true);
+                    setOpenAnimals(false);
+                  }}
+                >
+                  Tasks
+                </GreenButton>
+                <GreenButton
+                  onClick={() => {
+                    setOpenTasks(false);
+                    setOpenAnimals(true);
+                  }}
+                >
+                  Animals
+                </GreenButton>
+              </Flex>
+              {(openTasks || openAnimals) && (
+                <YellowButton
+                  onClick={() => {
+                    setOpenTasks(false);
+                    setOpenAnimals(false);
+                  }}
+                >
+                  Close
+                </YellowButton>
+              )}
+            </Flex>
+          )}
 
           {openTasks && (
             <Flex direction="column" p="16px" gap="16px">
@@ -350,7 +363,8 @@ export default function Tracker() {
                             fontSize="xl"
                             onClick={() => {
                               const map = mapRef.current;
-                              if (map && task.latFinish && task.lonFinish) map.flyTo([task.latFinish, task.lonFinish], 15);
+                              if (map && task.latFinish && task.lonFinish)
+                                map.flyTo([task.latFinish, task.lonFinish], 15);
                             }}
                             style={{ cursor: "pointer" }}
                           >
@@ -397,7 +411,12 @@ export default function Tracker() {
                       <Text color="#306844" fontSize="3xl">
                         {spec.name}
                       </Text>
-                      <Avatar size="2xl" src={`data:image/jpeg;base64,${spec.photo}`} alt={spec.name} borderRadius="8px" />
+                      <Avatar
+                        size="2xl"
+                        src={`data:image/jpeg;base64,${spec.photo}`}
+                        alt={spec.name}
+                        borderRadius="8px"
+                      />
                       <Text pt="8px">{spec.description}</Text>
                     </Flex>
                   </Flex>
@@ -425,7 +444,7 @@ export default function Tracker() {
                         {individual.name}
                       </Text>
                       <Text color="#306844" fontSize="xl">
-                        {individual.species}
+                        {individual.species.name}
                       </Text>
                       <Avatar
                         size="2xl"
