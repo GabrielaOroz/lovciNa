@@ -43,6 +43,7 @@ export default function ListOfUsers() {
   const [lastName, setLastName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
+  const [role, setRole] = useState("");
   const [password, setPassword] = useState("");
   const [selectedFile, setSelectedFile] = useState("");
 
@@ -254,6 +255,7 @@ export default function ListOfUsers() {
                           setLastName(user.surname);
                           setUsername(user.username);
                           setEmail(user.email);
+                          setRole(user.role);
                           convertByteArrayToUrl(user.photo);
                         }}
                         p="10px"
@@ -283,6 +285,8 @@ export default function ListOfUsers() {
                         <ModalHeader>USER INFO</ModalHeader>
                         <ModalCloseButton />
                         <ModalBody>
+                        <Text mb="8px">Email: {email}</Text>
+                        <Text mb="8px">Role: {role}</Text>
                           <Input
                             marginBottom="10px"
                             defaultValue={firstName}
@@ -328,7 +332,6 @@ export default function ListOfUsers() {
                           >
                             Username required.
                           </Text>
-                          <Input marginBottom="10px" defaultValue={email} onChange={changeEmail} placeholder="Email" />
                           <Text
                             marginBottom="10px"
                             style={{ display: rightEmail ? "none" : "block" }}

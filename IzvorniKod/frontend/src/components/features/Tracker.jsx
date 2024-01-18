@@ -77,7 +77,7 @@ export default function Tracker() {
 
   const putDoneTasks = (id) => {
     fetch("http://localhost:8000/tracker/doneTasks", {
-      method: "PUT",
+      method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
