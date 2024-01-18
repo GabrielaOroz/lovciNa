@@ -16,6 +16,7 @@ export default function Tracker() {
   const [individuals, setIndividuals] = useState([]);
   const [tasks, setTasks] = useState([]);
   const mapRef = useRef(null);
+  const [comments, setComments] = useState([]);
 
   /* TRACKER INFO */
   useEffect(() => {
@@ -27,6 +28,13 @@ export default function Tracker() {
       .then((data) => {
         console.log("currentTrackerInfo: ", data);
         setTracker(data);
+        setComments(
+          data.action.animals &&
+            data.action.animals.reduce((obj, individual) => {
+              obj[individual.id] = individual.comments;
+              return obj;
+            }, {})
+        );
       });
   }, []);
 
@@ -44,7 +52,7 @@ export default function Tracker() {
   }, []);
 
   /* DONE */
-  
+
   const putDoneTasks = (id) => {
     fetch("http://localhost:8000/tracker/doneTasks", {
       method: "PUT",
@@ -52,7 +60,7 @@ export default function Tracker() {
         "Content-Type": "application/json",
       },
       credentials: "include",
-      body: JSON.stringify({[id]:2 }),
+      body: JSON.stringify({ [id]: 2 }),
     }).then((res) => {
       if (res.ok) {
         window.location.reload();
@@ -61,28 +69,19 @@ export default function Tracker() {
   };
 
   /* NEW ANIMAL COMMENT */
-  const [comments, setComments] = useState(() =>
-    individuals.reduce((obj, individual) => {
-      obj[individual.id] = individual.comments;
-      return obj;
-    }, {})
-  );
-  //console.log(comments);
-  const handleKeyDown = (e, id) => {
-    if (e.key === "Enter" && e.target.value) {
-      e.preventDefault();
-      setComments({ ...comments, [id]: [...comments[id], e.target.value] });
-      putComments();
-    }
+  const handleComment = (e, id) => {
+    setComments({ ...comments, [id]: [...comments[id], e.target.value] });
   };
-  const putComments = () => {
+
+  const putComments = (id) => {
+    let comment = comments[id].slice(-1)[0];
     fetch("http://localhost:8000/tracker/newComments", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
       credentials: "include",
-      body: JSON.stringify(comments),
+      body: JSON.stringify({[id]: [comment]}),
     }).then((res) => {
       if (res.ok) {
         window.location.reload();
@@ -100,7 +99,7 @@ export default function Tracker() {
   };
 
   const putActionComments = () => {
-    let comment = commentsAction.slice(-1)[0]
+    let comment = commentsAction.slice(-1)[0];
     fetch("http://localhost:8000/tracker/actionComments", {
       method: "PUT",
       headers: {
@@ -135,7 +134,9 @@ export default function Tracker() {
       routingMachineLayer.addTo(map);
 
       return () => {
-        map.removeControl(routingMachineLayer);
+        if (map && routingMachineLayer) {
+          map.removeControl(routingMachineLayer);
+        }
       };
     });
 
@@ -454,9 +455,8 @@ export default function Tracker() {
                       <Flex direction="column" align="center">
                         <Divider borderColor="#306844" mt="8px" mb="8px" />
                         <List mb="8px">
-                          {individual.comments && individual.comments.map((comment, index) => (
-                            <Text key={index}>○ {comment}</Text>
-                          ))}
+                          {individual.comments &&
+                            individual.comments.map((comment, index) => <Text key={index}>○ {comment}</Text>)}
                         </List>
                       </Flex>
                     )}
@@ -465,11 +465,12 @@ export default function Tracker() {
                       _hover={{ borderColor: "#97B3A1" }}
                       focusBorderColor="#306844"
                       borderColor="#306844"
-                      onKeyDown={(e) => {
-                        handleKeyDown(e, individual.id);
-                      }}
+                      onChange={(e) => handleComment(e, individual.id)}
                       placeholder="Add a comment..."
                     />
+                    <GreenButton onClick={() => putComments(individual.id)} mt="8px">
+                      Add
+                    </GreenButton>
                   </Flex>
                 ))}
               </Flex>
