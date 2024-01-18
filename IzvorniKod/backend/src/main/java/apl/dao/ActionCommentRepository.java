@@ -10,5 +10,5 @@ import java.util.Optional;
 
 @Repository
 public interface ActionCommentRepository extends JpaRepository<ActionComment, Long> {
-    Optional<List<ActionComment>> findByActionId(Long id);
+    List<ActionComment> findByActionId(Long id);
 }

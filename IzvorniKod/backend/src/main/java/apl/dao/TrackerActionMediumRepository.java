@@ -15,7 +15,7 @@ public interface TrackerActionMediumRepository extends JpaRepository<TrackerActi
     Optional<TrackerActionMedium> findTopByTrackerIdAndActionStatus(Long trackerId, ActionStatus actionStatus);
     List<TrackerActionMedium> findByTrackerId(Long trackerId);
 
-    Optional<List<TrackerActionMedium>> findByActionId(Long actionId);
+    List<TrackerActionMedium> findByActionId(Long actionId);
 
     Optional<TrackerActionMedium> findByTrackerIdAndActionId(Long trackerId, Long actionId);
 

@@ -105,7 +105,7 @@ public class ResearcherServiceJpa implements ResearcherService {
             ActionDTO actionDTO = new ActionDTO();
 
             List<DtoTracker> trackers = new LinkedList<>();
-            List<TrackerActionMedium> trackersDB = trackerActionMediumRepo.findByActionId(action.getId()).orElse(null);
+            List<TrackerActionMedium> trackersDB = trackerActionMediumRepo.findByActionId(action.getId());
 
             Map<Long, MediumType> mediumForTrackers = new HashMap<>();
 
@@ -166,10 +166,9 @@ public class ResearcherServiceJpa implements ResearcherService {
                 action.setSpecies(species);
 
                 List<String> actionComments = new LinkedList<>();
-                if(actionCommentRepo.findByActionId(action.getId()).orElse(null) != null){
-                    for(ActionComment ac : actionCommentRepo.findByActionId(action.getId()).orElse(null)){
-                        actionComments.add(ac.getContent());
-                    }
+                List<ActionComment> actionComments1 = actionCommentRepo.findByActionId(action.getId());
+                for(ActionComment ac : actionComments1){
+                    actionComments.add(ac.getContent());
                 }
                 action.setComments(actionComments);
             }
@@ -352,7 +351,7 @@ public class ResearcherServiceJpa implements ResearcherService {
             ActionDTO actionDTO = new ActionDTO();
 
             List<DtoTracker> trackers = new LinkedList<>();
-            List<TrackerActionMedium> trackersDB = trackerActionMediumRepo.findByActionId(action.getId()).orElse(null);
+            List<TrackerActionMedium> trackersDB = trackerActionMediumRepo.findByActionId(action.getId());
 
             Map<Long, MediumType> mediumForTrackers = new HashMap<>();
 
