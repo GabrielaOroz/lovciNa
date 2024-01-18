@@ -27,8 +27,6 @@ export default function Researcher() {
   const [formData, setFormData] = useState({});
   const [coords, setCoords] = useState({});
 
-  const [photos, setPhotos] = useState([]);
-
   /* GET DATA */
   useEffect(() => {
     fetch("http://localhost:8000/researcher/actions", {
@@ -39,22 +37,10 @@ export default function Researcher() {
       .then((data) => {
         console.log("Actions: ", data);
         setFormData(data);
-        const actionsData = data.map((action) => {
-          const trackersData = action.trackers.map((tracker) => ({
-            id: tracker.id,
-            photo: "data:image/jpeg;base64," + tracker.photo,
-          }));
-          return {
-            actionId: action.action.id,
-            trackers: trackersData,
-          };
-        });
-        setPhotos(actionsData);
       });
   }, []);
-  console.log(photos);
 
-  /*
+  
   useEffect(() => {
     fetch("http://localhost:8000/researcher/coords", {
       method: "GET",
@@ -65,7 +51,7 @@ export default function Researcher() {
         console.log("Coords: ", data);
         setCoords(data);
       });
-  }, []);*/
+  }, []);
 
   const [openActions, setOpenActions] = useState(false);
 
@@ -519,12 +505,18 @@ export default function Researcher() {
                                         scrollToMap();
                                       }}
                                     >
+                                      {individual.name}
+                                    </Text>
+                                    <Text
+                                      color="#306844"
+                                      fontSize="lg"
+                                    >
                                       {individual.species.name}
                                     </Text>
                                     <Avatar
                                       size="2xl"
                                       src={`data:image/jpeg;base64,${individual.photo}`}
-                                      alt={individual.species.name}
+                                      alt={individual.name}
                                       borderRadius="8px"
                                       _hover={{ cursor: "pointer" }}
                                       onClick={() => {

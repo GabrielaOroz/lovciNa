@@ -19,7 +19,6 @@ import GreenButton from "../components/shared/GreenButton";
 import YellowButton from "../components/shared/YellowButton";
 import { MapContainer, TileLayer, useMapEvents, useMap } from "react-leaflet";
 import { createControlComponent } from "@react-leaflet/core";
-import L from "leaflet";
 import "leaflet-routing-machine/dist/leaflet-routing-machine.css";
 import "leaflet-routing-machine";
 import Multiselect from "multiselect-react-dropdown";
@@ -45,9 +44,9 @@ export default function NewActions() {
       if (ac.action.id == actionId) {
         if (
           !(
-            ac.existingHabitats.length != 0 ||
-            ac.existingAnimals.length != 0 ||
-            ac.existingSpecies.length != 0 ||
+            selectedSpeciesMap[actionId].length != 0 ||
+            selectedIndividualsMap[actionId].length != 0 ||
+            selectedHabitatsMap[actionId].length != 0 ||
             ac.action.species.length != 0 ||
             ac.action.habitats.length != 0 ||
             ac.action.animals.length != 0
@@ -56,12 +55,10 @@ export default function NewActions() {
         ) {
           setError((prevError) => ({ ...prevError, [actionId]: true }));
           shouldExit = true;
-          console.log("3", true);
           return true;
         } else if (ac.trackers.filter((tracker) => tracker.tasks.length == 0).length > 0) {
           setError((prevError) => ({ ...prevError, [actionId]: true }));
           shouldExit = true;
-          console.log("2", true);
           return true;
         } else {
           setError((prevError) => ({ ...prevError, [actionId]: false }));
@@ -76,21 +73,18 @@ export default function NewActions() {
   /* SUBMIT */
   const handleSubmit = (actionId) => {
     setError((prevError) => ({ ...prevError, [actionId]: false }));
-    console.log(checkError(actionId));
     let postData;
     formData.map((ac) => {
       if (ac.action.id == actionId && !checkError(actionId)) {
         postData = {
           action: ac.action,
           existingSpecies: selectedSpeciesMap[actionId] || [],
-          existingIndividuals: selectedIndividualsMap[actionId] || [],
+          existingAnimals: selectedIndividualsMap[actionId] || [],
           existingHabitats: selectedHabitatsMap[actionId] || [],
           trackers: formData.filter((action) => action.action.id == actionId)[0].trackers
         };
       }
     });
-
-    console.log(postData);
     
     if (!checkError(actionId)) {
       fetch("http://localhost:8000/researcher/finished-action", {
@@ -132,7 +126,6 @@ export default function NewActions() {
         });
       });
   }, []);
-  console.log(itemType)
 
   const [error, setError] = useState(() => {
     if (formData.length > 0) {
@@ -144,7 +137,6 @@ export default function NewActions() {
       return {};
     }
   });
-  console.log(error);
 
   const [existingSpecies, setExistingSpecies] = useState([]);
   const [existingIndividuals, setExistingIndividuals] = useState([]);
@@ -184,7 +176,7 @@ export default function NewActions() {
   }, []);
 
   /* EXISTING SPECIES */
-  const [selectedSpeciesMap, setSelectedSpeciesMap] = useState({});
+  const [selectedSpeciesMap, setSelectedSpeciesMap] = useState([]);
   const handleSpecies = (actionId, selectedSpecies) => {
     setSelectedSpeciesMap((prevMap) => ({
       ...prevMap,
@@ -193,7 +185,7 @@ export default function NewActions() {
   };
 
   /* EXISTING INDIVIDUALS */
-  const [selectedIndividualsMap, setSelectedIndividualsMap] = useState({});
+  const [selectedIndividualsMap, setSelectedIndividualsMap] = useState([]);
   const handleIndividuals = (actionId, selectedIndividuals) => {
     setSelectedIndividualsMap((prevMap) => ({
       ...prevMap,
@@ -202,7 +194,7 @@ export default function NewActions() {
   };
 
   /* EXISTING HABITATS */
-  const [selectedHabitatsMap, setSelectedHabitatsMap] = useState({});
+  const [selectedHabitatsMap, setSelectedHabitatsMap] = useState([]);
   const handleHabitats = (actionId, selectedHabitats) => {
     setSelectedHabitatsMap((prevMap) => ({
       ...prevMap,
@@ -937,7 +929,6 @@ export default function NewActions() {
                   <Text fontSize="lg" color="#306844" as="b">
                     TRACKERS
                   </Text>
-                  {console.log(formData.filter((a) => a.action.id == action.action.id)[0])}
                   {formData
                     .filter((a) => a.action.id == action.action.id)[0]
                     .trackers.map((tracker) => (

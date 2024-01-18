@@ -355,6 +355,7 @@ export default function Tracker() {
                               const map = mapRef.current;
                               if (map && task.latFinish && task.lonFinish)
                                 map.flyTo([task.latFinish, task.lonFinish], 15);
+                              scrollToMap();
                             }}
                             style={{ cursor: "pointer" }}
                           >
@@ -453,7 +454,7 @@ export default function Tracker() {
                       <Flex direction="column" align="center">
                         <Divider borderColor="#306844" mt="8px" mb="8px" />
                         <List mb="8px">
-                          {individual.comments.map((comment, index) => (
+                          {individual.comments && individual.comments.map((comment, index) => (
                             <Text key={index}>○ {comment}</Text>
                           ))}
                         </List>
