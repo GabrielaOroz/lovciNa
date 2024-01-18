@@ -1,23 +1,8 @@
 \chapter{Arhitektura i dizajn sustava}
 		
-	
-	\noindent Arhitektura aplikacije je slojevita te zasnovana na događajima – MVC arhitektura, koja razdvaja aplikaciju na 3 osnovne komponente kako bi se smanjila međuovisnost te time olakšao razvoj i održavanje aplikacije. Komponente:
-	
-		\begin{itemize}
-		\item Model (Model) - sadrži razrede čiji se objekti obrađuju
-		\item View (Pogled) – komponenta zadužena za prikaz podataka i interakciju s korisnicima
-		\item Controller (Nadglednik) – komponenta zadužena za upravljanje korisničkom interakcijom s pogledom i modelom (dohvaćanje podataka i ažuriranje pogleda novim podacima) te odgovaranje na događaje/promjene
-		\end{itemize}
 		
-			\begin{figure}[H]
-			\includegraphics[scale=0.45]{slike/MVC.PNG} %veličina u odnosu na širinu linije
-			\centering
-			\caption{MVC arhitektura}
-			\label{fig:mvc} %label mora biti drugaciji za svaku sliku
-		\end{figure}
-
-	\noindent Nadalje, arhitektura prati model klijent – server. 
-	React je korišten za izgradnju frontend-a (klijentske strane), Spring Boot kao backend server, a PostgreSQL kao sustav za upravljanje bazom podataka. Za izradu korisničkog sučelja korišten je React, komponente su građene tako da su reaktivne i ažuriraju se automatski kada se stanje aplikacije promijeni. Za upravljanje navigacijom unutar aplikacije korišten je React Router.
+	\noindent Arhitektura prati model klijent – server koja omogućava fleksibilnost u razvoju i održavanju budući da backend i frontend mogu evolouirati neovisno jedno o drugome. Komunikacija se vrši putem HTTP protokola.
+	React je korišten za izgradnju frontend-a (klijentske strane), Spring Boot kao backend server, a PostgreSQL kao sustav za upravljanje bazom podataka. Pri izradi korisničkog sučelja komponente su građene tako da su reaktivne i ažuriraju se automatski kada se stanje aplikacije promijeni. Za upravljanje navigacijom unutar aplikacije korišten je React Router.
 	Spring Boot je korišten za izradu backend dijela aplikacije koji obuhvaća:
 	
 	\begin{itemize}
@@ -26,7 +11,6 @@
 		\item pristup PostgreSQL bazi podataka – za komunikaciju se definiraju JPA repozitoriji koji omogućavaju pristup i upravljanje podacima.
 	\end{itemize}
 	
-	\noindent Komunikacija izneđu frotnenda i backenda odvija se preko HTTP protokola koji služi za prijenos informacija na webu.
 	
 	Korisnik putem WEB preglednika šalje zahtjev WEB poslužitelju. WEB poslužitelj omogućava komunikaciju između klijenta i aplikacije putem HTTP protokola. Ukratko, WEB poslužitelj pokreće aplikaciju te joj prosljeđuje korisnikove zahtjeve. Frontend šalje HTTP zahtjeve prema SpringBootu putem fetcha, a backend obrađuje zahtjeve, pristupa bazi podataka, izvršava logiku i vraća rezultat frontendu u obliku JSON objekta.  Aplikacija u konačnici vraća odgovor u obliku HTML dokumenta.
 	

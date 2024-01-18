@@ -108,7 +108,7 @@
 					\noindent \underbar{\textbf{UC1 - Registracija}}
 					\begin{packed_item}
 						
-						\item \textbf{Glavni sudionik: }Korisnik
+						\item \textbf{Glavni sudionik: } Neregistrirani korisnik
 						\item  \textbf{Cilj:} Izrada korisničkog računa za pristup sustavu
 						\item  \textbf{Sudionici:} Baza podataka
 						\item  \textbf{Preduvjet:} -
@@ -121,6 +121,7 @@
 							\item Unos osobnih podataka (korisničko ime, fotografija, lozinka, ime, prezime i email adresa)
 							\item Slanje zahtjeva za registraciju
 							\item Potvrđivanje registracije preko email adrese
+							
 						
 								\end{packed_enum}
 								
@@ -164,7 +165,7 @@
 						\item \textbf{Glavni sudionik: }Administrator
 						\item  \textbf{Cilj:} Potvrda registracije istraživača i voditelja
 						\item  \textbf{Sudionici:} Baza podataka
-						\item  \textbf{Preduvjet:} Istraživač ili voditelj je poslao zahtjev za registraciju
+						\item  \textbf{Preduvjet:} Istraživač ili voditelj je poslao zahtjev za registraciju i potvrdio registraciju putem mail-a.
 						\item  \textbf{Opis osnovnog tijeka:}
 						
 						\item[] \begin{packed_enum}
@@ -173,18 +174,6 @@
 							
 						\end{packed_enum}
 						
-						\item  \textbf{Opis mogućih odstupanja:}
-						
-						\item[] \begin{packed_item}
-							
-							\item[1.a] Administrator ne potvrđuje registraciju istraživača ili voditelja
-							\item[] \begin{packed_enum}
-								
-								\item Sustav obavještava korisnika da mu nije potvrđena registracija i predlaže da sudjeluje kao tragač
-								
-								\end{packed_enum}
-							
-						\end{packed_item}
 						
 					\end{packed_item}
 					
@@ -195,7 +184,7 @@
 						\item \textbf{Glavni sudionik: }Korisnik
 						\item  \textbf{Cilj:} Korištenje aplikacije
 						\item  \textbf{Sudionici:} Baza podataka
-						\item  \textbf{Preduvjet:} Registracija
+						\item  \textbf{Preduvjet:} Potvrđena registracija
 						\item  \textbf{Opis osnovnog tijeka:}
 						
 						\item[] \begin{packed_enum}
@@ -259,7 +248,7 @@
 							\item[3.b] Korisnik unosi krivi format lozinke
 							\item[] \begin{packed_enum}
 								
-								\item Sustav obavještava korisnika lo uvjetu koji nije zadovoljen da bi lozinka bila ispravna
+								\item Sustav obavještava korisnika o uvjetu koji nije zadovoljen da bi lozinka bila ispravna
 								
 							\end{packed_enum}
 							
@@ -281,7 +270,7 @@
 					\begin{packed_item}
 						
 						\item \textbf{Glavni sudionik: }Administrator
-						\item  \textbf{Cilj:} Pregled i upravljanje registriranim korisnicima
+						\item  \textbf{Cilj:} Pregled registriranih korisnika
 						\item  \textbf{Sudionici:} Baza podataka
 						\item  \textbf{Preduvjet:} Postoje registrirani korisnici
 						\item  \textbf{Opis osnovnog tijeka:}
@@ -289,6 +278,24 @@
 						\item[] \begin{packed_enum}
 							
 							\item Odabir opcije pregleda registriranih korisnika
+							\item Pregled podataka
+							
+						\end{packed_enum}
+						
+						
+					\end{packed_item}
+					
+					\noindent\underbar{\textbf{UC6 - Upravljanje registriranim korisnicima}}
+					\begin{packed_item}
+						
+						\item \textbf{Glavni sudionik: }Administrator
+						\item  \textbf{Cilj:} Upravljanje registriranim korisnicima
+						\item  \textbf{Sudionici:} Baza podataka
+						\item  \textbf{Preduvjet:} Postoje registrirani korisnici
+						\item  \textbf{Opis osnovnog tijeka:}
+						
+						\item[] \begin{packed_enum}
+							
 							\item Odabir opcije mijenjanja prava i osobnih podataka pojedinog korisnika
 							\item Odabir opcije spremanja promjene
 							\item Baza podataka se ažurira
@@ -299,7 +306,7 @@
 						
 						\item[] \begin{packed_item}
 							
-							\item[3.a] Administrator ne odabire opciju spremanja promjena
+							\item[2.a] Administrator ne odabire opciju spremanja promjena
 							\item[] \begin{packed_enum}
 								
 								\item Sustav obavještava korisnika da nije spremio podatke 
@@ -310,8 +317,7 @@
 						
 					\end{packed_item}
 					
-					
-					\noindent \underbar{\textbf{UC6 - Voditelj odabire svoje postaje i tragače}}
+					\noindent \underbar{\textbf{UC7 - Odabir  postaje i tragača}}
 					\begin{packed_item}
 						
 						\item \textbf{Glavni sudionik: }Voditelj
@@ -333,7 +339,7 @@
 							\item[2.a] Voditelj odabire već zauzetu postaju
 							\item[] \begin{packed_enum}
 								
-								\item Sustav obavještava voditelja da postaja već ima svog voditelja
+								\item Sustav obavještava voditelja da ta postaja već postoji
 								
 							\end{packed_enum}
 							
@@ -342,11 +348,11 @@
 						
 					\end{packed_item}
 					
-					\noindent \underbar{\textbf{UC7 - Voditelj definira metode pretraživanja za tragača}}
+					\noindent \underbar{\textbf{UC8 - Definiranje metode pretraživanja tragača}}
 					\begin{packed_item}
 						
 						\item \textbf{Glavni sudionik: }Voditelj
-						\item  \textbf{Cilj:} Tragač ima određene metode pretraživanja
+						\item  \textbf{Cilj:} Tragač ima definirane metode pretraživanja
 						\item  \textbf{Sudionici:} Baza podataka
 						\item  \textbf{Preduvjet:} Voditelj ima dodijeljenu postaju i tragače kojima upravlja
 						\item  \textbf{Opis osnovnog tijeka:}
@@ -362,7 +368,7 @@
 						
 					\end{packed_item}
 					
-					\noindent \underbar{\textbf{UC8 - Praćenje životinja}}
+					\noindent \underbar{\textbf{UC9 - Praćenje životinja}}
 					\begin{packed_item}
 						
 						\item \textbf{Glavni sudionik:} Gps uređaj
@@ -393,13 +399,12 @@
 						
 					\end{packed_item}
 					
-					\noindent \underbar{\textbf{UC9 - Stvaranje akcije pretraživanja i praćenja}}
+					\noindent \underbar{\textbf{UC10 - Stvaranje akcije pretraživanja i praćenja}}
 					\begin{packed_item}
 						
 						\item \textbf{Glavni sudionik: }Istraživač
 						\item  \textbf{Cilj:} Stvoriti akciju pretraživanja i praćenja
 						\item  \textbf{Sudionici:} Baza podataka
-						\item  \textbf{Preduvjet:} Prijavljen kao istraživač
 						\item  \textbf{Opis osnovnog tijeka:}
 						
 						\item[] \begin{packed_enum}
@@ -414,13 +419,13 @@
 						
 					\end{packed_item}
 					
-						\noindent \underbar{\textbf{UC10 - Voditelj odabire tragače za akciju}}
+						\noindent \underbar{\textbf{UC11 - Odabir tragača za akciju}}
 					\begin{packed_item}
 						
 						\item \textbf{Glavni sudionik: }Voditelj
 						\item  \textbf{Cilj:} Odabrati tragače za akciju pretraživanja i praćenja
 						\item  \textbf{Sudionici:} Baza podataka
-						\item  \textbf{Preduvjet:} Prijavljen kao voditelj
+						\item  \textbf{Preduvjet:} Voditelj posjeduje tragače koji nisu niti na jednoj akciji
 						\item  \textbf{Opis osnovnog tijeka:}
 						
 						\item[] \begin{packed_enum}
@@ -448,7 +453,7 @@
 					
 					
 					
-					\noindent \underbar{\textbf{UC11 - Stvaranje zadataka}}
+					\noindent \underbar{\textbf{UC12 - Stvaranje zadataka}}
 					\begin{packed_item}
 						
 						\item \textbf{Glavni sudionik: }Istraživač
@@ -483,13 +488,13 @@
 						
 					\end{packed_item}
 					
-					\noindent \underbar{\textbf{UC12 - Istraživač ostavlja komentare za tragače}}
+					\noindent \underbar{\textbf{UC13 - Ostavljanje komentara za tragače}}
 					\begin{packed_item}
 						
 						\item \textbf{Glavni sudionik:} Istraživač
 						\item  \textbf{Cilj:} Ostaviti komentare za akciju tragačima 
 						\item  \textbf{Sudionici:} Baza podataka
-						\item  \textbf{Preduvjet:} Prijavljen kao istraživač
+						\item  \textbf{Preduvjet:} Zadaci za tragače su stvoreni
 						\item  \textbf{Opis osnovnog tijeka:}
 						
 						\item[] \begin{packed_enum}
@@ -514,7 +519,7 @@
 						
 					\end{packed_item}
 					
-					\noindent \underbar{\textbf{UC13 - Prikaz životinja na karti istraživača}}
+					\noindent \underbar{\textbf{UC14 - Prikaz životinja na karti istraživača}}
 					\begin{packed_item}
 						
 						\item \textbf{Glavni sudionik: }Istraživač
@@ -537,7 +542,7 @@
 						
 						\item[] \begin{packed_item}
 							
-							\item[5.a]Karta se ne generira 
+							\item[5.a]Korisnik nije odabrao sve potrebne informacije 
 							\item[] \begin{packed_enum}
 								
 								\item Sustav obavještava korisnika da nije odabrao sve potrebne informacije
@@ -549,7 +554,7 @@
 						
 						
 						
-				\noindent \underbar{\textbf{UC14 - Prikaz tragača na karti istraživača}}
+				\noindent \underbar{\textbf{UC15 - Prikaz tragača na karti istraživača}}
 				\begin{packed_item}
 					
 					\item \textbf{Glavni sudionik: }Istraživač
@@ -586,11 +591,11 @@
 			
 			
 				
-				\noindent \underbar{\textbf{UC15 - Prikaz karte za tragača}}
+				\noindent \underbar{\textbf{UC16 - Prikaz karte za tragača}}
 				\begin{packed_item}
 					
 					\item \textbf{Glavni sudionik:}Tragač
-					\item  \textbf{Cilj:} Prikaz karte za tragača na određenoj akciji
+					\item  \textbf{Cilj:} Prikaz karte za tragača s pripadajućim zadacima te označavanje odrađenih zadataka na akciji
 					\item  \textbf{Sudionici:} Baza podataka
 					\item  \textbf{Preduvjet:} Tragač je prijavljen i sudjeluje u određenoj akciji
 					\item  \textbf{Opis osnovnog tijeka:}
@@ -601,7 +606,6 @@
 						\item Odabir prikaza karte za odabranu akciju
 						\item Odabir prikaza popisa zadataka, trenutne pozicije ostalih tragača ili trenutne pozicije praćenih životinja za određenu akciju
 						\item Tragač može pojedini zadatak označiti odrađenim
-						\item Tragač može ostaviti komentar na zadatak ili na praćenu životinju
 						\item Tragač potvrđuje unesene podatke
 						\item Spremanje podataka u bazu podataka
 					\end{packed_enum}
@@ -622,21 +626,20 @@
 					
 				\end{packed_item}
 				
-				\noindent \underbar{\textbf{UC16 - Tragač ostavlja komentar o životinji}}
+				\noindent \underbar{\textbf{UC17 - Ostavljanje komentara o životinji}}
 				\begin{packed_item}
 					
-					\item \textbf{Glavni sudionik:}Tragač
-					\item  \textbf{Cilj:} Komentar za životinju od
-				 strane tragača
+					\item \textbf{Glavni sudionik:}Tragač/Istraživač
+					\item  \textbf{Cilj:} Komentar za životinju 
 					\item  \textbf{Sudionici:} Baza podataka
 					\item  \textbf{Preduvjet:} Tragač je sudjelovao u akciji
 					\item  \textbf{Opis osnovnog tijeka:}
 					
 					\item[] \begin{packed_enum}
 					 
-						\item Tragaču se pri prikazu karte i životinja	nudi opcija "Komentiraj"
-					\item Tragač piše komentar na praćenu životinju
-						\item Tragač sprema komentar
+						\item Pri prikazu karte	nudi se opcija "Komentiraj"
+					\item Pisanje komentara za praćenu životinju
+						\item  Spremanje komentara
 					\end{packed_enum}
 					
 						\item  \textbf{Opis mogućih odstupanja:}
@@ -656,7 +659,7 @@
 				
 				
 				
-				\noindent \underbar{\textbf{UC17 - Tragač napušta akciju}}
+				\noindent \underbar{\textbf{UC18 - Napuštanje akciju}}
 				\begin{packed_item}
 					
 					\item \textbf{Glavni sudionik: }Tragač
@@ -687,7 +690,7 @@
 					
 				\end{packed_item}
 				
-				\noindent \underbar{\textbf{UC18 - Tragač ocijenjuje i piše komentar}}
+				\noindent \underbar{\textbf{UC1 - Ocjena i komentiranje završene akcije}}
 				\begin{packed_item}
 					
 					\item \textbf{Glavni sudionik: }Tragač
@@ -719,46 +722,6 @@
 						
 					\end{packed_item}
 				\end{packed_item}
-				
-
-					
-				
-				\noindent \underbar{\textbf{UC19 - Istraživač ostavlja komentar na životinju
-					}}
-				\begin{packed_item}
-					
-					\item \textbf{Glavni sudionik:} Istraživač
-					\item  \textbf{Cilj:} Komentar na životinju
-					\item  \textbf{Sudionici:} Baza podataka
-					\item  \textbf{Preduvjet:} Istraživač je prijavljen
-					\item  \textbf{Opis osnovnog tijeka:}
-					
-					\item[] \begin{packed_enum}
-						
-						\item Istraživaču se pri prikazu karte nudi opcija "Komentiraj"
-					
-						\item Istraživač piše komentar na životinju
-						\item Istraživač potvrđuje unešeni komentar
-						
-						
-					\end{packed_enum}
-					
-					\item  \textbf{Opis mogućih odstupanja:}
-				
-				\item[] \begin{packed_item}
-					
-					\item[4.a]Korisnik ne odabire opciju "Spremi"
-					\item[] \begin{packed_enum}
-						
-						\item Sustav obavještava korisnika da nije spremio komentar
-						
-					\end{packed_enum}
-					
-				\end{packed_item}
-						
-				\end{packed_item}
-				
-					
 				
 				
 				\noindent \underbar{\textbf{UC20 - Blježenje staza i kretanja tragača}}
