@@ -179,4 +179,17 @@ public class ResearcherController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+
+    @PostMapping("/coords")
+    public ResponseEntity<CoordsDTO> getCoords(HttpSession session) {
+        Long usrId = authorize2(session.getAttribute("id"));
+        if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+
+        CoordsDTO c = researcherService.getCoords(usrId);
+        if (c != null) {
+            return ResponseEntity.ok(c);
+        } else {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(c);
+        }
+    }
 }

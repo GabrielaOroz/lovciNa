@@ -197,6 +197,7 @@ public class ResearcherServiceJpa implements ResearcherService {
             }
 
             Animal a = new Animal(species, animal.getName(), animal.getDescription(), animal.getPhoto());
+            a.updateLocation(action1.getManager().getStation().getLongitude()+0.05D, action1.getManager().getStation().getLatitude()+0.06D);
 
             List<String> commentsOnAnimal = animal.getComments();
             List<AnimalComment> newComments = new LinkedList<>();
@@ -220,18 +221,7 @@ public class ResearcherServiceJpa implements ResearcherService {
 
 
 
-        List<Habitat> habitatsForDB = new LinkedList<>();
-        for(DtoHabitat habitat : action.getAction().getHabitats()){
-            Habitat habitat1 = new Habitat(habitat.getLongitude(), habitat.getLatitude(), habitat.getRadius(), habitat.getName(), habitat.getDescription(), habitat.getPhoto());
-            habitatsForDB.add(habitat1);
-        }
 
-        for(DtoHabitat habitat : action.getExistingHabitats()){
-            Habitat habitat1 = habitatRepo.findById(habitat.getId()).orElse(null);
-            habitatsForDB.add(habitat1);
-        }
-
-        action1.addMultipleHabitats(habitatsForDB);
 
         //komentari
         List<String> commentsOnAction = action.getAction().getComments();
@@ -279,6 +269,20 @@ public class ResearcherServiceJpa implements ResearcherService {
                 taskDB.setTitle(task.getTitle());       //ok
 
 
+                List<Habitat> habitatsForDB = new LinkedList<>();
+                for(DtoHabitat habitat : action.getAction().getHabitats()){
+                    Habitat habitat1 = new Habitat(taskDB.getLonFinish()+0.05D, taskDB.getLatStart()+0.06D, 20D, habitat.getName(), habitat.getDescription(), habitat.getPhoto());
+                    habitatsForDB.add(habitat1);
+                }
+
+                for(DtoHabitat habitat : action.getExistingHabitats()){
+                    Habitat habitat1 = habitatRepo.findById(habitat.getId()).orElse(null);
+                    habitatsForDB.add(habitat1);
+                }
+
+                action1.addMultipleHabitats(habitatsForDB);
+
+
 
                 if(task.getComments() != null) {
                     List<TaskComment> newCommentsForTask = new LinkedList<>();
@@ -311,18 +315,12 @@ public class ResearcherServiceJpa implements ResearcherService {
         }
 
 
-
-
         action1.addMultipleActionComments(newComments);
         try{
             actionRepo.save(action1);
         }catch (Exception e){
             return null;
         }
-
-
-
-
 
         return action1.toDTO();
     }
@@ -401,5 +399,49 @@ public class ResearcherServiceJpa implements ResearcherService {
             dtoHabitats.add(dtoHabitat);
         }
         return dtoHabitats;
+    }
+
+    @Override
+    public CoordsDTO getCoords(Long usrId) {
+        //int randomNumber = new Random().nextInt(90) + 1;
+        //double randomLatitude = -90 + Math.random() * (90 - (-90));
+        //double randomDouble = Math.random();
+
+        CoordsDTO coords = new CoordsDTO();
+
+        List<Animal> animalsDB = animalRepo.findAllAnimalsByResearcherId(usrId);
+
+        List<AnimalCoordsDTO> animalsCoords = new LinkedList<>();
+        //double n = Math.round(1 + Math.random() * (20 - (1)));
+        for(Animal a : animalsDB){
+            AnimalCoordsDTO animal = new AnimalCoordsDTO();
+            animal.setId(a.getId());
+            animal.setSpecies(a.getSpecies().getName());
+
+            double n = Math.round(1 + Math.random() * (20 - (1)));
+            System.out.println(n);
+            List<List<Double>> coordsList = new LinkedList<>();
+            for(int i = 1; i <= n; i++) {
+
+
+                List<Double> coord = new LinkedList<>();
+                Double randomLatitude = -90 + Math.random() * (90 - (-90));
+                Double randomLongitude = -180 + Math.random() * (180 - (-180));
+                Double randomIntensity = Math.random();
+                coord.add(randomLatitude);
+                coord.add(randomLongitude);
+                coord.add(randomIntensity);
+                coordsList.add(coord);
+            }
+
+            animal.setCoords(coordsList);
+
+            animalsCoords.add(animal);
+        }
+        coords.setAnimals(animalsCoords);
+
+        
+
+        return coords;
     }
 }

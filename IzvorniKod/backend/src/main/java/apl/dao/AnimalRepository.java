@@ -2,6 +2,8 @@ package apl.dao;
 
 import apl.domain.*;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -20,5 +22,12 @@ public interface AnimalRepository extends JpaRepository<Animal, Long> {
 
     List<Animal> findBySpeciesNameAndTasksId(String speciesName, Long taskId);
     Optional<Animal> findByIdAndTasksId(Long id, Long taskId);
+
+    @Query("SELECT DISTINCT a FROM Animal a " +
+            "JOIN a.actions action " +
+            "JOIN action.researcher r " +
+            "WHERE r.id = :researcherId")
+    List<Animal> findAllAnimalsByResearcherId(@Param("researcherId") Long researcherId);
+
 
 }

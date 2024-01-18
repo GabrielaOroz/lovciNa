@@ -55,7 +55,7 @@ public class TrackerServiceJpa implements TrackerService {
 
         trackerDTO.setMedium(actionMedium.getMedium().toDTO());
         trackerDTO.setAction(actionMedium.getAction().toDTO());
-        //trackerDTO.getAction().setSpecies();
+
         trackerDTO.getAction().setTasks(MyConverter.convertToDTOList(action.getTasks()));
         trackerDTO.getAction().setAnimals(MyConverter.convertToDTOList(action.getAnimals()));
         trackerDTO.getAction().setHabitats(MyConverter.convertToDTOList(action.getHabitats()));
@@ -70,37 +70,26 @@ public class TrackerServiceJpa implements TrackerService {
 
         for (DtoAnimal dtoAnimal : trackerDTO.getAction().getAnimals()) {
             Animal animal = animalRepo.findById(dtoAnimal.getId()).orElse(null);
+            List<String> animalComments = new LinkedList<>();
             if (animal.getComments() != null) {
-                List<String> animalComments = new LinkedList<>();
                 for (AnimalComment animalComment : animal.getComments()) {
                     animalComments.add(animalComment.getContent());
                 }
-                dtoAnimal.setComments(animalComments);
             }
+            dtoAnimal.setComments(animalComments);
         }
+
 
         for (DtoTask dtoTask : trackerDTO.getAction().getTasks()) {
             Task task = taskRepo.findById(dtoTask.getId()).orElse(null);
+            List<String> taskComments = new LinkedList<>();
             if (task.getComments() != null) {
-                List<String> taskComments = new LinkedList<>();
                 for (TaskComment taskComment : task.getComments()) {
                     taskComments.add(taskComment.getContent());
                 }
-                dtoTask.setComments(taskComments);
             }
+            dtoTask.setComments(taskComments);
         }
-
-
-
-
-
-
-
-
-
-
-
-
 
         if(tracker.getStation() != null){
             trackerDTO.setStation(tracker.getStation().toDTO());
@@ -217,13 +206,6 @@ public class TrackerServiceJpa implements TrackerService {
         List<Task> allTasksOfTracker = taskRepo.findByActionIdAndTrackerId(action.getId(), usrId);
 
 
-
-
-
-
-
-
-
         for(Task task : allTasksOfTracker){
             if(lista.containsKey(task.getId())){
                 if(lista.get(task.getId()) == 2){
@@ -238,8 +220,9 @@ public class TrackerServiceJpa implements TrackerService {
             }
         }
 
+        List<Task> allTasksOnAction = taskRepo.findByActionId(action.getId());
         boolean temp = false;
-        for(Task task : action.getTasks()){
+        for(Task task : allTasksOnAction){
             if(task.getStatus().equals(TaskStatus.ACTIVE)){
                 temp = true;
             }

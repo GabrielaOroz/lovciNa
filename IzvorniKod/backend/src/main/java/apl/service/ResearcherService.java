@@ -24,4 +24,6 @@ public interface ResearcherService {
 
     List<DtoHabitat> getAllHabitats();
 
+    CoordsDTO getCoords(Long usrId);
+
 }
