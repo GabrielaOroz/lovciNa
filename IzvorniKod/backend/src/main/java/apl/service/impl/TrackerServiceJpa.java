@@ -214,18 +214,21 @@ public class TrackerServiceJpa implements TrackerService {
                     task.setStatus(TaskStatus.SOLVED);
                     task.setEndOfTask(LocalDateTime.now());
 
-                    /*double n = Math.round(1 + Math.random() * (20 - (1)));
-
+                    double n = Math.round(10 + Math.random() * (20 - (10)));
+                    System.out.println(n);
                     for(int i = 1; i <= n; i++) {
 
                         TrackerHistory trackerHistory = new TrackerHistory();
-                        Double randomLatitude = -0.008 + Math.random() * (0.008 - (-0.008));
-                        Double randomLongitude = -0.008 + Math.random() * (0.008 - (-0.008));
+
+                        Double randomLatitude = task.getLatStart() + Math.random() * (task.getLatFinish() - (task.getLatStart()));
+                        Double randomLongitude = task.getLonStart() + Math.random() * (task.getLonFinish() - (task.getLonStart()));
+                        //Double randomTime = Double.valueOf(task.getStartOfTask().getSecond()) + Math.random() * (Double.valueOf(task.getEndOfTask().getSecond()) - Double.valueOf(task.getStartOfTask().getSecond()));
+
                         trackerHistory.assignTracker(task.getTracker());
-                        trackerHistory.setLatitude(task.getLatFinish() + randomLatitude);
-                        trackerHistory.setLongitude(task.getLonFinish() + randomLongitude);
+                        trackerHistory.setLatitude(randomLatitude);
+                        trackerHistory.setLongitude(randomLongitude);
                         trackerHistoryRepo.save(trackerHistory);
-                    }*/
+                    }
 
                     try{
                         taskRepo.save(task);

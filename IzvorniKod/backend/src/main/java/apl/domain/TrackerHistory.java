@@ -101,7 +101,7 @@ public class TrackerHistory implements ConvertibleToDTO<DtoTrackerHistory>, Conv
         return this.tracker.toTrackerDTO();
     }
 
-    @Column(name = "time", nullable = false)
+    @Column(name = "time", nullable = true)
     private LocalDateTime time;
 
     @Column(nullable = false)

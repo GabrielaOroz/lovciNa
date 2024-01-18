@@ -134,18 +134,23 @@ public class TrackerController {
         }
     }
 
-    @PutMapping("/doneTasks")
+    @PostMapping("/doneTasks")
     public ResponseEntity<DtoAction> allDoneTasks(@RequestBody Map<Long, Long> lista , HttpSession session) {
         Long usrId = authorize(session.getAttribute("id"));
         if (usrId<0) return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
-
+        DtoAction action = trackerService.updateAllDoneTasks(lista, usrId);
+        if (action != null) {
+            return ResponseEntity.ok(action);
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        /*
         try {
-
             return ResponseEntity.ok(trackerService.updateAllDoneTasks(lista, usrId));
         } catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
+        }*/
     }
 
     @PutMapping("/newComments")

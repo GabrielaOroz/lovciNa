@@ -97,7 +97,7 @@ public class AnimalHistory implements ConvertibleToDTO<DtoAnimalHistory>, Conver
         return this.animal.toDTO();
     }
 
-    @Column(name = "time", nullable = false)
+    @Column(name = "time", nullable = true)
     private LocalDateTime time;
 
     @Column(nullable = false)

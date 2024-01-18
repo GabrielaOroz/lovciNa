@@ -59,6 +59,10 @@ public class ResearcherServiceJpa implements ResearcherService {
 
     @Autowired
     private TrackerHistoryRepository trackerHistoryRepo;
+
+    @Autowired
+    private AnimalHistoryRepository animalHistoryRepo;
+
     @Transactional
     public DtoUser createAction(Action action, Long usrId) {
         try {
@@ -205,7 +209,7 @@ public class ResearcherServiceJpa implements ResearcherService {
 
             Species species = speciesRepo.findByName(animal.getSpecies().getName().toUpperCase()).orElse(null);
             if(species == null){
-                species = new Species(animal.getSpecies().getName().toUpperCase(), animal.getSpecies().getDescription(), animal.getSpecies().getPhoto());
+                species = new Species(animal.getSpecies().getName().toUpperCase(), animal.getSpecies().getDescription(), animal.getPhoto());
                 speciesRepo.save(species);
             }
 
@@ -215,6 +219,31 @@ public class ResearcherServiceJpa implements ResearcherService {
             double randNum2 = -0.005 + Math.random() * (0.005 - (-0.005));
 
             a.updateLocation(action1.getManager().getStation().getLongitude()+randNum, action1.getManager().getStation().getLatitude()+randNum2);
+
+            for(DtoTracker t : action.getTrackers()){
+                List<Task> tasksForTracker = new LinkedList<>();
+
+                Tracker tracker = trackerRepo.findById(t.getId()).orElse(null);
+
+                for(DtoTask task : t.getTasks()){
+                    double n = Math.round(10 + Math.random() * (20 - (10)));
+                    System.out.println(n);
+                    for(int i = 1; i <= n; i++) {
+
+                        AnimalHistory animalHistory = new AnimalHistory();
+
+                        Double randomLatitude = task.getLatStart() + Math.random() * (task.getLatFinish() - (task.getLatStart()));
+                        Double randomLongitude = task.getLonStart() + Math.random() * (task.getLonFinish() - (task.getLonStart()));
+                        //Double randomTime = Double.valueOf(task.getStartOfTask().getSecond()) + Math.random() * (Double.valueOf(task.getEndOfTask().getSecond()) - Double.valueOf(task.getStartOfTask().getSecond()));
+
+                        animalHistory.assignAnimal(a);
+                        animalHistory.setLatitude(randomLatitude);
+                        animalHistory.setLongitude(randomLongitude);
+                        System.out.println("hihi evo me");
+                        animalHistoryRepo.save(animalHistory);
+                    }
+                }
+            }
 
             List<String> commentsOnAnimal = animal.getComments();
             List<AnimalComment> newComments = new LinkedList<>();
@@ -235,10 +264,6 @@ public class ResearcherServiceJpa implements ResearcherService {
         }
 
         action1.addMultipleAnimals(animalsForDB);
-
-
-
-
 
         //komentari
         List<String> commentsOnAction = action.getAction().getComments();
@@ -264,19 +289,6 @@ public class ResearcherServiceJpa implements ResearcherService {
                 taskDB.assignAction(action1);
                 taskDB.assignTracker(tracker);
 
-
-                //List<RoutePoint> routePoints = new LinkedList<>();
-                //for(DtoRoutePoint rp : task.getRoute().getPoints()){
-                    //RoutePoint routePoint = new RoutePoint();
-                    //routePoint.setOrderPoint(rp.getOrderPoint());
-                    //routePoint.setLatitude(rp.getLatitude());
-                    //routePoint.setLongitude(rp.getLongitude());
-
-                    //routePoints.add(routePoint);
-                //}
-
-                //Route route = new Route(task.getRoute().getName(), task.getRoute().getDescription(), routePoints);
-                //taskDB.assignRoute(route);
 
                 taskDB.setContent(task.getContent());   //ok
                 taskDB.setLatStart(task.getLatStart());
@@ -311,6 +323,7 @@ public class ResearcherServiceJpa implements ResearcherService {
                 }
 
                 if(task.getAnimals() != null) {
+
                     List<Animal> animalsForTask = new LinkedList<>();
                     for (DtoAnimal animal : task.getAnimals()) {
 
@@ -320,6 +333,24 @@ public class ResearcherServiceJpa implements ResearcherService {
                             speciesRepo.save(species);
                         }
                         Animal animal1 = new Animal(species, animal.getName(), animal.getDescription(), animal.getPhoto());
+
+                        double n = Math.round(10 + Math.random() * (20 - (10)));
+                        System.out.println(n);
+                        for(int i = 1; i <= n; i++) {
+
+                            AnimalHistory animalHistory = new AnimalHistory();
+
+                            Double randomLatitude = task.getLatStart() + Math.random() * (task.getLatFinish() - (task.getLatStart()));
+                            Double randomLongitude = task.getLonStart() + Math.random() * (task.getLonFinish() - (task.getLonStart()));
+                            //Double randomTime = Double.valueOf(task.getStartOfTask().getSecond()) + Math.random() * (Double.valueOf(task.getEndOfTask().getSecond()) - Double.valueOf(task.getStartOfTask().getSecond()));
+
+                            animalHistory.assignAnimal(animal1);
+                            animalHistory.setLatitude(randomLatitude);
+                            animalHistory.setLongitude(randomLongitude);
+                            System.out.println("hihi evo me");
+                            animalHistoryRepo.save(animalHistory);
+                        }
+
                         animalsForTask.add(animal1);
                     }
                     taskDB.addMultipleAnimals(animalsForTask);
@@ -418,6 +449,7 @@ public class ResearcherServiceJpa implements ResearcherService {
         return dtoHabitats;
     }
 
+    @Transactional
     @Override
     public CoordsDTO getCoords(Long usrId) {
         //int randomNumber = new Random().nextInt(90) + 1;
@@ -428,24 +460,28 @@ public class ResearcherServiceJpa implements ResearcherService {
 
         List<Animal> animalsDB = animalRepo.findAllAnimalsByResearcherId(usrId);
         List<AnimalCoordsDTO> animalsCoords = new LinkedList<>();
+
         //double n = Math.round(1 + Math.random() * (20 - (1)));
         for(Animal a : animalsDB){
+
             AnimalCoordsDTO animal = new AnimalCoordsDTO();
+
             animal.setId(a.getId());
             animal.setSpecies(a.getSpecies().getName());
-            double n = Math.round(1 + Math.random() * (20 - (1)));
-            System.out.println(n);
+
             List<List<Double>> coordsList = new LinkedList<>();
-            for(int i = 1; i <= n; i++) {
+
+            List<AnimalHistory> animalHistory = animalHistoryRepo.findByAnimalId(a.getId());
+            for(AnimalHistory ah : animalHistory){
                 List<Double> coord = new LinkedList<>();
-                Double randomLatitude = -90 + Math.random() * (90 - (-90));
-                Double randomLongitude = -180 + Math.random() * (180 - (-180));
-                Double randomIntensity = Math.random();
-                coord.add(randomLatitude);
-                coord.add(randomLongitude);
-                coord.add(randomIntensity);
+
+                coord.add(ah.getLatitude());
+                coord.add(ah.getLongitude());
+                coord.add(Math.random());
+
                 coordsList.add(coord);
             }
+
             animal.setCoords(coordsList);
             animalsCoords.add(animal);
         }
@@ -455,23 +491,33 @@ public class ResearcherServiceJpa implements ResearcherService {
 
         List<Tracker> trackersDB = trackerRepo.findByTrackerActionMediaActionResearcherId(usrId);
 
-        /*for(Tracker t : trackersDB){
-            double n = Math.round(1 + Math.random() * (20 - (1)));
+        List<TrackerCoordsDTO> trackersCoords = new LinkedList<>();
 
-            for(int i = 1; i <= n; i++) {
+        //double n = Math.round(1 + Math.random() * (20 - (1)));
+        for(Tracker t : trackersDB){
 
-                TrackerHistory trackerHistory = new TrackerHistory();
-                Double randomLatitude = -0.008 + Math.random() * (0.008 - (-0.008));
-                Double randomLongitude = -0.008 + Math.random() * (0.008 - (-0.008));
-                trackerHistory.assignTracker(t);
-                trackerHistory.setLatitude(t.getStation().getLatitude() + randomLatitude);
-                trackerHistory.setLongitude(t.getStation().getLongitude() + randomLongitude);
-                trackerHistoryRepo.save(trackerHistory);
+            TrackerCoordsDTO tracker = new TrackerCoordsDTO();
+            tracker.setId(t.getId());
+            tracker.setMedium(t.getQualification().get(0).getType().name());
+
+
+            List<List<Double>> coordsList = new LinkedList<>();
+
+            List<TrackerHistory> trackerHistory = trackerHistoryRepo.findByTrackerId(t.getId());
+            for(TrackerHistory th : trackerHistory){
+                List<Double> coord = new LinkedList<>();
+
+                coord.add(th.getLatitude());
+                coord.add(th.getLongitude());
+                coord.add(Math.random());
+
+                coordsList.add(coord);
             }
-        }*/
 
-        
-
+            tracker.setCoords(coordsList);
+            trackersCoords.add(tracker);
+        }
+        coords.setTrackers(trackersCoords);
         return coords;
     }
 }
