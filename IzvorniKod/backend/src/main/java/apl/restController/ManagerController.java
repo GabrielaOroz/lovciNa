@@ -20,7 +20,7 @@ import java.util.Map;
 
 
 @CrossOrigin(
-        origins = "http://localhost:5173",
+        origins = "https://wildtrack.onrender.com",
         methods  = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE },
         allowedHeaders = "*",
         allowCredentials = "true"

@@ -32,7 +32,7 @@ import java.util.Map;
 
 
 @CrossOrigin(
-        origins = "http://localhost:5173",
+        origins = "https://wildtrack.onrender.com",
         methods  = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE },
         allowedHeaders = "*",
         allowCredentials = "true"
@@ -186,7 +186,7 @@ public class UserController {
             case "confirmed":
                 try {
                     return ResponseEntity.status(HttpStatus.FOUND)
-                            .location(new URI("http://localhost:5173/login"))
+                            .location(new URI("https://wildtrack.onrender.com/login"))
                             .build();
                 } catch (URISyntaxException e) {
                     return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Internal Server Error");
@@ -199,7 +199,7 @@ public class UserController {
                 try {
                     // Redirect to the specified URL on success
                     return ResponseEntity.status(HttpStatus.FOUND)
-                            .location(new URI("http://localhost:5173/expired"))
+                            .location(new URI("https://wildtrack.onrender.com/expired"))
                             .build();
                 } catch (URISyntaxException e) {
                     // Handle the exception if the URI is invalid
