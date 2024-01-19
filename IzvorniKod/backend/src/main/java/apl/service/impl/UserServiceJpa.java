@@ -2,6 +2,8 @@ package apl.service.impl;
 
 import apl.dao.*;
 import apl.domain.*;
+import apl.dto.DtoRequest;
+import apl.dto.DtoUser;
 import apl.email.EmailSender;
 import apl.token.ConfirmationToken;
 import apl.token.ConfirmationTokenRepository;
@@ -26,6 +28,7 @@ import java.util.Optional;
 import java.util.UUID;
 
 //ovdje se pišu sve funkcije koje nam trebaju
+
 
 
 @Service
@@ -143,9 +146,7 @@ public class UserServiceJpa implements UserService {
     }
 
     @Override
-    public int createUser(User user, Long stationId) {
-
-
+    public int createUser(User user) {
 
         boolean success=false;
 
@@ -164,29 +165,29 @@ public class UserServiceJpa implements UserService {
         }
 
 
-        if(user.getRole().equals("researcher") && stationId == null){
+        if(user.getRole().equals("researcher")){
             try {
                 user = saveResearcher(new Researcher(user));
                 success = true;
             } catch (Exception e) {return -1;}
 
-        } else if (stationId != null) {
-            if (user.getRole().equals("manager")) {
-                try {
-                    user = saveManager(new Manager(user,stationId));
-                    success = true;
-                } catch (Exception e) {return -1;}
 
-            } else if (user.getRole().equals("tracker")) {
-                try {
-                    user = saveTracker(new Tracker(user, stationId));
-                    success = true;
-                } catch (Exception e) {
-                    return -1;
-                }
-            } else return -1;
+        } else if (user.getRole().equals("manager")) {
+            try {
+                user = saveManager(new Manager(user));
+                success = true;
+            } catch (Exception e) {return -1;}
+        } else if (user.getRole().equals("tracker")) {
+            try {
+                user = saveTracker(new Tracker(user));
+                success = true;
+            } catch (Exception e) {
+                return -1;
+            }
 
         } else return -1;
+
+
 
 
         if (success == true) {
@@ -197,7 +198,7 @@ public class UserServiceJpa implements UserService {
                     user);
 
             confirmationTokenService.saveConfirmationToken(confirmationToken);
-            String link = "https://wildback.onrender.com/auth/confirm?token=" + token;
+            String link = "http://localhost:8000/auth/confirm?token=" + token;
             emailSender.send(user.getEmail(), buildEmail(user.getName(), link));
 
             return 0;
@@ -330,6 +331,15 @@ public class UserServiceJpa implements UserService {
 
 
         return "confirmed";
+    }
+
+
+    @Transactional
+    public List<DtoRequest> getRequests(Long usrId) {
+        User user = userRepo.findById(usrId).orElse(null);
+        List<DtoRequest> requests = user.retrieveRequestsDTO();
+        for (DtoRequest r:requests) r.setUser(null);
+        return requests;
     }
 
 
