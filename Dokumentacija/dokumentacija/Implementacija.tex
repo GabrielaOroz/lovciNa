@@ -199,10 +199,52 @@ U ovom ispitivanju testiramo zahtjev istraživača za brojem tragača. Istraživ
 
 \textbf{\textit{dio 2. revizije}}\\
 
-\textit{U ovom poglavlju potrebno je dati upute za puštanje u pogon (engl. deployment) ostvarene aplikacije. Na primjer, za web aplikacije, opisati postupak kojim se od izvornog kôda dolazi do potpuno postavljene baze podataka i poslužitelja koji odgovara na upite korisnika. Za mobilnu aplikaciju, postupak kojim se aplikacija izgradi, te postavi na neku od trgovina. Za stolnu (engl. desktop) aplikaciju, postupak kojim se aplikacija instalira na računalo. Ukoliko mobilne i stolne aplikacije komuniciraju s poslužiteljem i/ili bazom podataka, opisati i postupak njihovog postavljanja. Pri izradi uputa preporučuje se \textbf{naglasiti korake instalacije uporabom natuknica} te koristiti što je više moguće \textbf{slike ekrana} (engl. screenshots) kako bi upute bile jasne i jednostavne za slijediti.}
+\textit{Instalacija PostgreSQL baze podataka
+	Potrebno je preuzeti PostgreSQL bazu podataka. Slijedite upute instalacijskog čarobnjaka, koji će vas voditi kroz postavljanje PostgreSQL servera. Nakon preuzimanja, slijedi se uobičajeni postupak instalacije uz kreiranje korisničkog računa.
+	Konfiguracija PostgreSQL-a
+	Nakon što je instalacija završena, pgAdmin  4 treba se pokrenuti i postaviti prva veza na bazu. Postavljanje hostname-a/adrese, porta (5432), korisničko ime i lozinku te bazu podataka za „održavanje“ (postgres) .  Za ime poslužitelja baze treba staviti „wildtrack“.
+	Stvaranje baze podataka
+	Baza podataka se automatski stvara prilikom pokretanja Java programa u sklopu naše aplikacije.
+	Uporaba Render aplikacije 
+	\begin{figure}[H]
+		\includegraphics[scale=0.32]{slike/x.png} %veličina u odnosu na širinu linije
+		\centering
+		\caption{Contributors from GitHub}
+		\label{fig:contributors} %label mora biti drugaciji za svaku sliku
+	\end{figure}
+	\begin{figure}[H]
+		\includegraphics[scale=0.32]{slike/y.png} %veličina u odnosu na širinu linije
+		\centering
+		\caption{Contributors from GitHub}
+		\label{fig:contributors} %label mora biti drugaciji za svaku sliku
+	\end{figure}
+	\begin{figure}[H]
+		\includegraphics[scale=0.32]{slike/z.png} %veličina u odnosu na širinu linije
+		\centering
+		\caption{Contributors from GitHub}
+		\label{fig:contributors} %label mora biti drugaciji za svaku sliku
+	\end{figure}
+	Stvaramo novi „Web service“ pristiskom na tipku „New +“. Ostavljamo označenu opciju da „Web service“ se izradi pomoću git repozitorija,  nastavljamo sa tipkom „Next“ i spajamo se na naš git repozitorij. Kao ime web servisa za „backend“ dio koda stavljamo  „wildback“, „Frankfurt (EU Central)“ regiju, „master“ granu, „IzvorniKod/backend“ kao izvorni direktorij te tako stvaramo web service. Slično radimo i za „frontend“ dio koda samo umjesto ime servisa stavljamo „wildtrack“ i „IzvorniKod/frontend“ kao izvorni direktorij. Također pritiskom na tipku „New +“ i odabirom „PostgreSQL“ stvaramo bazu podataka. Tu trebamo unijeti ime baze (wildtrackdb) te označiti „Frankfurt (EU Central)“ kao regiju. Nakon pritiska tipke „Create Database“ za kreiranje baze dobivamo podatke za spajanje baze podataka sa backend dijelom koda. To su Password, Internal i External Database URL te PSQL Command.}
+		\begin{figure}[H]
+		\includegraphics[scale=0.32]{slike/a.png} %veličina u odnosu na širinu linije
+		\centering
+		\caption{Contributors from GitHub}
+		\label{fig:contributors} %label mora biti drugaciji za svaku sliku
+	\end{figure}
+	\begin{figure}[H]
+		\includegraphics[scale=0.32]{slike/b.png} %veličina u odnosu na širinu linije
+		\centering
+		\caption{Contributors from GitHub}
+		\label{fig:contributors} %label mora biti drugaciji za svaku sliku
+	\end{figure}
+	\begin{figure}[H]
+		\includegraphics[scale=0.32]{slike/dockerfile.png} %veličina u odnosu na širinu linije
+		\centering
+		\caption{Contributors from GitHub}
+		\label{fig:contributors} %label mora biti drugaciji za svaku sliku
+	\end{figure}
 
 
-\textit{Dovršenu aplikaciju potrebno je pokrenuti na javno dostupnom poslužitelju. Studentima se preporuča korištenje neke od sljedećih besplatnih usluga: \href{https://aws.amazon.com/}{Amazon AWS}, \href{https://azure.microsoft.com/en-us/}{Microsoft Azure} ili \href{https://www.heroku.com/}{Heroku}. Mobilne aplikacije trebaju biti objavljene na F-Droid, Google Play ili Amazon App trgovini.}
 
 
 \eject 

@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.10.19)  19 JAN 2024 22:48
+This is pdfTeX, Version 3.141592653-2.6-1.40.25 (TeX Live 2023) (preloaded format=pdflatex 2023.10.19)  19 JAN 2024 23:56
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -975,15 +975,27 @@ LaTeX Warning: Label `fig:promjene' multiply defined.
 
 LaTeX Warning: Label `fig:promjene' multiply defined.
 
-) (./Arhitektura.aux) (./Implementacija.aux) (./Zakljucak.aux)
-(./Literatura.aux) (./Dodatak.aux))
+) (./Arhitektura.aux
+
+LaTeX Warning: Label `fig:promjene' multiply defined.
+
+
+LaTeX Warning: Label `fig:promjene' multiply defined.
+
+
+LaTeX Warning: Label `fig:promjene' multiply defined.
+
+) (./Implementacija.aux) (./Zakljucak.aux) (./Literatura.aux) (./Dodatak.aux
+
+LaTeX Warning: Label `fig:contributors' multiply defined.
+
+))
 \openout1 = `PROGI_ProjektnaDokumentacija.aux'.
 
 LaTeX Font Info:    Checking defaults for OML/jkp/m/it on input line 85.
 LaTeX Font Info:    Trying to load font information for OML+jkp on input line 8
 5.
-
-(c:/texlive/2023/texmf-dist/tex/latex/kpfonts/omljkp.fd
+ (c:/texlive/2023/texmf-dist/tex/latex/kpfonts/omljkp.fd
 File: omljkp.fd 2006/08/15 v1.0
 )
 LaTeX Font Info:    ... okay on input line 85.
@@ -1129,7 +1141,7 @@ pdfTeX warning (ext4): destination with the same identifier (name{page.1}) has
 been already used, duplicate ignored
 <to be read again> 
                    \relax 
-l.28 ...: Prikaz aktivnosti grupe}{59}{chapter*.5}
+l.28 ...: Prikaz aktivnosti grupe}{66}{chapter*.5}
                                                   % [1
 
 ])
@@ -2882,6 +2894,36 @@ Underfull \hbox (badness 10000) in paragraph at lines 200--201
 
  []
 
+<slike/x.png, id=712, 1445.4pt x 813.0375pt>
+File: slike/x.png Graphic file (type png)
+<use slike/x.png>
+Package pdftex.def Info: slike/x.png  used on input line 227.
+(pdftex.def)             Requested size: 462.53746pt x 260.1773pt.
+
+Overfull \hbox (26.92667pt too wide) in paragraph at lines 227--227
+ [][] 
+ []
+
+<slike/y.png, id=713, 1445.4pt x 813.0375pt>
+File: slike/y.png Graphic file (type png)
+<use slike/y.png>
+Package pdftex.def Info: slike/y.png  used on input line 227.
+(pdftex.def)             Requested size: 462.53746pt x 260.1773pt.
+
+Overfull \hbox (26.92667pt too wide) in paragraph at lines 227--227
+ [][] 
+ []
+
+<slike/z.png, id=714, 1445.4pt x 813.0375pt>
+File: slike/z.png Graphic file (type png)
+<use slike/z.png>
+Package pdftex.def Info: slike/z.png  used on input line 227.
+(pdftex.def)             Requested size: 462.53746pt x 260.1773pt.
+
+Overfull \hbox (26.92667pt too wide) in paragraph at lines 227--227
+ [][] 
+ []
+
 
 Package fancyhdr Warning: \headheight is too small (12.0pt): 
 (fancyhdr)                Make it at least 14.49998pt, for example:
@@ -2890,7 +2932,100 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[62])
+[62
+pdfTeX warning (ext4): destination with the same identifier (name{figure.5.1}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.227 ...External Database URL te PSQL Command.}
+                                                   <./slike/x.png>]
+<slike/a.png, id=723, 1445.4pt x 813.0375pt>
+File: slike/a.png Graphic file (type png)
+<use slike/a.png>
+Package pdftex.def Info: slike/a.png  used on input line 229.
+(pdftex.def)             Requested size: 462.53746pt x 260.1773pt.
+
+Overfull \hbox (26.92667pt too wide) in paragraph at lines 229--231
+ [][] 
+ []
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[63
+pdfTeX warning (ext4): destination with the same identifier (name{figure.5.2}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.233 	\end{figure}
+                   
+pdfTeX warning (ext4): destination with the same identifier (name{figure.5.3}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.233 	\end{figure}
+                    <./slike/y.png> <./slike/z.png>]
+<slike/b.png, id=733, 1445.4pt x 813.0375pt>
+File: slike/b.png Graphic file (type png)
+<use slike/b.png>
+Package pdftex.def Info: slike/b.png  used on input line 235.
+(pdftex.def)             Requested size: 462.53746pt x 260.1773pt.
+
+Overfull \hbox (26.92667pt too wide) in paragraph at lines 235--237
+ [][] 
+ []
+
+<slike/dockerfile.png, id=734, 1445.4pt x 813.0375pt>
+File: slike/dockerfile.png Graphic file (type png)
+<use slike/dockerfile.png>
+Package pdftex.def Info: slike/dockerfile.png  used on input line 241.
+(pdftex.def)             Requested size: 462.53746pt x 260.1773pt.
+
+Overfull \hbox (26.92667pt too wide) in paragraph at lines 241--243
+ [][] 
+ []
+
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[64
+pdfTeX warning (ext4): destination with the same identifier (name{figure.5.4}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.245 	\end{figure}
+                    <./slike/a.png>]
+
+Package fancyhdr Warning: \headheight is too small (12.0pt): 
+(fancyhdr)                Make it at least 14.49998pt, for example:
+(fancyhdr)                \setlength{\headheight}{14.49998pt}.
+(fancyhdr)                You might also make \topmargin smaller to compensate:
+
+(fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
+
+[65
+pdfTeX warning (ext4): destination with the same identifier (name{figure.5.5}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.250 \eject
+            
+pdfTeX warning (ext4): destination with the same identifier (name{figure.5.6}) 
+has been already used, duplicate ignored
+<argument> ...shipout:D \box_use:N \l_shipout_box 
+                                                  \__shipout_drop_firstpage_...
+l.250 \eject
+             <./slike/b.png> <./slike/dockerfile.png>])
 \openout2 = `Zakljucak.aux'.
 
  (./Zakljucak.tex
@@ -2903,7 +3038,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[63
+[66
 
 
 
@@ -2939,7 +3074,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[64
+[67
 
 
 
@@ -2957,7 +3092,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[65
+[68
 
 
 
@@ -2973,7 +3108,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[66
+[69
 
 
 ]
@@ -2985,7 +3120,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[67]
+[70]
 > Step: init table outer spec.
 > Step: parse table options.
 > Step: split table.
@@ -3003,13 +3138,13 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[68]
-<slike/contributors.JPEG, id=802, 989.6975pt x 1807.75375pt>
+[71]
+<slike/contributors.JPEG, id=838, 989.6975pt x 1807.75375pt>
 File: slike/contributors.JPEG Graphic file (type jpg)
 <use slike/contributors.JPEG>
 Package pdftex.def Info: slike/contributors.JPEG  used on input line 181.
 (pdftex.def)             Requested size: 316.70967pt x 578.49303pt.
-<slike/git_numbers.JPEG, id=803, 820.56563pt x 403.5075pt>
+<slike/git_numbers.JPEG, id=839, 820.56563pt x 403.5075pt>
 File: slike/git_numbers.JPEG Graphic file (type jpg)
 <use slike/git_numbers.JPEG>
 Package pdftex.def Info: slike/git_numbers.JPEG  used on input line 188.
@@ -3023,7 +3158,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[69
+[72
 pdfTeX warning (ext4): destination with the same identifier (name{figure.6.1}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
@@ -3038,7 +3173,7 @@ Package fancyhdr Warning: \headheight is too small (12.0pt):
 
 (fancyhdr)                \addtolength{\topmargin}{-2.49998pt}.
 
-[70
+[73
 pdfTeX warning (ext4): destination with the same identifier (name{figure.6.2}) 
 has been already used, duplicate ignored
 <argument> ...shipout:D \box_use:N \l_shipout_box 
@@ -3064,10 +3199,10 @@ anged.
 (rerunfilecheck)             Checksum: C7BA501FFE4D56E1B0FC29A67283D3B1;4419.
  ) 
 Here is how much of TeX's memory you used:
- 18125 strings out of 474504
- 318771 string characters out of 5756725
- 2051043 words of memory out of 5000000
- 39472 multiletter control sequences out of 15000+600000
+ 18175 strings out of 474504
+ 319656 string characters out of 5756725
+ 2052043 words of memory out of 5000000
+ 39513 multiletter control sequences out of 15000+600000
  651243 words of font info for 240 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  86i,14n,115p,1378b,1079s stack positions out of 10000i,1000n,20000p,200000b,200000s
@@ -3076,10 +3211,10 @@ ve/2023/texmf-dist/fonts/type1/public/kpfonts/jkpbn8a.pfb><c:/texlive/2023/texm
 f-dist/fonts/type1/public/kpfonts/jkpmit8a.pfb><c:/texlive/2023/texmf-dist/font
 s/type1/public/kpfonts/jkpmn8a.pfb><c:/texlive/2023/texmf-dist/fonts/type1/publ
 ic/kpfonts/jkpttmn8a.pfb>
-Output written on PROGI_ProjektnaDokumentacija.pdf (71 pages, 7543161 bytes).
+Output written on PROGI_ProjektnaDokumentacija.pdf (74 pages, 8090406 bytes).
 PDF statistics:
- 903 PDF objects out of 1000 (max. 8388607)
- 735 compressed objects within 8 object streams
- 280 named destinations out of 1000 (max. 500000)
- 419 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 942 PDF objects out of 1000 (max. 8388607)
+ 759 compressed objects within 8 object streams
+ 289 named destinations out of 1000 (max. 500000)
+ 449 words of extra memory for PDF output out of 10000 (max. 10000000)
 
