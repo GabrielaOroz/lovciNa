@@ -184,6 +184,13 @@ public class Tracker extends User implements ConvertibleToLocation {
     private List<Medium> qualification = new LinkedList<>();
 
     public void addMedium(Medium medium) {
+
+        for (Medium medium1 : this.getQualification()) {
+            if (medium.getType().equals(medium1.getType())) {
+                return;
+            }
+        }
+
         this.qualification.add(medium);
         medium.getTrackers().add(this);
     }

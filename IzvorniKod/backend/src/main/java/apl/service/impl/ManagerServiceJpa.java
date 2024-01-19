@@ -149,14 +149,11 @@ public class ManagerServiceJpa implements ManagerService {
     @Override
     public Station saveTrackerQualification(Long usrId, Map<Long, List<MediumType>> map) {
         Station station = stationRepo.findByManagerId(usrId);
-        System.out.println("0. nepetlja");
         for (Long trackerId : map.keySet()){
             Tracker tracker = trackerRepo.findById(trackerId).orElse(null);
             List<Medium> media = new LinkedList<>();
-            System.out.println("1. petlja");
             for (MediumType mediumType : map.get(trackerId)) {
-                Medium medium = mediumRepo.findById(mediumType).orElse(null);
-                System.out.println(mediumType);
+                Medium medium = mediumRepo.findByType(mediumType).orElse(null);
                 media.add(medium);
             }
             tracker.addMultipleMedia(media);
@@ -166,11 +163,6 @@ public class ManagerServiceJpa implements ManagerService {
             tracker.setLongitude(station.getLongitude() + randNum);
             double randNum2 = -0.005 + Math.random() * (0.005 - (-0.005));
             tracker.setLatitude(station.getLatitude() + randNum2);
-            /*try{
-                trackerRepo.save(tracker);
-            } catch (Exception e){
-                return null;
-            }*/
         }
 
 
