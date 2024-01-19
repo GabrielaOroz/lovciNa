@@ -261,7 +261,7 @@ export default function Manager() {
           .catch((error) => {
             console.error("Error saving abilities:", error);
           });
-       // console.log(selectedTrackers);
+       
         setIsAbilitiesModalOpen(false);
         setSelectedAll(true);
         setSelected(true);
@@ -379,14 +379,17 @@ export default function Manager() {
              padding="6px"
              placeholder="Select Tracker"
              onChange={(e) => {
-             const selectedTrackerObject = availableTrackers.find((tracker) => tracker.name === e.target.value);
+              const selectedTrackerObject = availableTrackers.find((tracker) => {
+                return tracker.id === parseInt(e.target.value, 10);
+              });
              setSelectedTracker(selectedTrackerObject);
              setCurrentSelectedTracker(selectedTrackerObject);
+             
             }}
           >
             {selectedTrackers.map((tracker) => (
-             <option key={tracker.id} value={tracker.name}>
-              {`${tracker.name} ${tracker.surname}`} {/* Dodao sam prezime ovdje */}
+             <option key={tracker.id} value={tracker.id}>
+              {`${tracker.name} ${tracker.surname}`}
              </option>
            ))}
            </Select>
