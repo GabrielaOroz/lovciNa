@@ -34,21 +34,25 @@
 					\item ANIMAL
 					\item STATION
 					\item ACTION
-					\item ANIMAL\_ACTION
+					\item ACTION\_ANIMAL
 					\item TASK
 					\item MEDIUM
 					\item QUALIFICATION
-					\item TRACKER\_IN\_ACTION
-					\item TRACKER\_IN\_ACTION\_ARCHIVE
-					\item TRACKER\_LOCATION
-					\item ANIMAL\_LOCATION
-					\item STATION\_LOCATION
 					\item TRACKER\_HISTORY
 					\item ANIMAL\_HISTORY
 					\item ROUTE
-					\item ROUTE\_POINT\_LOCATION
+					\item ROUTE\_POINT
 					\item ANIMAL\_COMMENT
-					\item MAP\_COMMENT
+					\item ACTION\_COMMENT
+					\item ACTION\_HABITAT
+					\item CONFIRMATION\_TOKEN
+					\item HABITAT
+					\item REQUEST
+					\item REQUIREMENTS
+					\item SPECIES
+					\item TASK\_ANIMAL
+					\item TASK\_COMMENT
+					\item TRACKER\_ACTION\_MEDIUM
 				\end{itemize}
 				
 		\subsection{Opis tablica}
@@ -78,7 +82,7 @@
 				\end{longtblr}
 				
 				
-				\noindent \textbf{RESEARCHER} \hspace{1em} Ovaj entitet sadrži dodatni atribut odobrenja koji je potreban korisniku koji se odlučio za ulogu istraživača u aplikaciji. Povezan je s klasom USER vezom \textit{One-to-One} preko ID ključa. Dodatni atribut nam govori je li korisnik odobren kao istraživač od strane administratora jer je to preduvjet za obavljanje te uloge. U vezi je \textit{One-to-Many} s klasom ACTION (svaki istraživač može organizirati više radnih akcija). S klasom MAP\_COMMENT je indirektno (pomoću USER.id) u vezi \textit{One-to-Many} jer više istraživača može ostaviti komentar na mapi. Također je s klasom ANIMAL\_COMMENT indirektno preko USER.id u vezi \textit{One-to-Many} jer više istraživača može ostaviti komentar na nekoj životinji.
+				\noindent \textbf{RESEARCHER} \hspace{1em} Ovaj entitet sadrži dodatni atribut odobrenja koji je potreban korisniku koji se odlučio za ulogu istraživača u aplikaciji. Povezan je s klasom USER vezom \textit{One-to-One} preko ID ključa. Dodatni atribut nam govori je li korisnik odobren kao istraživač od strane administratora jer je to preduvjet za obavljanje te uloge. U vezi je \textit{One-to-Many} s klasom ACTION (svaki istraživač može organizirati više radnih akcija). Također je s klasom ANIMAL\_COMMENT indirektno preko USER.id u vezi \textit{One-to-Many} jer više istraživača može ostaviti komentar na nekoj životinji.
 				
 				\begin{longtblr}[
 					label=none,
@@ -112,7 +116,7 @@
 				\end{longtblr}
 				
 				
-				\noindent \textbf{TRACKER} \hspace{1em} Ovaj entitet označava korisnika koji obavlja ulogu tragača. Povezan je vezama \textit{One-to-One} s klasom USER i klasom TRACKER\_IN\_ACTION koja označava tragača koji trenutno obavlja zadatke neke akcije i vozilo kojim se koristi, te vezom \textit{Many-to-One} s klasom STATION i vezom \textit{One-to-Many} s klasom TASK jer jedan tragač može imati više zadataka te klasom TRACKER\_IN\_ACTION\_ARCHIVE koja čuva podatke o tragačima koji su sudjelovali u nekoj akciji. Tragač može obavljati zadatke koji su zadani od strane istraživača samo na jednoj stanici, dok stanica može imati više tragača na različitim zadatcima. S klasom ANIMAL\_COMMENT je indirektno preko USER.id u vezi \textit{One-to-Many} jer više tragača može ostaviti komentar na nekoj životinji te je također u vezi \textit{One-to-One} s klasom TRACKER\_LOCATION koja služi za čuvanje lokacija tragača.  Također je u vezi \textit{Many-to-Many} s klasom MEDIUM što se razrješava tablicom QUALIFICATION. S klasom MAP\_COMMENT je indirektno (pomoću USER.id) u vezi \textit{One-to-Many} jer više tragača može ostaviti komentar na mapi.
+				\noindent \textbf{TRACKER} \hspace{1em} Ovaj entitet označava korisnika koji obavlja ulogu tragača. Povezan je vezama \textit{One-to-One} s klasom USER i klasom TRACKER\_ACTION\_MEDIUM koja označava tragača koji trenutno obavlja zadatke neke akcije i vozilo kojim se koristi, te vezom \textit{Many-to-One} s klasom STATION i vezom \textit{One-to-Many} s klasom TASK jer jedan tragač može imati više zadataka. Tragač može obavljati zadatke koji su zadani od strane istraživača samo na jednoj stanici, dok stanica može imati više tragača na različitim zadatcima. S klasom ANIMAL\_COMMENT je indirektno preko USER.id u vezi \textit{One-to-Many} jer više tragača može ostaviti komentar na nekoj životinji. Sadrži atribute longitude i latitude koji služe za čuvanje zadnje poznate lokacije tragača.  Također je u vezi \textit{Many-to-Many} s klasom MEDIUM što se razrješava tablicom QUALIFICATION.
 				
 				\begin{longtblr}[
 					label=none,
@@ -124,10 +128,12 @@
 					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
 					\hline \SetCell[c=3]{c}{\textbf{TRACKER}}	 \\ \hline[3pt]
 					\SetCell{LightGreen}id & INT & jedinstveni identifikator tragača (USER.id) \\ \hline
+					longitude & DOUBLE & geografska dužina \\ \hline
+					latitude & DOUBLE & geografska širina \\ \hline
 					\SetCell{LightBlue} idStation & INT & jedinstveni identifikator stanice (STATION.id)\\ \hline
 				\end{longtblr}
 				
-				\noindent \textbf{ANIMAL} \hspace{1em} Ovaj entitet predstavlja klasu životinja i sadrži sve atribute koji opisuju neku životinju. Sadrži atribute ID životinje, vrstu životinje, fotografiju životinje, tekst koji opisuje životinju i oznaku koja govori je li postavljen GPS na životinju ili nije. U vezi je \textit{One-to-Many} s klasom  TASK jer na nekom zadatku se može pratiti jedna životinja dok više zadataka može pratiti istu životinju. S klasom ANIMAL\_COMMENT je u vezi \textit{One-to-Many} jer više komentara se može ostaviti za istu životinju. Također je u vezi \textit{One-to-One} s klasom ANIMAL\_LOCATION koja zapisuje trenutnu lokaciju životinje, ali je u vezi \textit{One-to-Many} s klasom ANIMAL\_HISTORY koja sprema podatke o kretanju životinje. Također je u \textit{One-to-Many} vezi s klasom ANIMAL\_ACTION gdje se može vidjeti u kojim akcijama je životinja praćena. Još je u \textit{Many-to-Many} vezi s klasom ACTION što se dodatno razrješava u tablici ANIMAL\_ACTION.
+				\noindent \textbf{ANIMAL} \hspace{1em} Ovaj entitet predstavlja klasu životinja i sadrži sve atribute koji opisuju neku životinju. Sadrži atribute ID životinje, ID  vrste životinje, fotografiju životinje, ime jedinke, podatke o lokaciji i tekst koji opisuje životinju. U vezi je \textit{One-to-Many} s klasom  TASK jer na nekom zadatku se može pratiti jedna životinja dok više zadataka može pratiti istu životinju. S klasom ANIMAL\_COMMENT je u vezi \textit{One-to-Many} jer više komentara se može ostaviti za istu životinju. U \textit{One-to-Many} vezi je s klasom ANIMAL\_HISTORY koja sprema podatke o kretanju životinje. Također je u \textit{One-to-Many} vezi s klasom ACTION\_ANIMAL gdje se može vidjeti u kojim akcijama je životinja praćena. Još je u \textit{Many-to-Many} vezi s klasom ACTION što se dodatno razrješava u tablici ACTION\_ANIMAL.
 				
 				
 				\begin{longtblr}[
@@ -140,15 +146,17 @@
 					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
 					\hline \SetCell[c=3]{c}{\textbf{ANIMAL}}	 \\ \hline[3pt]
 					\SetCell{LightGreen}id & INT & jedinstveni identifikator \\ \hline
-					species & VARCHAR & vrsta životinje \\ \hline
+					speciesId & INT & vrsta životinje \\ \hline
 					photo & BYTEA & fotografija životinje \\ \hline
 					description & TEXT & opis životinje \\ \hline
-					hasGPS & BOOLEAN & potvrda GPS uređaja na životinji \\ \hline
+					longitude & DOUBLE & geografska dužina \\ \hline
+					latitude & DOUBLE & geografska širina \\ \hline
+					name & VARCHAR & ime jedinke \\ \hline
 				\end{longtblr}
 				
 				
 				
-				\noindent \textbf{STATION} \hspace{1em} Ovaj entitet predstavlja klasu stanice koja sadrži atribute koje opisuju stanicu; ID stanice, ime stanice te kratki opis stanice. U vezi je \textit{One-to-One} s klasom STATION\_LOCATION koja sadrži podatke o lokaciji stanice i s klasom MANAGER jer je za svaku stanicu zadužen je točno jedan voditelj te je u vezi \textit{One-to-Many} s klasom TRACKER jer više tragača može raditi za istu stanicu.
+				\noindent \textbf{STATION} \hspace{1em} Ovaj entitet predstavlja klasu stanice koja sadrži atribute koje opisuju stanicu; ID stanice, ime stanice, podatke o lokaciji te kratki opis stanice. U vezi je \textit{One-to-One} s klasom MANAGER jer je za svaku stanicu zadužen je točno jedan voditelj te je u vezi \textit{One-to-Many} s klasom TRACKER jer više tragača može raditi za istu stanicu.
 				
 				\begin{longtblr}[
 					label=none,
@@ -160,12 +168,14 @@
 					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
 					\hline \SetCell[c=3]{c}{\textbf{STATION}}	 \\ \hline[3pt]
 					\SetCell{LightGreen}id & INT & jedinstveni identifikator stanice \\ \hline
+					longitude & DOUBLE & geografska dužina \\ \hline
+					latitude & DOUBLE & geografska širina \\ \hline
 					name & VARCHAR & ime stanice \\ \hline
 					description & TEXT & opis stanice \\ \hline
 				\end{longtblr}
 				
 				
-				\noindent \textbf{ACTION} \hspace{1em} Ovaj entitet sadržava sve važne informacije vezane za akciju koju provodi određeni istraživač. Sadrži atribute ID, naslov, ID istraživača koji provodi akciju, vrijeme početka, vrijeme kraja te status koji je kodni broj za trenutno stanje akcije (čeka da postane aktivna, aktivna, riješena, prekinuta). Ovaj entitet u vezi je \textit{Many-to-One} s entitetom RESEARCHER preko ID-a istraživača te je u vezi \textit{One-to-Many} s entitetima TASK koji predstavlja zadatak, TRACKER\_IN\_ACTION koji predstavlja trenutno aktivne tragače u akcijama te njihov način prijevoza, TRACKER\_IN\_ACTION\_ARCHIVE koji predstavlja prošle zapise tragača aktivnih na akcijama te njihov način prijevoza, ANIMAL\_COMMENT koji predstavlja komentar tragača vezan za određenu životinju u nekoj akciji, MAP\_COMMENT koji predstavlja komentar vezan za određenu lokaciju u nekoj akciji te ga mogu napisati istraživač ili tragač te ANIMAL\_ACTION gdje se može vidjeti koje životinje se prate u akciji. Još je u \textit{Many-to-Many} vezi s entitetom ANIMAL što se dodatno razrješava u tablici ANIMAL\_ACTION.
+				\noindent \textbf{ACTION} \hspace{1em} Ovaj entitet sadržava sve važne informacije vezane za akciju koju provodi određeni istraživač. Sadrži atribute ID, naslov, ID istraživača koji provodi akciju, ID voditelja postaje gdje se odvija akcija, vrijeme početka, vrijeme kraja te status  za trenutno stanje akcije (čeka da postane aktivna, na čekanju, riješena). Ovaj entitet u vezi je \textit{Many-to-One} s entitetom RESEARCHER preko ID-a istraživača te je u vezi \textit{One-to-Many} s entitetima TASK koji predstavlja zadatak, TRACKER\_ACTION\_MEDIUM koji predstavlja trenutno aktivne tragače u akcijama te njihov način prijevoza, ANIMAL\_COMMENT koji predstavlja komentar tragača vezan za određenu životinju u nekoj akciji te ACTION\_ANIMAL gdje se može vidjeti koje životinje se prate u akciji. Još je u \textit{Many-to-Many} vezi s entitetom HABITAT te ANIMAL što se dodatno razrješava u tablici ACTION\_ANIMAL.
 				
 				\begin{longtblr}[
 					label=none,
@@ -179,13 +189,14 @@
 					\SetCell{LightGreen}id & INT & jedinstveni identifikator \\ \hline
 					title & VARCHAR & naslov akcije \\ \hline
 					\SetCell{LightBlue}idResearcher & INT & ID istraživača (RESEARCHER.id) \\ \hline
-					start & TIMESTAMP & vrijeme početka \\ \hline
-					end & TIMESTAMP & vrijeme kraja \\ \hline
+					\SetCell{LightBlue}idManager & INT & ID voditelja postaje (MANAGER.id) \\ \hline
+					startOfAction & TIMESTAMP & vrijeme početka \\ \hline
+					endOfAction & TIMESTAMP & vrijeme kraja \\ \hline
 					status & INT & kodni broj za trenutno stanje akcije \\ \hline
 				\end{longtblr}
 				
 				
-				\noindent \textbf{ANIMAL\_ACTION} \hspace{1em} Ovaj entitet sadržava sve važne informacije vezane za praćene životinje u nekoj akciji te razrješava \textit{Many-to-Many} vezu između entiteta ANIMAL i ACTION. Sadrži atribute ID životinje te ID akcije u kojoj je ta životinja praćena. Ovaj entitet u vezi je \textit{Many-to-One} s entitetima ANIMAL preko ID-a životinje i ACTION preko ID-a akcije.
+				\noindent \textbf{ACTION\_ANIMAL} \hspace{1em} Ovaj entitet sadržava sve važne informacije vezane za praćene životinje u nekoj akciji te razrješava \textit{Many-to-Many} vezu između entiteta ANIMAL i ACTION. Sadrži atribute ID životinje te ID akcije u kojoj je ta životinja praćena. Ovaj entitet u vezi je \textit{Many-to-One} s entitetima ANIMAL preko ID-a životinje i ACTION preko ID-a akcije.
 				
 					\begin{longtblr}[
 					label=none,
@@ -195,13 +206,13 @@
 						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
 						rowhead = 1,
 					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
-					\hline \SetCell[c=3]{c}{\textbf{ANIMAL\_ACTION}}	 \\ \hline[3pt]
+					\hline \SetCell[c=3]{c}{\textbf{ACTION\_ANIMAL}}	 \\ \hline[3pt]
 					\SetCell{LightGreen}idAnimal & INT & ID životinje (ANIMAL.id), ujedno i prvi dio kompozitnog primarnog ključa \\ \hline
 					\SetCell{LightGreen}idAction & INT & ID akcije (ACTION.id), ujedno i drugi dio kompozitnog primarnog ključa \\ \hline
 				\end{longtblr}
 				
 				
-				\noindent \textbf{TASK} \hspace{1em} Ovaj entitet sadržava sve važne informacije vezane za zadatak koji je dio neke akcije te ga odrađuje određeni tragač. Sadrži atribute ID, naslov, ID tragača koji odrađuje zadatak, ID akcije kojoj pripada, ID životinje u slučaju da je zadatak da se prati neku životinju, vrsta životinje u slučaju da je zadatak povezan s nekom vrstom životinje, geografska širina i dužina za slučaj da je potrebno otići na neku lokaciju, ID rute za slučaj da je potreban prolazak nekom rutom, površina za slučaj da je potrebno istražiti neku površinu, sadržaj u kojem je opisan zadatak, vrijeme početka, vrijeme kraja te status koji je kodni broj za trenutno stanje zadatka (čeka da postane aktivan, aktivan, riješen, prekinut). Ovaj entitet u vezi je \textit{Many-to-One} s entitetima RESEARCHER preko ID-a istraživača, ACTION preko ID-a akcije, ANIMAL preko ID-a životinje, ROUTE preko ID-a rute.
+				\noindent \textbf{TASK} \hspace{1em} Ovaj entitet sadržava sve važne informacije vezane za zadatak koji je dio neke akcije te ga odrađuje određeni tragač. Sadrži atribute ID, naslov, opis, ID tragača koji odrađuje zadatak, ID akcije kojoj pripada, trenutnu geografsku širinu i dužinu, geografsku lokaciju početka i kraja zadatka, ID rute za slučaj da je potreban prolazak nekom rutom, vrijeme početka, vrijeme početka i kraja te status koji za trenutno stanje zadatka (čeka da postane aktivan, riješen, prekinut). Ovaj entitet u vezi je \textit{Many-to-One} s entitetima RESEARCHER preko ID-a istraživača, ACTION preko ID-a akcije, ANIMAL preko ID-a životinje, ROUTE preko ID-a rute.
 				
 				\begin{longtblr}[
 					label=none,
@@ -216,21 +227,22 @@
 					title & VARCHAR & naslov zadatka \\ \hline
 					\SetCell{LightBlue}idTracker & INT & ID tragača (TRACKER.id) \\ \hline
 					\SetCell{LightBlue}idAction & INT & ID akcije (ACTION.id) \\ \hline
-					\SetCell{LightBlue}idAnimal & INT & ID životinje (ANIMAL.id) \\ \hline
-					speciesAnimal & VARCHAR & vrsta životinje (ako postoji, treba biti neki od ANIMAL.species zapisa) \\ \hline
 					latitude & DOUBLE & geografska širina \\ \hline
 					longitude & DOUBLE & geografska dužina \\ \hline
+					latStart & DOUBLE & geografska širina početka zadatka \\ \hline
+					lonStart & DOUBLE & geografska dužina početka zadatka \\ \hline
+					latFinish & DOUBLE & geografska širina kraja zadatka \\ \hline
+					lonFinish & DOUBLE & geografska dužina kraja zadatka \\ \hline
 					\SetCell{LightBlue}idRoute & INT & ID rute (ROUTE.id) \\ \hline
-					area & DOUBLE & površina \\ \hline
 					content & TEXT & opis (sadržaj) zadatka \\ \hline
 					start & TIMESTAMP & vrijeme početka \\ \hline
 					end & TIMESTAMP & vrijeme kraja \\ \hline
-					status & INT & kodni broj za trenutno stanje zadatka \\ \hline
+					status & TEXT & kodni broj za trenutno stanje zadatka \\ \hline
 				\end{longtblr}
 				
 				
 				
-				\noindent \textbf{MEDIUM} \hspace{1em} Ovaj entitet sadržava sve važne informacije vezane za sredstva prijevoza koje tragači mogu koristiti u akcijama. Sadrži atribute tip (npr. automobil, zrakoplov…), zračna linija što je oznaka računa li se ruta do neke lokacije za taj tip prijevoza kao pravocrtna (zračna linija), radijus pretraživanja moguć s tim sredstvom, vrijednost na skali koliko dobro se uočavaju detalji s tim tipom sredstva te vrijednost na skali kolika je brzina putovanja tim tipom sredstva. Ovaj entitet u vezi je \textit{Many-to-Many} s entitetom TRACKER što se dodatno razrješava u tablici QUALIFICATION te je u vezi \textit{One-to-Many} s entitetima TRACKER\_IN\_ACTION, TRACKER\_IN\_ACTION\_ARCHIVE te QUALIFICATION.
+				\noindent \textbf{MEDIUM} \hspace{1em} Ovaj entitet sadržava sve važne informacije vezane za sredstva prijevoza koje tragači mogu koristiti u akcijama. Sadrži atribute tip (npr. automobil, zrakoplov…), zračna linija što je oznaka računa li se ruta do neke lokacije za taj tip prijevoza kao pravocrtna (zračna linija), radijus pretraživanja moguć s tim sredstvom, vrijednost na skali koliko dobro se uočavaju detalji s tim tipom sredstva te vrijednost na skali kolika je brzina putovanja tim tipom sredstva. Ovaj entitet u vezi je \textit{Many-to-Many} s entitetom TRACKER što se dodatno razrješava u tablici QUALIFICATION te je u vezi \textit{One-to-Many} s entitetima TRACKER\_ACTION\_MEDIUM te QUALIFICATION.
 				
 				\begin{longtblr}[
 					label=none,
@@ -263,7 +275,7 @@
 					\SetCell{LightGreen}typeMedium & VARCHAR & tip (ujedno i ID) sredstva prijevoza (MEDIUM.type), ujedno i drugi dio kompozitnog primarnog ključa \\ \hline
 				\end{longtblr}
 				
-				\noindent \textbf{TRACKER\_IN\_ACTION} \hspace{1em} Ovaj entitet sadržava sve važne informacije vezane za odnos trenutno aktivnih akcija i tragača koji rade na njima. Sadrži atribute ID tragača, ID akcije te sredstvo prijevoza. Ovaj entitet u vezi je \textit{One-to-One} s entitetom TRACKER preko ID-a tragača te je u vezi \textit{Many-to-One} s entitetima ACTION preko ID-a akcije, MEDIUM preko tipa sredstva prijevoza.
+				\noindent \textbf{TRACKER\_ACTION\_MEDIUM} \hspace{1em} Ovaj entitet sadržava sve važne informacije vezane za odnos trenutno aktivnih akcija i tragača koji rade na njima. Sadrži atribute ID, ID tragača, ID akcije te sredstvo prijevoza. Ovaj entitet u vezi je \textit{One-to-One} s entitetom TRACKER preko ID-a tragača te je u vezi \textit{Many-to-One} s entitetima ACTION preko ID-a akcije, MEDIUM preko tipa sredstva prijevoza.
 				
 				\begin{longtblr}[
 					label=none,
@@ -273,81 +285,17 @@
 						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
 						rowhead = 1,
 					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
-					\hline \SetCell[c=3]{c}{\textbf{TRACKER\_IN\_ACTION}}	 \\ \hline[3pt]
-					\SetCell{LightGreen}idTracker & INT & ID tragača (TRACKER.id), ujedno i primarni ključ \\ \hline
+					\hline \SetCell[c=3]{c}{\textbf{TRACKER\_ACTION\_MEDIUM}}	 \\ \hline[3pt]
+					\SetCell{LightGreen}id & INT & jedinstveni identifikator \\ \hline
+					\SetCell{LightBlue}idTracker & INT & ID tragača (TRACKER.id), ujedno i primarni ključ \\ \hline
 					\SetCell{LightBlue}idAction & INT & ID akcije (ACTION.id) \\ \hline
 					\SetCell{LightBlue}typeMedium & VARCHAR & tip (ujedno i ID) sredstva prijevoza (MEDIUM.type) \\ \hline
 				\end{longtblr}
 				
-				\noindent \textbf{TRACKER\_IN\_ACTION\_ARCHIVE} \hspace{1em} Ovaj entitet sadržava sve važne informacije vezane za prošle odnose akcija i tragača, arhiva koja nastaje iz podataka koji migriraju iz tablice TRACKER\_IN\_ACTION kada neki tragač završi svoj posao na nekoj akciji. Sadrži atribute ID tragača, ID akcije te sredstvo prijevoza. Ovaj entitet u vezi je \textit{Many-to-One} s entitetima TRACKER preko ID-a tragača, ACTION preko ID-a akcije, MEDIUM preko tipa sredstva prijevoza.
-				
-				\begin{longtblr}[
-					label=none,
-					entry=none
-					]{
-						width = \textwidth,
-						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
-						rowhead = 1,
-					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
-					\hline \SetCell[c=3]{c}{\textbf{TRACKER\_IN\_ACTION\_ARCHIVE}}	 \\ \hline[3pt]
-					\SetCell{LightGreen}idTracker & INT & ID tragača (TRACKER.id), ujedno i prvi dio kompozitnog primarnog ključa \\ \hline
-					\SetCell{LightGreen}idAction & INT & ID akcije (ACTION.id), ujedno i drugi dio kompozitnog primarnog ključa \\ \hline
-					\SetCell{LightBlue}typeMedium & VARCHAR & tip (ujedno i ID) sredstva prijevoza (MEDIUM.type) \\ \hline
-				\end{longtblr}
+			
 				
 				
-				\noindent \textbf{TRACKER\_LOCATION} \hspace{1em} Ovaj entitet sadržava sve važne informacije vezane za trenutne lokacije tragača. Sadrži atribute ID tragača te geografska širina i dužina koje zajedno čine lokaciju. Ovaj entitet u vezi je \textit{One-to-One} s entitetom TRACKER preko ID-a tragača.
-				
-				\begin{longtblr}[
-					label=none,
-					entry=none
-					]{
-						width = \textwidth,
-						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
-						rowhead = 1,
-					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
-					\hline \SetCell[c=3]{c}{\textbf{TRACKER\_LOCATION}}	 \\ \hline[3pt]
-					\SetCell{LightGreen}idTracker & INT & ID tragača (TRACKER.id), ujedno i primarni ključ \\ \hline
-					latitude & DOUBLE & geografska širina \\ \hline
-					longitude & DOUBLE & geografska dužina \\ \hline
-				\end{longtblr}
-				
-				
-				\noindent \textbf{ANIMAL\_LOCATION} \hspace{1em} Ovaj entitet sadržava sve važne informacije vezane za trenutne lokacije praćenih životinja. Sadrži atribute ID životinje te geografska širina i dužina koje zajedno čine lokaciju. Ovaj entitet u vezi je \textit{One-to-One} s entitetom ANIMAL preko ID-a životinje.
-				
-				\begin{longtblr}[
-					label=none,
-					entry=none
-					]{
-						width = \textwidth,
-						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
-						rowhead = 1,
-					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
-					\hline \SetCell[c=3]{c}{\textbf{ANIMAL\_LOCATION}}	 \\ \hline[3pt]
-					\SetCell{LightGreen}idAnimal & INT & ID životinje (ANIMAL.id), ujedno i primarni ključ \\ \hline
-					latitude & DOUBLE & geografska širina \\ \hline
-					longitude & DOUBLE & geografska dužina \\ \hline
-				\end{longtblr}
-				
-				
-				\noindent \textbf{STATION\_LOCATION} \hspace{1em} Ovaj entitet sadržava sve važne informacije vezane za lokacije stanica. Sadrži atribute ID stanice te geografska širina i dužina koje zajedno čine lokaciju. Ovaj entitet u vezi je \textit{One-to-One} s entitetom STATION preko ID-a stanice.
-				
-				\begin{longtblr}[
-					label=none,
-					entry=none
-					]{
-						width = \textwidth,
-						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
-						rowhead = 1,
-					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
-					\hline \SetCell[c=3]{c}{\textbf{STATION\_LOCATION}}	 \\ \hline[3pt]
-					\SetCell{LightGreen}idStation & INT & ID stanice (STATION.id), ujedno i primarni ključ \\ \hline
-					latitude & DOUBLE & geografska širina \\ \hline
-					longitude & DOUBLE & geografska dužina \\ \hline
-				\end{longtblr}
-				
-				
-				\noindent \textbf{TRACKER\_HISTORY} \hspace{1em} Ova tablica bilježi podatke na mapi, odnosno točke na mapi kojima je tragač prolazio tijekom obavljanja zadataka. U vezi je \textit{Many-to-One} s tablicom TRACKER što znači da za jednog tragača može biti više zabilježenih točaka na mapi. Atributi su ID tragača, vrijeme bilježenja lokacije te zemljopisna dužina i širina. Primarni ključ čine dva atributa: ID tragača i vrijeme bilježenja lokacije.
+				\noindent \textbf{TRACKER\_HISTORY} \hspace{1em} Ova tablica bilježi podatke na mapi, odnosno točke na mapi kojima je tragač prolazio tijekom obavljanja zadataka. U vezi je \textit{Many-to-One} s tablicom TRACKER što znači da za jednog tragača može biti više zabilježenih točaka na mapi. Atributi su ID, ID tragača, vrijeme bilježenja lokacije te zemljopisna dužina i širina.
 				
 				\begin{longtblr}[
 					label=none,
@@ -358,14 +306,15 @@
 						rowhead = 1,
 					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
 					\hline \SetCell[c=3]{c}{\textbf{TRACKER\_HISTORY}}	 \\ \hline[3pt]
-					\SetCell{LightGreen}idTracker & INT & identifikator tragača (TRACKER.id) \\ \hline
-					\SetCell{LightGreen}time & TIMESTAMP & vrijeme bilježenja lokacije \\ \hline
+					\SetCell{LightGreen}id & INT & jedinstveni identifikator \\ \hline
+					\SetCell{LightBlue}idTracker & INT & identifikator tragača (TRACKER.id) \\ \hline
+					time & TIMESTAMP & vrijeme bilježenja lokacije \\ \hline
 					latitude & DOUBLE & zemljopisna širina \\ \hline
 					longitude & DOUBLE & zemljopisna dužina \\ \hline
 				\end{longtblr}
 				
 				
-				\noindent \textbf{ANIMAL\_HISTORY} \hspace{1em} Ova tablica zapisane lokacije na kojima je određena životinja prolazila u nekom trenutku. Sadrži atribute ID životinje, vrijeme bilježenja lokacije, zemljopisnu širinu i dužinu. Primarni ključ tablice čine ID životinje i vrijeme bilježenja lokacije. Entitet je u vezi \textit{Many-to-One} s tablicom ANIMAL zato jer se za jednu životinju može zabilježiti više točaka na karti.
+				\noindent \textbf{ANIMAL\_HISTORY} \hspace{1em} Ova tablica zapisane lokacije na kojima je određena životinja prolazila u nekom trenutku. Sadrži atribute ID životinje, vrijeme bilježenja lokacije, zemljopisnu širinu i dužinu.Atributi su ID, ID životinje, vrijeme bilježenja lokacije te zemljopisna dužina i širina. Entitet je u vezi \textit{Many-to-One} s tablicom ANIMAL zato jer se za jednu životinju može zabilježiti više točaka na karti.
 				
 				\begin{longtblr}[
 					label=none,
@@ -376,47 +325,16 @@
 						rowhead = 1,
 					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
 					\hline \SetCell[c=3]{c}{\textbf{ANIMAL\_HISTORY}}	 \\ \hline[3pt]
-					\SetCell{LightGreen}idAnimal & INT & identifikator životinje (ANIMAL.id) \\ \hline
-					\SetCell{LightGreen}time & TIMESTAMP & vrijeme bilježenja lokacije \\ \hline
+					\SetCell{LightGreen}id & INT & jedinstveni identifikator \\ \hline
+					\SetCell{LightBlue}idAnimal & INT & identifikator životinje (ANIMAL.id) \\ \hline
+					time & TIMESTAMP & vrijeme bilježenja lokacije \\ \hline
 					latitude & DOUBLE & zemljopisna širina \\ \hline
 					longitude & DOUBLE & zemljopisna dužina \\ \hline
 				\end{longtblr}
 				
 				
-				\noindent \textbf{ROUTE} \hspace{1em} Ova tablica označava rutu po kojoj se tragači mogu kretati. Sadrži atribute ID tablice i tekstualni opis te rute. U vezi je \textit{One-to-Many} s tablicom ROUTE\_POINT\_LOCATION koja opisuje lokacijske točke na mapi te određene rute. Također je u odnosu \textit{One-to-Many} s tablicom TASK što govori da se na više zadataka može prolaziti istom rutom.
 				
-				\begin{longtblr}[
-					label=none,
-					entry=none
-					]{
-						width = \textwidth,
-						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
-						rowhead = 1,
-					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
-					\hline \SetCell[c=3]{c}{\textbf{ROUTE}}	 \\ \hline[3pt]
-					\SetCell{LightGreen}id & INT & identifikator rute \\ \hline
-					description & TEXT & tekstualni opis rute \\ \hline
-				\end{longtblr}
-				
-				\noindent \textbf{ROUTE\_POINT\_LOCATION} \hspace{1em} Ova tablica je povezana s tablicom ROUTE odnosom \textit{Many-to-One} te se u nju spremaju podatci svake zabilježene točke neke rute po kojima se ta ruta razlikuje od drugih. Atributi su joj ID rute, poredak točaka po ruti, zemljopisna širina i dužina svake točke na ruti. Primarni ključ ove tablice čini kombinacija ID rute i poredak točaka.
-				
-				\begin{longtblr}[
-					label=none,
-					entry=none
-					]{
-						width = \textwidth,
-						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
-						rowhead = 1,
-					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
-					\hline \SetCell[c=3]{c}{\textbf{ROUTE\_POINT\_LOCATION}}	 \\ \hline[3pt]
-					\SetCell{LightGreen}idRoute & INT & identifikator rute (ROUTE.id) \\ \hline
-					\SetCell{LightGreen}order & INT & poredak točaka po ruti \\ \hline
-					latitude & DOUBLE & zemljopisna širina točke na ruti \\ \hline
-					longitude & DOUBLE & zemljopisna dužina točke na ruti \\ \hline
-				\end{longtblr}
-				
-				
-				\noindent \textbf{ANIMAL\_COMMENT} \hspace{1em} Ovaj entitet sadržava sve važne informacije vezane za komentar nekog tragača o nekoj životinji u nekoj akciji. Sadrži atribute ID, naslov, ID životinje na koju se komentar odnosi, ID tragača koji je napisao komentar, ID akcije u kojoj je komentar napisan te sadržaj komentara. Ovaj entitet u vezi je \textit{Many-to-One} s entitetima ANIMAL preko ID-a životinje, USER preko ID-a korisnika (može biti TRACKER ili RESEARCHER) te ACTION preko ID-a akcije.
+				\noindent \textbf{ANIMAL\_COMMENT} \hspace{1em} Ovaj entitet sadržava sve važne informacije vezane za komentar nekog tragača o nekoj životinji u nekoj akciji. Sadrži atribute ID, naslov, ID životinje na koju se komentar odnosi, ID tragača koji je napisao komentar, ID akcije u kojoj je komentar napisan, vrijeme izrade te sadržaj komentara. Ovaj entitet u vezi je \textit{Many-to-One} s entitetima ANIMAL preko ID-a životinje, USER preko ID-a korisnika (može biti TRACKER ili RESEARCHER) te ACTION preko ID-a akcije.
 				
 				\begin{longtblr}[
 					label=none,
@@ -432,11 +350,11 @@
 					\SetCell{LightBlue}idAnimal & INT & ID životinje (ANIMAL.id) \\ \hline
 					\SetCell{LightBlue}idUser & INT & ID korisnika (USER.id, indirektno povezano s TRACKER.id ili RESEARCHER.id) \\ \hline
 					\SetCell{LightBlue}idAction & INT & ID akcije (ACTION.id) \\ \hline
+					time & TIMESTAMP & vrijeme izrade \\ \hline
 					content & TEXT & sadržaj komentara \\ \hline
 				\end{longtblr}
 				
-				
-				\noindent \textbf{MAP\_COMMENT} \hspace{1em} Ovaj entitet sadržava sve važne informacije vezane za komentar nekog korisnika (može biti istraživač ili tragač) vezan za određenu lokaciju u nekoj akciji. Sadrži atribute ID, naslov, ID korisnika (istraživač ili tragač) koji je napisao komentar, ID akcije u kojoj je komentar napisan, geografska širina i dužina koje zajedno čine lokaciju za koju je komentar vezan te sadržaj komentara. Ovaj entitet u vezi je \textit{Many-to-One} s entitetima USER preko ID-a korisnika (indirektno s TRACKER ili RESEARCHER) te ACTION preko ID-a akcije.
+				\noindent \textbf{ACTION\_COMMENT} \hspace{1em} Ovaj entitet sadržava sve važne informacije vezane za komentar nekog istraživača ili tragača o nekoj nekoj akciji. Sadrži atribute ID, naslov, ID akcije na koju se komentar odnosi, ID korisnika koji je napisao komentar, vrijeme izrade te sadržaj komentara. Ovaj entitet u vezi je \textit{Many-to-One} s entitetima ACTION preko ID-a akcije te USER preko ID-a korisnika (može biti TRACKER ili RESEARCHER).
 				
 				\begin{longtblr}[
 					label=none,
@@ -446,15 +364,148 @@
 						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
 						rowhead = 1,
 					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
-					\hline \SetCell[c=3]{c}{\textbf{MAP\_COMMENT}}	 \\ \hline[3pt]
+					\hline \SetCell[c=3]{c}{\textbf{ACTION\_COMMENT}}	 \\ \hline[3pt]
 					\SetCell{LightGreen}id & INT & jedinstveni identifikator \\ \hline
 					title & VARCHAR & naslov komentara \\ \hline
 					\SetCell{LightBlue}idUser & INT & ID korisnika (USER.id, indirektno povezano s TRACKER.id ili RESEARCHER.id) \\ \hline
 					\SetCell{LightBlue}idAction & INT & ID akcije (ACTION.id) \\ \hline
+					time & TIMESTAMP & vrijeme izrade \\ \hline
+					content & TEXT & sadržaj komentara \\ \hline
+				\end{longtblr}
+				
+				\noindent \textbf{TASK\_COMMENT} \hspace{1em} Ovaj entitet sadržava sve važne informacije vezane za komentar nekog tragača ili istraživača o nekom zadatku u nekoj akciji. Sadrži atribute ID, naslov, ID zadatka na koji se komentar odnosi, ID korisnika koji je napisao komentar, vrijeme izrade te sadržaj komentara. Ovaj entitet u vezi je \textit{Many-to-One} s entitetima TASK preko ID-a zadatka i preko njega inidirektno i s ACTION te USER preko ID-a korisnika (može biti TRACKER ili RESEARCHER).
+				
+				\begin{longtblr}[
+					label=none,
+					entry=none
+					]{
+						width = \textwidth,
+						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
+						rowhead = 1,
+					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
+					\hline \SetCell[c=3]{c}{\textbf{TASK\_COMMENT}}	 \\ \hline[3pt]
+					\SetCell{LightGreen}id & INT & jedinstveni identifikator \\ \hline
+					title & VARCHAR & naslov komentara \\ \hline
+					\SetCell{LightBlue}idTask & INT & ID zadatka (TASK.id) \\ \hline
+					\SetCell{LightBlue}idUser & INT & ID korisnika (USER.id, indirektno povezano s TRACKER.id ili RESEARCHER.id) \\ \hline
+					time & TIMESTAMP & vrijeme izrade \\ \hline
+					content & TEXT & sadržaj komentara \\ \hline
+				\end{longtblr}
+				
+				\noindent \textbf{ACTION\_HABITAT} \hspace{1em} Ovaj entitet sadržava sve važne informacije vezane za praćene životinje u nekom staništu te razrješava \textit{Many-to-Many} vezu između entiteta ANIMAL i HABITAT. Sadrži atribute ID staništa te ID akcije u kojoj je ta životinja praćena. Ovaj entitet u vezi je \textit{Many-to-One} s entitetima HABITAT preko ID-a staništa i ACTION preko ID-a akcije.
+				
+				\begin{longtblr}[
+					label=none,
+					entry=none
+					]{
+						width = \textwidth,
+						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
+						rowhead = 1,
+					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
+					\hline \SetCell[c=3]{c}{\textbf{ACTION\_HABITAT}}	 \\ \hline[3pt]
+					\SetCell{LightGreen}idHabitat & INT & ID staništa (HABITAT.id), ujedno i prvi dio kompozitnog primarnog ključa \\ \hline
+					\SetCell{LightGreen}idAction & INT & ID akcije (ACTION.id), ujedno i drugi dio kompozitnog primarnog ključa \\ \hline
+				\end{longtblr}
+				
+				\noindent \textbf{CONFIRMATION\_TOKEN} \hspace{1em} Ovaj entitet sadržava sve važne informacije vezane za kreiranje tokena radi sigurnije prijave korisnika pomoću potvrde email adrese. Sadrži atribute ID, tekst koji je sifra tokena, vremena kreiranja, potvrdivanja i isteka tokena te strani ključ idUser. Ovaj entitet u vezi je \textit{Many-to-One} s entitetom USER preko ID-a korisnika.
+				
+				\begin{longtblr}[
+					label=none,
+					entry=none
+					]{
+						width = \textwidth,
+						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
+						rowhead = 1,
+					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
+					\hline \SetCell[c=3]{c}{\textbf{CONFIRMATION\_TOKEN}}	 \\ \hline[3pt]
+					\SetCell{LightGreen}id & INT & tip sredstva prijevoza, ujedno i primarni ključ \\ \hline
+					\SetCell{LightBlue}idUser & INT & ID korisnika (USER.id) \\ \hline
+					createdAt & TIMESTAMP & vrijeme izrade \\ \hline
+					confirmedAt & TIMESTAMP & vrijeme potvrde \\ \hline
+					expiresAt & TIMESTAMP & vrijeme isteka \\ \hline
+					token & TEXT & šifra tokena \\ \hline
+					
+				\end{longtblr}
+				
+				\noindent \textbf{SPECIES} \hspace{1em} Ovaj entitet predstavlja klasu vrsta životinja i sadrži sve atribute koji opisuju neku vrstu. Sadrži atribute ID, fotografiju vrste, ime vrste i tekst koji opisuje životinju. U vezi je \textit{One-to-Many} s klasom  ANIMAL jer jedna vrsta može imati više jediniki životinja, a jedna jedinka može biti samo jedne  vrste.
+				
+				
+				\begin{longtblr}[
+					label=none,
+					entry=none
+					]{
+						width = \textwidth,
+						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
+						rowhead = 1,
+					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
+					\hline \SetCell[c=3]{c}{\textbf{SPECIES}}	 \\ \hline[3pt]
+					\SetCell{LightGreen}id & INT & jedinstveni identifikator \\ \hline
+					photo & BYTEA & fotografija vrste \\ \hline
+					description & TEXT & opis vrste \\ \hline
+					name & VARCHAR & ime vrste \\ \hline
+				\end{longtblr}
+				
+				
+				\noindent \textbf{HABITAT} \hspace{1em} Ovaj entitet predstavlja klasu različitih staništa i sadrži sve atribute koji opisuju neko stanište. Sadrži atribute ID, fotografiju staništa, ime staništa, tekst koji opisuje stanište, radijus koji obuhvaća stanište te geografsku lokaciju staništa. U vezi je \textit{One-to-Many} s klasom ANIMAL jedno stanište može biti stanište više životinja, a jedna životinja ima isključivo to stanište te je u vezi  \textit{One-to-Many} s klasom ACTION jer jedna akcija može imati više staništa, a stanište može biti dio više akcija. 
+				
+				
+				\begin{longtblr}[
+					label=none,
+					entry=none
+					]{
+						width = \textwidth,
+						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
+						rowhead = 1,
+					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
+					\hline \SetCell[c=3]{c}{\textbf{HABITAT}}	 \\ \hline[3pt]
+					\SetCell{LightGreen}id & INT & jedinstveni identifikator \\ \hline
+					photo & BYTEA & fotografija staništa \\ \hline
+					description & TEXT & opis staništa \\ \hline
+					name & VARCHAR & ime staništa \\ \hline
+					radius & DOUBLE & radijus staništa \\ \hline
 					latitude & DOUBLE & geografska širina \\ \hline
 					longitude & DOUBLE & geografska dužina \\ \hline
-					content & TEXT & sadržaj komentara \\ \hline
-				\end{longtblr}												
+				\end{longtblr}
+				
+				\noindent \textbf{REQUEST} \hspace{1em} Ovaj entitet sadržava sve važne informacije vezane za zahtjev unutar određene akcije. Sadrži atribute ID, ID korisnika koji je kreirao zahtjev, ID akcije, tip zahtjeva, status zahtjeva te vrijeme izrade. Ovaj entitet u vezi je \textit{One-to-One} s entitetom USER preko ID-a korisnika te je u vezi \textit{Many-to-one} s entitetom ACTION koji predstavlja akciju.
+				
+				\begin{longtblr}[
+					label=none,
+					entry=none
+					]{
+						width = \textwidth,
+						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
+						rowhead = 1,
+					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
+					\hline \SetCell[c=3]{c}{\textbf{REQUEST}}	 \\ \hline[3pt]
+					\SetCell{LightGreen}id & INT & jedinstveni identifikator \\ \hline
+					\SetCell{LightBlue}idResearcher & INT & ID korisnika (USER.id) \\ \hline
+					\SetCell{LightBlue}idAction & INT & ID akcije (ACTION.id) \\ \hline
+					creationTime & TIMESTAMP & vrijeme izrade \\ \hline
+					status & VARCHAR &  trenutno stanje akcije \\ \hline
+					type & VARCHAR & tip zahtjeva \\ \hline
+					
+				\end{longtblr}
+				
+				\noindent \textbf{REQUIREMENTS} \hspace{1em} Ovaj entitet sadržava sve važne informacije vezane za specifične uvjete koje voditelj traži za pojedinu akciju. Sadrži atribute ID akcije, vrstu vozila tragača i količinu tih pojedinih tragača potrebnih za akciju. Ovaj entitet u vezi je \textit{One-to-One} s entitetom ACTION preko ID-a akcije.
+				
+				\begin{longtblr}[
+					label=none,
+					entry=none
+					]{
+						width = \textwidth,
+						colspec={|X[6,l]|X[6, l]|X[20, l]|}, 
+						rowhead = 1,
+					} %definicija širine tablice, širine stupaca, poravnanje i broja redaka naslova tablice
+					\hline \SetCell[c=3]{c}{\textbf{REQUIREMENTS}}	 \\ \hline[3pt]
+					\SetCell{LightBlue}idAction & INT & ID akcije (ACTION.id) \\ \hline
+					amount & INT & broj tragača s pojedinim vozilom \\ \hline
+					type & VARCHAR & tragaci s traženim tipom vozila \\ \hline
+				\end{longtblr}
+		
+				
+				
+												
 				
 			\eject
 			
