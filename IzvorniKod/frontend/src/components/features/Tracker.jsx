@@ -20,7 +20,7 @@ export default function Tracker() {
 
   /* TRACKER INFO */
   useEffect(() => {
-    fetch("http://localhost:8000/tracker/myInfo", {
+    fetch("https://wildback.onrender.com/tracker/myInfo", {
       method: "GET",
       credentials: "include",
     })
@@ -62,7 +62,7 @@ export default function Tracker() {
 
   /* TRACKERS ON ACTION */
   useEffect(() => {
-    fetch("http://localhost:8000/tracker/trackers", {
+    fetch("https://wildback.onrender.com/tracker/trackers", {
       method: "GET",
       credentials: "include",
     })
@@ -76,7 +76,7 @@ export default function Tracker() {
   /* DONE */
 
   const putDoneTasks = (id) => {
-    fetch("http://localhost:8000/tracker/doneTasks", {
+    fetch("https://wildback.onrender.com/tracker/doneTasks", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -97,7 +97,7 @@ export default function Tracker() {
 
   const putComments = (id) => {
     let comment = comments[id].slice(-1)[0];
-    fetch("http://localhost:8000/tracker/newComments", {
+    fetch("https://wildback.onrender.com/tracker/newComments", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -122,7 +122,7 @@ export default function Tracker() {
 
   const putActionComments = () => {
     let comment = commentsAction.slice(-1)[0];
-    fetch("http://localhost:8000/tracker/actionComments", {
+    fetch("https://wildback.onrender.com/tracker/actionComments", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

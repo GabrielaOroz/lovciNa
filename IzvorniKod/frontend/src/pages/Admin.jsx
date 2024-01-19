@@ -22,7 +22,7 @@ export default function Admin() {
       password,
     };
 
-    fetch("http://localhost:8000/admin", {
+    fetch("https://wildback.onrender.com/admin", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

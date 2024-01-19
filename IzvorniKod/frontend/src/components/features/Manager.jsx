@@ -46,7 +46,7 @@ export default function Manager() {
 
   
   const sendEmptyMediaList = () => {
-    fetch("http://localhost:8000/manager/saveMedia", {
+    fetch("https://wildback.onrender.com/manager/saveMedia", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -85,7 +85,7 @@ export default function Manager() {
   
   
   const fetchExistingStationData = () => {
-    fetch("http://localhost:8000/manager/station", {
+    fetch("https://wildback.onrender.com/manager/station", {
       method: "GET",
       credentials: "include",
       headers: {
@@ -119,7 +119,7 @@ export default function Manager() {
   };
 
   const fetchMyTrackers = () => {
-    fetch("http://localhost:8000/manager/available-trackers", {
+    fetch("https://wildback.onrender.com/manager/available-trackers", {
       method: "GET",
       credentials: "include",
     })
@@ -133,7 +133,7 @@ export default function Manager() {
   };
 
   const fetchTrackers = () => {
-    return fetch("http://localhost:8000/manager/trackers", {
+    return fetch("https://wildback.onrender.com/manager/trackers", {
       credentials: "include",
       headers: {
         "Content-Type": "application/json",
@@ -170,7 +170,7 @@ export default function Manager() {
 
     // šaljemo na back naziv postaje, lat i lon
 
-    fetch("http://localhost:8000/manager/selected-station", {
+    fetch("https://wildback.onrender.com/manager/selected-station", {
       method: "POST",
       credentials: "include",
       headers: {
@@ -246,7 +246,7 @@ export default function Manager() {
   const handleSaveAbilities = () => {
 
       if (validateSelectedTrackers()) {
-        fetch("http://localhost:8000/manager/saveAbilities", {
+        fetch("https://wildback.onrender.com/manager/saveAbilities", {
           method: "POST",
           credentials: "include",
           headers: {

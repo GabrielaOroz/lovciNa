@@ -31,7 +31,7 @@ export default function CreateAction() {
   
 
   const fetchCurrentUser = () => {
-    fetch("http://localhost:8000/auth/current-user", {
+    fetch("https://wildback.onrender.com/auth/current-user", {
       method: "GET",
       credentials: "include",
     })
@@ -42,7 +42,7 @@ export default function CreateAction() {
   };
 
   const fetchIncomingRequests = () => {
-    fetch("http://localhost:8000/manager/incoming-requests", {
+    fetch("https://wildback.onrender.com/manager/incoming-requests", {
       method: "GET",
       credentials: "include",
     })
@@ -59,7 +59,7 @@ export default function CreateAction() {
 
   };
   const fetchTrackers = () => {
-    fetch("http://localhost:8000/manager/available-trackers", {
+    fetch("https://wildback.onrender.com/manager/available-trackers", {
         method: "GET",
         credentials: "include",
         })
@@ -143,7 +143,7 @@ export default function CreateAction() {
     // Šaljemo na backend listu tragača s njihovim id-ijem i imenom
 
     // slanje na back
-    fetch("http://localhost:8000/manager/submit-action", {
+    fetch("https://wildback.onrender.com/manager/submit-action", {
       method: "POST",
       credentials: "include",
       headers: {

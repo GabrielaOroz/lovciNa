@@ -6,7 +6,7 @@ export default function Header() {
   const navigate = useNavigate();
 
   const logout = () => {
-    fetch("http://localhost:8000/auth/logout", {
+    fetch("https://wildback.onrender.com/auth/logout", {
       method: "POST",
       credentials: "include",
     }).then((res) => {

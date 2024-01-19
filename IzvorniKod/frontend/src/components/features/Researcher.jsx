@@ -29,7 +29,7 @@ export default function Researcher() {
 
   /* GET DATA */
   useEffect(() => {
-    fetch("http://localhost:8000/researcher/actions", {
+    fetch("https://wildback.onrender.com/researcher/actions", {
       method: "GET",
       credentials: "include",
     })
@@ -42,7 +42,7 @@ export default function Researcher() {
 
   
   useEffect(() => {
-    fetch("http://localhost:8000/researcher/coords", {
+    fetch("https://wildback.onrender.com/researcher/coords", {
       method: "GET",
       credentials: "include",
     })

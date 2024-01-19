@@ -27,7 +27,7 @@ import Header from "../components/shared/Header";
 export default function NewActions() {
   const [session, setSession] = useState(null);
   useEffect(() => {
-    fetch("http://localhost:8000/auth/current-user", {
+    fetch("https://wildback.onrender.com/auth/current-user", {
       method: "GET",
       credentials: "include",
     })
@@ -87,7 +87,7 @@ export default function NewActions() {
     });
     
     if (!checkError(actionId)) {
-      fetch("http://localhost:8000/researcher/finished-action", {
+      fetch("https://wildback.onrender.com/researcher/finished-action", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -106,7 +106,7 @@ export default function NewActions() {
   const [itemType, setItemType] = useState({});
   const [formData, setFormData] = useState({});
   useEffect(() => {
-    fetch("http://localhost:8000/researcher/unfinished-actions", {
+    fetch("https://wildback.onrender.com/researcher/unfinished-actions", {
       method: "GET",
       credentials: "include",
     })
@@ -142,7 +142,7 @@ export default function NewActions() {
   const [existingIndividuals, setExistingIndividuals] = useState([]);
   const [existingHabitats, setExistingHabitats] = useState([]);
   useEffect(() => {
-    fetch("http://localhost:8000/researcher/species", {
+    fetch("https://wildback.onrender.com/researcher/species", {
       method: "GET",
       credentials: "include",
     })
@@ -153,7 +153,7 @@ export default function NewActions() {
       });
   }, []);
   useEffect(() => {
-    fetch("http://localhost:8000/researcher/individuals", {
+    fetch("https://wildback.onrender.com/researcher/individuals", {
       method: "GET",
       credentials: "include",
     })
@@ -164,7 +164,7 @@ export default function NewActions() {
       });
   }, []);
   useEffect(() => {
-    fetch("http://localhost:8000/researcher/habitats", {
+    fetch("https://wildback.onrender.com/researcher/habitats", {
       method: "GET",
       credentials: "include",
     })

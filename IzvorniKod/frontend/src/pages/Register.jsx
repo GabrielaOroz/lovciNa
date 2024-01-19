@@ -86,7 +86,7 @@ export default function Register() {
     formData.append("username", data.username);
     formData.append("password", data.password);
 
-    fetch("http://localhost:8000/auth/register", {
+    fetch("https://wildback.onrender.com/auth/register", {
       method: "POST",
       body: formData,
       credentials: 'include',

@@ -9,7 +9,7 @@ export default function Home() {
   const [session, setSession] = useState();
 
   useEffect(() => {
-    fetch("http://localhost:8000/auth/current-user", {
+    fetch("https://wildback.onrender.com/auth/current-user", {
       method: "GET",
       credentials: "include",
     })

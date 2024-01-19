@@ -8,7 +8,7 @@ import Header from "../components/shared/Header";
 export default function CreateAction() {
   const [session, setSession] = useState(null);
   useEffect(() => {
-    fetch("http://localhost:8000/auth/current-user", {
+    fetch("https://wildback.onrender.com/auth/current-user", {
       method: "GET",
       credentials: "include",
     })
@@ -31,7 +31,7 @@ export default function CreateAction() {
 
   /* GET DATA */
   useEffect(() => {
-    fetch("http://localhost:8000/researcher/managers", {
+    fetch("https://wildback.onrender.com/researcher/managers", {
       method: "GET",
       credentials: "include",
     })
@@ -48,7 +48,7 @@ export default function CreateAction() {
       setError(false);
 
       //console.log(formData);
-      fetch("http://localhost:8000/researcher/create-requests", {
+      fetch("https://wildback.onrender.com/researcher/create-requests", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

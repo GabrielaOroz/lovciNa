@@ -24,7 +24,7 @@ import { useNavigate } from "react-router-dom";
 export default function ListOfUsers() {
   const [session, setSession] = useState(null);
   useEffect(() => {
-    fetch("http://localhost:8000/auth/current-user", {
+    fetch("https://wildback.onrender.com/auth/current-user", {
       method: "GET",
       credentials: "include",
     })
@@ -156,7 +156,7 @@ export default function ListOfUsers() {
 
   // ONCLICK
   const handleUsers = () => {
-    fetch("http://localhost:8000/admin/registeredUsers", {
+    fetch("https://wildback.onrender.com/admin/registeredUsers", {
       method: "GET",
       credentials: "include",
     })
@@ -173,7 +173,7 @@ export default function ListOfUsers() {
       role,
       approved: true,
     };
-    fetch("http://localhost:8000/admin/approved", {
+    fetch("https://wildback.onrender.com/admin/approved", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -197,7 +197,7 @@ export default function ListOfUsers() {
     formData.append("username", username);
     formData.append("password", password);
 
-    fetch("http://localhost:8000/admin/newInfo", {
+    fetch("https://wildback.onrender.com/admin/newInfo", {
       method: "PUT",
       body: formData,
       credentials: "include",
@@ -210,7 +210,7 @@ export default function ListOfUsers() {
 
   const navigate = useNavigate();
   const logout = () => {
-    fetch("http://localhost:8000/auth/logout", {
+    fetch("https://wildback.onrender.com/auth/logout", {
       method: "POST",
       credentials: "include",
     }).then((res) => {
