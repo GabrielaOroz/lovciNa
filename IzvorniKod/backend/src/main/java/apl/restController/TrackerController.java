@@ -21,7 +21,7 @@ import java.util.Map;
 
 
 @CrossOrigin(
-        origins = "https://wildtrack.onrender.com",
+        origins = "https://wildtrack-bc08.onrender.com",
         methods  = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE },
         allowedHeaders = "*",
         allowCredentials = "true"
