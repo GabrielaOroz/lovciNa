@@ -211,7 +211,6 @@ export default function Manager() {
       }
     });
 
-    // Ensure selectedAbilities includes all selected trackers with empty abilities
     setSelectedAbilities((prevAbilities) => {
       const updatedAbilities = { ...prevAbilities };
 
@@ -262,10 +261,11 @@ export default function Manager() {
           .catch((error) => {
             console.error("Error saving abilities:", error);
           });
-    
+       // console.log(selectedTrackers);
         setIsAbilitiesModalOpen(false);
         setSelectedAll(true);
         setSelected(true);
+        
 
       }
     };
@@ -429,10 +429,10 @@ export default function Manager() {
                   </Checkbox>
                   <Checkbox
                     colorScheme="green"
-                    isChecked={selectedTracker && selectedAbilities[selectedTracker.id]?.includes("DRONE")}
-                    onChange={() => handleAbilitiesCheckboxChange("DRONE")}
+                    isChecked={selectedTracker && selectedAbilities[selectedTracker.id]?.includes("DRON")}
+                    onChange={() => handleAbilitiesCheckboxChange("DRON")}
                   >
-                    Drone
+                    Dron
                   </Checkbox>
                   <Checkbox
                     colorScheme="green"
